@@ -15,14 +15,31 @@ class ValueHelpers {
 
         return $userHasRoleName == $role_name ? true : false;
     }
+    
+    public static function getUsersRoleName( $userId = null) {
+     
+        if ( $userId == null ) {
 
-    public static function getUserRoleValue( $userId = null ) {
+            $usersRoleName = Yii::$app->user->identity->role->role_name;
+
+            return isset( $usersRoleName ) ? $usersRoleName : false;
+        } else {
+
+            $user = User::findOne( $userId );
+
+            $usersRoleName = $user->role->role_name;
+
+            return isset( $usersRoleName ) ? $usersRoleName : false;
+        }
+    }
+    
+    public static function getUsersRoleValue( $userId = null ) {
 
         if ( $userId == null ) {
 
             $usersRoleValue = Yii::$app->user->identity->role->role_value;
 
-            return isset( $usersRoleValue ) ? $userRoleValue : false;
+            return isset( $usersRoleValue ) ? $usersRoleValue : false;
         } else {
 
             $user = User::findOne( $userId );

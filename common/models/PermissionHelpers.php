@@ -4,6 +4,7 @@ namespace common\models;
 
 use yii;
 use common\models\ValueHelpers;
+use common\models\User;
 use yii\web\Controller;
 use yii\helpers\Url;
 
