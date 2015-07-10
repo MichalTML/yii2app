@@ -7,7 +7,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
-use yii\web\IndetityInterface;
+use yii\web\IdentityInterface;
 use yii\helpers\Security;
 
 /**
@@ -40,7 +40,7 @@ class User extends ActiveRecord implements IdentityInterface {
     public function behaviors() {
         return [
             'timestamp' => [
-                'class' => 'yii/behaviors/TimestampBehavior',
+                'class' => 'yii\behaviors\TimestampBehavior',
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => [ 'created_at', 'updated_at' ],
                     ActiveRecord::EVENT_BEFORE_UPDATE => [ 'updated_at' ],
@@ -59,10 +59,12 @@ class User extends ActiveRecord implements IdentityInterface {
             ['status_id', 'default', 'value' => self::STATUS_ACTIVE ],
             ['role_id', 'default', 'value' => 1 ],
             ['user_type_id', 'default', 'value' => 1 ],
+            
             ['username', 'filter', 'filter' => 'trim' ],
             ['username', 'required' ],
             ['username', 'unique' ],
             ['username', 'string', 'min' => 2, 'max' => 255 ],
+            
             ['email', 'filter', 'filter' => 'trim' ],
             ['email', 'required' ],
             ['email', 'email' ],
@@ -109,7 +111,7 @@ class User extends ActiveRecord implements IdentityInterface {
      * @return static|null 
      */
     public static function findByPasswordResetToken( $token ) {
-        if(!static::isPasswordResetTokenValid($token) {
+        if(!static::isPasswordResetTokenValid($token)) {
             return null;
         }
 
@@ -129,11 +131,18 @@ class User extends ActiveRecord implements IdentityInterface {
             return false;
         }
         $expire = Yii::$app->params[ 'user.passwordResetTokenExpire' ];
-        $pars = explode( '_', $token );
+        $parts = explode( '_', $token );
         $timestamp = ( int ) end( $parts );
         return $timestamp + $expire >= time();
     }
 
+    /**
+     * @getId
+     */
+    
+    public function getId() {
+        return $this->getPrimaryKey();
+    }
     /**
      * @getAuthKey
      */
@@ -144,7 +153,7 @@ class User extends ActiveRecord implements IdentityInterface {
     /**
      * @validateAuthKey
      */
-    public function validateAuthKey( $authkey ) {
+    public function validateAuthKey( $authKey ) {
         return $this->getAuthKey() === $authKey;
     }
 
