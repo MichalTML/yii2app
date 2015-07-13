@@ -270,7 +270,7 @@ class User extends ActiveRecord implements IdentityInterface {
      * getUserType
      */
     public function getUserType() {
-        return $this->hasOne(UserType::className, [ 'id' => 'user_type_id' ]);
+        return $this->hasOne(UserType::className(), [ 'id' => 'user_type_id' ]);
     }
 
     /**

@@ -12,8 +12,6 @@ class PermissionHelpers {
 
     public static function requireUpgradeTo( $user_type_name ) {
 
-
-
         if ( !ValueHelpers::userTypeMatch( $user_type_name ) ) {
 
             return Yii::$app->getResponse()->redirect( Url::to( ['upgrade/index' ] ) );

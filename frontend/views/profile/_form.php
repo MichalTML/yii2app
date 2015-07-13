@@ -18,7 +18,7 @@ use yii\jui\DatePicker;
 
     <?= $form->field($model, 'last_name')->textInput(['maxlength' => 45]) ?>          
 <br />
-    <?= $form->field($model, 'birthdate')->widget(DatePicker::className(),[
+   <?= $form->field($model, 'birthdate')->widget(DatePicker::className(),[
         'dateFormat' => 'yyyy-MM-dd',
         'clientOptions' => [
             'yearRange' => '-115:+0',
@@ -30,6 +30,7 @@ use yii\jui\DatePicker;
 
 <div class="form-group">
     <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+</div>
     <?php ActiveForm::end(); ?>
     
 </div>

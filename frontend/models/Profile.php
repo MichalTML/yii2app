@@ -39,7 +39,7 @@ class Profile extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [[ 'user_id', 'first_name', 'last_name', 'birthdate', 'gender_id', 'created_at', 'updated_at' ], 'required' ],
+            [[ 'user_id', 'first_name', 'last_name', 'birthdate'], 'required' ],
             [[ 'user_id', 'gender_id' ], 'integer' ],
             [[ 'first_name', 'last_name' ], 'string' ],
             [[ 'birthdate', 'created_at', 'updated_at' ], 'safe' ],
@@ -173,6 +173,20 @@ class Profile extends \yii\db\ActiveRecord {
 //        return parent::beforeValidate();
 //    }
 //    
-    
+    public function signup()
+    {
+        if ($this->validate()) {
+            $user = new Profile();
+            $user->first_name = $this->username;
+            $user->email = $this->email;
+            $user->setPassword($this->password);
+            $user->generateAuthKey();
+            if ($user->save()) {
+                return $user;
+            }
+        }
+
+        return null;
+    }
     
 }

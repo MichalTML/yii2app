@@ -69,6 +69,11 @@ class SiteController extends Controller
     {
         return $this->render('index');
     }
+    
+    public function actionMain()
+    {
+        return $this->render('main');
+    }
 
     public function actionLogin()
     {
@@ -78,7 +83,7 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return $this->redirect( ['main' ] );
         } else {
             return $this->render('login', [
                 'model' => $model,

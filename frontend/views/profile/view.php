@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use yii\models\PermissionHelpers;
+use common\models\PermissionHelpers;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\models\Profile */
@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     if(PermissionHelpers::userMustBeOwner('profile', $model->id)) {
         
-        echo Html::a('Update', ['update', 'id' => $model->$id],
+        echo Html::a('Update', ['update', 'id' => $model->id],
                                ['class' => 'btn btn-primary']);        
     }?>
     
