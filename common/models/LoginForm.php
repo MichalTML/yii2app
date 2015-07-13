@@ -74,14 +74,22 @@ class LoginForm extends Model {
         return $this->_user;
     }
     
-    // personal metod working!
+//    // personal metod working!
+//    public function loginAdmin() {
+//
+//        if (($this->validate()) && ValueHelpers::getUsersRoleName($this->getUser()->id) == 'Admin'){
+//            return Yii::$app->user->login( $this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0 );
+//        } else {
+//
+//            throw new NotfoundHttpException( 'You Shall Not Pass.'/*.$this->getUser()->id*/);
+//        }
+//    }
+    
     public function loginAdmin() {
-
-        if (($this->validate()) && ValueHelpers::getUsersRoleName($this->getUser()->id) == 'Admin'){
-            return Yii::$app->user->login( $this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0 );
+        if(($this->validate()) && PermissionHelpers::requireMinimumRole('Admin', $this->getUser()->id)) {
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         } else {
-
-            throw new NotfoundHttpException( 'You Shall Not Pass.'/*.$this->getUser()->id*/);
+            throw new NotFoundHttpException('You Shall Not Pass.');
         }
     }
 
