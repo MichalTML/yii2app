@@ -5,11 +5,13 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use frontend\widgets\Alert;
+use frontend\assets\FontAwesomeAsset;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
 AppAsset::register($this);
+FontAwesomeAsset::register($this);
 
 ?>
 <?php $this->beginPage() ?>
@@ -27,11 +29,11 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => 'TMA Project Manager',
+                'brandLabel' => 'TMA Project Manager <i class="fa fa-plug"></i>',
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
-                ],
+                ],                
             ]);            
             $menuItems = [
                 ['label' => 'Home', 'url' => ['/site/index']],

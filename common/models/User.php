@@ -248,7 +248,7 @@ class User extends ActiveRecord implements IdentityInterface {
      * get status relation
      */
     public function getStatus() {
-        return $this->hasOne( Status::className, ['id' => 'status_id' ] );
+        return $this->hasOne( Status::className(), ['id' => 'status_id' ] );
     }
 
     /**
@@ -300,7 +300,7 @@ class User extends ActiveRecord implements IdentityInterface {
      * @getProfileId
      */
     public function getProfileId() {
-        return $this->profile ? $this->prfile->id : 'none';
+        return $this->profile ? $this->profile->id : 'none';
     }
 
     /*
@@ -308,7 +308,7 @@ class User extends ActiveRecord implements IdentityInterface {
      */
 
     public function getProfileLink() {
-        $utl = Url::to( ['profile/view', 'id' => $this->prfileId ] );
+        $url = Url::to( ['profile/view', 'id' => $this->profileId ] );
         $options = [ ];
         return Html::a( $this->profile ? 'profile' : 'none', $url, $options );
     }

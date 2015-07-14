@@ -4,11 +4,14 @@ use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
+use common\models\PermissionHelpers;
+use frontend\assets\FontAwesomeAsset;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
 AppAsset::register($this);
+FontAwesomeAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -24,25 +27,64 @@ AppAsset::register($this);
     <?php $this->beginBody() ?>
     <div class="wrap">
         <?php
+        
+        
+        
+        if(!Yii::$app->user->isGuest){
+            
+            $is_admin = PermissionHelpers::requireMinimumRole('Admin');
+                
             NavBar::begin([
-                'brandLabel' => 'My Company',
+                'brandLabel' => 'TMA Project Manager ( admin zone )',
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
             ]);
+            
+        } else {
+            
+            NavBar::begin([
+                
+                'brandLabel' => 'TMA Project Manager',
+                'brandUrl' => Yii::$app->homeUrl,
+                'options' => [
+                    'class' => 'navbar-inverse navbar-fixed-top',
+                ],
+            ]);
+           
+        
             $menuItems = [
                 ['label' => 'Home', 'url' => ['/site/index']],
             ];
-            if (Yii::$app->user->isGuest) {
-                $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        }
+        
+            if (!Yii::$app->user->isGuest && $is_admin) {
+                
+                $menuItems[] = ['label' => 'Users', 'url' => ['user/index']];
+                
+                $menuItems[] = ['label' => 'Profiles', 'url' => ['profile/index']];
+                
+                $menuItems[] = ['label' => 'Roles', 'url' => ['/role/index']];
+                
+                $menuItems[] = ['label' => 'User Types', 'url' => ['/user-type/index']];
+                
+                $menuItems[] = ['label' => 'Statuses', 'url' => ['/status/index']];
+            }
+            
+            if (Yii::$app->user->isGuest) {   
+                
+                $menuItems[] = ['label' => 'Login', 'url' => ['site/login']];
+            
             } else {
+                            
                 $menuItems[] = [
                     'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
                     'url' => ['/site/logout'],
                     'linkOptions' => ['data-method' => 'post']
                 ];
             }
+            
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => $menuItems,
@@ -60,7 +102,7 @@ AppAsset::register($this);
 
     <footer class="footer">
         <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; TMA Project Manager <?= date('Y') ?></p>
         <p class="pull-right"><?= Yii::powered() ?></p>
         </div>
     </footer>
