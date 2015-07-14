@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'first_name:ntext',
             'last_name:ntext',
             'birthdate',
-            'gender_id',
+            'genderName',
             'created_at',
             'updated_at',
         ],
