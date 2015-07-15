@@ -12,6 +12,8 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use common\models\PermissionHelpers;
+use yii\helpers\Url;
 
 /**
  * Site controller
@@ -72,7 +74,19 @@ class SiteController extends Controller
     
     public function actionMain()
     {
-        return $this->render('main');
+        if(!Yii::$app->user->isGuest && PermissionHelpers::requireMinimumRole('Managment')) {
+        return $this->render('Mmain');
+        }
+        
+        if(!Yii::$app->user->isGuest && PermissionHelpers::requireMinimumRole('Constructor')) {
+            return $this->render('Cmain');
+        }
+        
+        if(!Yii::$app->user->isGuest && PermissionHelpers::requireMinimumRole('Automatics')) {
+            return $this->render('Amain');
+        }
+        
+        
     }
 
     public function actionLogin()
@@ -172,5 +186,10 @@ class SiteController extends Controller
         return $this->render('resetPassword', [
             'model' => $model,
         ]);
+    }
+    
+    public function getImageUrl()
+    {
+        return Url::to('http://www.tma-automation.com/wp-content/themes/TM-Automation/images/logo.jpg' . $this->logo, true);
     }
 }

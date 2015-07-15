@@ -15,3 +15,36 @@ and open the template in the editor.
     margin: 5px;
     
 }
+
+.navbar-inverse {
+    background-color:#e6e6e6;
+    border-color: #e6e6e6;
+}
+
+.navbar-inverse .navbar-nav > li > a 
+{
+    color: black;  
+    font-size: 15px;
+    font-family: "verdana";
+    text-transform: uppercase;
+    color: #808080;
+}
+
+.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
+    background-color: #e6e6e6;
+    color: #808080;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover{
+    background: transparent url(http://www.tma-automation.com/wp-content/themes/TM-Automation/images/menu_item_border.png) repeat-x scroll 0 40px;
+    color: #808080;
+}
+
+.navbar-brand {
+    padding: 5px;
+    height: 60px;
+}
+.navbar-brand > img {
+    display: inline;
+    
+}

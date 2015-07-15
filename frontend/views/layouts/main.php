@@ -6,6 +6,8 @@ use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use frontend\widgets\Alert;
 use frontend\assets\FontAwesomeAsset;
+use yii\helpers\Url;
+use yii\grid\GridView;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -27,9 +29,11 @@ FontAwesomeAsset::register($this);
 <body>
     <?php $this->beginBody() ?>
     <div class="wrap">
+        
         <?php
-            NavBar::begin([
-                'brandLabel' => 'TMA Project Manager <i class="fa fa-plug"></i>',
+            
+        NavBar::begin([
+                'brandLabel' => '<img syle="margin: 0; padding: 0px;" src="http://workspace.telemobile.pl/test/KAROL/RFswitchATT_Michal/Testing/images/logo.png"> Project Manager <i class="fa fa-plug"></i>',
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
