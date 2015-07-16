@@ -8,12 +8,16 @@ and open the template in the editor.
     Author     : REVIZOR04
 */
 
+body {
+    font-family: "verdana";
+    color: #808080; 
+}
 .main {
     width: 250px;
     height: 100px;
     padding: 10px;
     margin: 5px;
-    
+
 }
 
 .navbar-inverse {
@@ -46,5 +50,33 @@ and open the template in the editor.
 }
 .navbar-brand > img {
     display: inline;
-    
+
 }
+
+.mainbox {    
+}
+
+.mainbox_info{
+    background: #e6e6e6 url("images/iml-bg.jpg") no-repeat scroll 0 60px;
+    color: black;
+    margin-top: 5px;
+    font-size: 12px;
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.mainbox a{
+    text-transform: uppercase;
+    width: 100%;
+    font-size: 25px;
+    color: #808080;
+    background: #e6e6e6;
+}
+
+.mainbox a:hover{
+    background: #83C503;
+    color: white;
+}
+

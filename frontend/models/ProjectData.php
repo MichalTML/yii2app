@@ -11,6 +11,7 @@ use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\AttributeBehavior;
+use frontend\models\ClientData;
 
 /**
  * This is the model class for table "project_data".
@@ -26,9 +27,11 @@ use yii\behaviors\AttributeBehavior;
  * @property integer $updUserId
  * @property string $updDate
  * @property string $projectStatus
- *
- * @property User $creUser
+ * @property integer $constructorId
+ * @property integer $contanctId
+ * 
  */
+
 class ProjectData extends \yii\db\ActiveRecord
 {
     /**
@@ -45,7 +48,7 @@ class ProjectData extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['projectId', 'projectName', 'clientId', 'deadline', 'projectStatus'], 'required'],
+            [['projectId', 'projectName', 'clientId', 'deadline', 'projectStatus', 'constructorId'], 'required'],
             [['projectId'], 'unique'],
             [['id', 'clientId', 'creUserId', 'updUserId'], 'integer'],
             [['projectId'], 'string', 'max' => 45],
@@ -58,11 +61,12 @@ class ProjectData extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
+        return [       
+            
             'id' => 'ID',
             'projectId' => 'Project ID',
             'projectName' => 'Project Name',
-            'clientId' => 'Client Name',
+            'name' => 'Client Name',
             'creDate' => 'Creation Date',
             'deadline' => 'Deadline',
             'endDate' => 'End Date',
@@ -70,6 +74,7 @@ class ProjectData extends \yii\db\ActiveRecord
             'updUserId' => 'Updated by',
             'updDate' => 'Update date',
             'projectStatus' => 'Project Status',
+            'constructorId' => 'Project Constructors',
         ];
     }
     
@@ -101,10 +106,45 @@ class ProjectData extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    
+    public function getClientId()
+    {
+        return $this->hasOne(ClientData::className(), ['clientNumber' => 'clientId']);
+    }    
+    
+    public function getClientList()
+    {
+        $droptions = ClientData::find()->asArray()->all();
+        return ArrayHelper::map($droptions, 'clientNumber', 'name');
+    }
+    
+    public function getStatusName()
+    {
+        return $this->hasOne(ProjectStatus::className(), ['statusName' => 'projectStatus']);
+    }
+    
+    public function getStatusList()
+    {
+        
+        $droptions = ProjectStatus::find()->asArray()->all();
+        return ArrayHelper::map($droptions, 'statusName', 'statusName');
+    }
+    
+    public function getConstructorList()
+    {
+       $listoptions = User::find()->where(['role_id' => 1])->all();
+       
+       
+        
+       return ArrayHelper::map($listoptions, 'id', 'firstlastName');
+        
+    }
+    
     public function getCreUser()
     {
         return $this->hasMany(User::className(), ['id' => 'creUserId']);
     }
+    
     
     public function getCreUserName()
     {
@@ -116,16 +156,28 @@ class ProjectData extends \yii\db\ActiveRecord
         $url = Url::to(['user/view', 'id'=>$this->userId]);
         $options = [];
         return Html::a($this->getUserName(), $url, $options);
+    }  
+    
+    /**
+     * get client relationship
+     */
+    public function getClientData()
+    {
+        return $this->hasOne(ClientData::className(), ['clientNumber' => 'clientId']);
     }
     
-    public function getStatusList()
+    /*
+     * get client name
+     */
+    public function getClientDataName() 
     {
-        return $statusList = ['Active' => 'Active','Pending' => 'Pending','Complete' => 'Complete'];
+        return $this->clientData ? $this->clientData->name : '- no client name -';
+        
     }
     
-    public function getClientList()
-    {
-        return $clientList = ['a', 'b', 'c'];
-        // link to client list table
-    }
+    
+    
+   
+    
+   
 }

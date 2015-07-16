@@ -32,7 +32,12 @@ use frontend\models\Profile;
  * @property integer $created_at 
  * @property integer $updated_at 
  * @property string $password write-only password
- *  */
+ * @property string $firstName 
+ * @property string $lastName 
+ * @property datetime $birthdate 
+ * @property string $projectStatus 
+ * @property int $genderId  
+ */
 class User extends ActiveRecord implements IdentityInterface {
 
     const STATUS_ACTIVE = 1;
@@ -88,7 +93,7 @@ class User extends ActiveRecord implements IdentityInterface {
 
     public function attributeLabels() {
         return [
-        'roleName' => Yii::t('app', 'Role'),
+        'roleName' => Yii::t('app', 'Role Name'),
         'statusName' => Yii::t('app', 'Status'),
         'prfileId' => Yii::t('app', 'Profile'),
         'profileLink' => Yii::t('app', 'Profile'),

@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\jui\DatePicker;
+use kartik\checkbox\CheckboxX;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\models\ProjectData */
@@ -28,11 +29,19 @@ use yii\jui\DatePicker;
 
     <?= $form->field($model, 'clientId')->dropDownList($model->getClientList(), ['prompt' => 'Choose client']) ?>  
     
-    <?= Html::a('Add client', ['user/index'],['class' => 'btn btn-default']) ?>
+    <?= Html::a('Add client', ['client/create'],['class' => 'btn btn-default']) ?>
     
     <br /><br />
     
-    <?= $form->field($model, 'projectStatus')->dropDownList($model->getStatusList(), ['prompt' => 'Choose project status'])?>
+    <?= $form->field($model, 'projectStatus')->dropDownList($model->getStatusList(), ['prompt' => 'Choose project status'])?>   
+        
+            
+    <?= $form->field($model, 'constructorId', ['template' => "{label}<span class='checkbox'>{input}</span>"])->checkboxList($model->getConstructorList(), $options = [        
+        'separator' => '<br />'
+        ]
+   );?>
+   
+    
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

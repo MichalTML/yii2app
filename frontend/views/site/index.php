@@ -13,8 +13,7 @@ $this->title = 'TMA Project Manager';
   <div class="jumbotron">
       
       
-      
-      <?php if(Yii::$app->user->isGuest) {
+      <?php
       echo Html::a('Getting started with TMA PM', ['site/login'],
       ['class' => 'btn btn-lg btn-primary']);
       echo '<h1 style="text-shadow: 2px 2px silver;">TMA Project Manager</h1>';
@@ -23,7 +22,8 @@ $this->title = 'TMA Project Manager';
       echo '<p class="lead">Basic How To</p>';
       echo '<p class="lead">Some generall ifno</p>';
       echo '<p class="lead">Some generall message</p>';
-      echo '<br />';}
+      echo '<br />';      
+      
       ?>
      
     

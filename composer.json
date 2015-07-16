@@ -19,7 +19,8 @@
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
 		"kartik-v/yii2-social": "dev-master",
-		"fortawesome/font-awesome": "4.2.0"
+		"fortawesome/font-awesome": "4.2.0",
+		"kartik-v/yii2-checkbox-x": "*"
 		
     },
     "require-dev": {

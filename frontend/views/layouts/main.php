@@ -34,13 +34,13 @@ FontAwesomeAsset::register($this);
             
         NavBar::begin([
                 'brandLabel' => '<img syle="margin: 0; padding: 0px;" src="http://workspace.telemobile.pl/test/KAROL/RFswitchATT_Michal/Testing/images/logo.png"> Project Manager <i class="fa fa-plug"></i>',
-                'brandUrl' => Yii::$app->homeUrl,
+                'brandUrl' => ['/site/main'],
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],                
             ]);            
             $menuItems = [
-                ['label' => 'Home', 'url' => ['/site/index']],
+                ['label' => 'Home', 'url' => ['/site/main']],
                 ['label' => 'Help', 'url' => ['/site/contact']],
             ];
             if (Yii::$app->user->isGuest) {

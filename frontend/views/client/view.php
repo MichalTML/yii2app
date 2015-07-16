@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\ProjectData */
+/* @var $model frontend\models\ClientData */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Project Datas', 'url' => ['index']];
+$this->title = $model->name;
+$this->params['breadcrumbs'][] = ['label' => 'Client Datas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="project-data-view">
+<div class="client-data-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,17 +29,22 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'projectId',
-            'projectName',
-            'clientId',
+            'clientNumber',
+            'name',
+            'abr',
+            'adress',
+            'phone',
+            'fax',
+            'email:email',
+            'nip',
+            'krs',
+            'regon',
+            'www',
             'creDate',
-            'deadline',
-            'endDate',
+            'updDate',
             'creUserId',
             'updUserId',
-            'updDate',
-            'projectStatus',
-            'constructorId',
+            'contactId',
         ],
     ]) ?>
 

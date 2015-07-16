@@ -69,24 +69,16 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+        if(Yii::$app->user->isGuest) {
         return $this->render('index');
+        }
+        return $this->render('main');
     }
     
     public function actionMain()
-    {
-        if(!Yii::$app->user->isGuest && PermissionHelpers::requireMinimumRole('Managment')) {
-        return $this->render('Mmain');
-        }
-        
-        if(!Yii::$app->user->isGuest && PermissionHelpers::requireMinimumRole('Constructor')) {
-            return $this->render('Cmain');
-        }
-        
-        if(!Yii::$app->user->isGuest && PermissionHelpers::requireMinimumRole('Automatics')) {
-            return $this->render('Amain');
-        }
-        
-        
+    {        
+        return $this->render('main');
+     
     }
 
     public function actionLogin()
