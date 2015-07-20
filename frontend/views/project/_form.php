@@ -11,42 +11,46 @@ use kartik\checkbox\CheckboxX;
 ?>
 
 <div class="project-data-form">
-    
+
     <?php $form = ActiveForm::begin(); ?>
-    
-   
 
-    <?= $form->field($model, 'projectId')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'projectName')->textInput(['maxlength' => true]) ?>
-    
-    <?= $form->field($model, 'deadline')->widget(DatePicker::className(),[
+
+    <?= $form->field( $model, 'projectId' )->textInput( ['maxlength' => true ] ) ?>
+
+    <?= $form->field( $model, 'projectName' )->textInput( ['maxlength' => true ] ) ?>
+
+    <?=
+    $form->field( $model, 'deadline' )->widget( DatePicker::className(), [
         'dateFormat' => 'yyyy-MM-dd',
         'clientOptions' => [
             'yearRange' => '-115:+0',
-            'changeYear' => true]
-    ]) ?>
+            'changeYear' => true ]
+    ] )
+    ?>
 
-    <?= $form->field($model, 'clientId')->dropDownList($model->getClientList(), ['prompt' => 'Choose client']) ?>  
-    
-    <?= Html::a('Add client', ['client/create'],['class' => 'btn btn-default']) ?>
-    
+    <?= $form->field( $model, 'clientId' )->dropDownList( $model->getClientList(), ['prompt' => 'Choose client' ] ) ?>  
+
+<?= Html::a( 'Add client', ['client/create' ], ['class' => 'btn btn-default' ] ) ?>
+
     <br /><br />
-    
-    <?= $form->field($model, 'projectStatus')->dropDownList($model->getStatusList(), ['prompt' => 'Choose project status'])?>   
-        
-            
-    <?= $form->field($model, 'constructorId', ['template' => "{label}<span class='checkbox'>{input}</span>"])->checkboxList($model->getConstructorList(), $options = [        
+
+    <?= $form->field( $model, 'projectStatus' )->dropDownList( $model->getStatusList(), ['prompt' => 'Choose project status' ] ) ?>   
+
+
+    <?=
+    $form->field( $model, 'constructorId', ['template' => "{label}<span class='checkbox'>{input}</span>" ] )->checkboxList( $model->getConstructorList(), $options = [
         'separator' => '<br />'
-        ]
-   );?>
-   
-    
+            ]
+    );
+    ?>
+
+
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+<?= Html::submitButton( $model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary' ] ) ?>
     </div>
 
-    <?php ActiveForm::end(); ?>
+<?php ActiveForm::end(); ?>
 
 </div>

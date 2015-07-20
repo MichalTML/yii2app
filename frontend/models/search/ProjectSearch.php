@@ -59,6 +59,7 @@ class ProjectSearch extends ProjectData
             'id' => $this->id,
             'clientId' => $this->clientId,
             'creDate' => $this->creDate,
+            'clientData.name' => $this->clientId,
             'deadline' => $this->deadline,
             'endDate' => $this->endDate,
             'creUserId' => $this->creUserId,

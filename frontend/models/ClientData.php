@@ -70,7 +70,7 @@ class ClientData extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'clientNumber' => 'Client Number',
+            'name' => 'Client Number',
             'name' => 'Name',
             'abr' => 'Abbrevation',
             'adress' => 'Adress',

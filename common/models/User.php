@@ -16,6 +16,7 @@ use backend\models\Role;
 use backend\models\Status;
 use backend\models\UserType;
 use frontend\models\Profile;
+use frontend\models\ProjectData;
 
 /**
  * User model
@@ -335,5 +336,16 @@ class User extends ActiveRecord implements IdentityInterface {
         $options = [ ];
         return Html::a( $this->username, $url, $options );
     }
+    
+     /**
+     * get Project relation
+     */
+    public function getProjectData() {
+        return $this->hasMany(ProjectData::className(), ['creUserId' => 'id' ] );
+    }
+    
+    
+    
+
 
 }

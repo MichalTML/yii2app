@@ -66,11 +66,11 @@ class ProjectData extends \yii\db\ActiveRecord
             'id' => 'ID',
             'projectId' => 'Project ID',
             'projectName' => 'Project Name',
-            'name' => 'Client Name',
+            'clientData.name' => 'Client Name',
             'creDate' => 'Creation Date',
             'deadline' => 'Deadline',
             'endDate' => 'End Date',
-            'creUserId' => 'Created by',
+            'user.firstlastName' => 'Created by',
             'updUserId' => 'Updated by',
             'updDate' => 'Update date',
             'projectStatus' => 'Project Status',
@@ -136,7 +136,7 @@ class ProjectData extends \yii\db\ActiveRecord
        
        
         
-       return ArrayHelper::map($listoptions, 'id', 'firstlastName');
+       return ArrayHelper::map($listoptions, 'firstlastName', 'firstlastName');
         
     }
     
@@ -172,8 +172,24 @@ class ProjectData extends \yii\db\ActiveRecord
     public function getClientDataName() 
     {
         return $this->clientData ? $this->clientData->name : '- no client name -';
+    }
+    
+    /**
+     * get user relationshi
+     */
+    
+    public function getUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'creUserId']);
+    } 
+  
+     
+    public function getUserfirstlastName()
+    {
+        return $this->user ? $this->user->firstlastName : '- no user name -';
         
     }
+    
     
     
     

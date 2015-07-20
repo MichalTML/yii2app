@@ -5,10 +5,12 @@ namespace frontend\controllers;
 use Yii;
 use frontend\models\ProjectData;
 use frontend\models\search\ProjectSearch;
+use common\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use common\models\User;
+use yii\helpers\ArrayHelper;
+
 
 /**
  * ProjectController implements the CRUD actions for ProjectData model.
@@ -33,7 +35,8 @@ class ProjectController extends Controller {
     public function actionIndex() {
         $searchModel = new ProjectSearch();
         $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
-
+        
+        
         return $this->render( 'index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
@@ -46,8 +49,10 @@ class ProjectController extends Controller {
      * @return mixed
      */
     public function actionView( $id ) {
+        
         return $this->render( 'view', [
                     'model' => $this->findModel( $id ),
+            
         ] );
     }
 
@@ -57,19 +62,31 @@ class ProjectController extends Controller {
      * @return mixed
      */
     public function actionCreate() {
-        $model = new ProjectData();
+        
+        $model = new ProjectData();         
 
        if ( $model->load( Yii::$app->request->post() ) ) {
             
             $constructorsList = Yii::$app->request->post();
-            //$constructorsList = implode("|", $constructorsList);
-            //var_dump($constructorsList['ProjectData']['constructorId']);
-           // die();
+            
             $model->constructorId = '';
             foreach($constructorsList['ProjectData']['constructorId'] as $value)
-            {
+            {               
+//                var_dump($model->projectId);
+//                var_dump($constructorsList['ProjectData']['constructorId']);
+//                die();
+                $user = User::find()->where(['firstlastName' => $value])->one();
+                
+                
+                $user->projectStatus.= '|' . $model->projectId;
+                
+                $user->save();
+                
+                
+                
                 $model->constructorId.= $value.' | ';             
             }
+            $model->constructorId = trim($model->constructorId, ' | ');
 
             if ( $model->save() ) {
                 return $this->redirect( ['view', 'id' => $model->id ] );
@@ -78,6 +95,7 @@ class ProjectController extends Controller {
 
             return $this->render( 'update', [
                         'model' => $model,
+                        
             ] );
         }
     }
@@ -94,14 +112,25 @@ class ProjectController extends Controller {
         if ( $model->load( Yii::$app->request->post() ) ) {
             
             $constructorsList = Yii::$app->request->post();
-            //$constructorsList = implode("|", $constructorsList);
-            //var_dump($constructorsList['ProjectData']['constructorId']);
-           // die();
+            
             $model->constructorId = '';
             foreach($constructorsList['ProjectData']['constructorId'] as $value)
-            {
+            {               
+//                var_dump($model->projectId);
+//                var_dump($constructorsList['ProjectData']['constructorId']);
+//                die();
+                $user = User::find()->where(['firstlastName' => $value])->one();
+                
+                
+                $user->projectStatus.= '|' . $model->projectId;
+                
+                $user->save();
+                
+                
+                
                 $model->constructorId.= $value.' | ';             
             }
+            $model->constructorId = trim($model->constructorId, ' | ');
 
             if ( $model->save() ) {
                 return $this->redirect( ['view', 'id' => $model->id ] );
@@ -110,6 +139,7 @@ class ProjectController extends Controller {
 
             return $this->render( 'update', [
                         'model' => $model,
+                        
             ] );
         }
     }
