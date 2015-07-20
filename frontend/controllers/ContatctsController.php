@@ -3,16 +3,16 @@
 namespace frontend\controllers;
 
 use Yii;
-use frontend\models\ClientData;
-use frontend\models\search\ClientSearch;
+use frontend\models\Contacts;
+use frontend\models\search\ContactsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ClientController implements the CRUD actions for ClientData model.
+ * ContatctsController implements the CRUD actions for Contacts model.
  */
-class ClientController extends Controller
+class ContatctsController extends Controller
 {
     public function behaviors()
     {
@@ -27,12 +27,12 @@ class ClientController extends Controller
     }
 
     /**
-     * Lists all ClientData models.
+     * Lists all Contacts models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ClientSearch();
+        $searchModel = new ContactsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -42,7 +42,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Displays a single ClientData model.
+     * Displays a single Contacts model.
      * @param integer $id
      * @return mixed
      */
@@ -54,27 +54,25 @@ class ClientController extends Controller
     }
 
     /**
-     * Creates a new ClientData model.
+     * Creates a new Contacts model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new ClientData();
+        $model = new Contacts();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //return $this->redirect(['view', 'id' => $model->id]);
-            return $this->goBack();
+            return $this->redirect(['view', 'id' => $model->clientId]);
         } else {
-            
             return $this->render('create', [
-              'model' => $model,
-           ]);
+                'model' => $model,
+            ]);
         }
     }
 
     /**
-     * Updates an existing ClientData model.
+     * Updates an existing Contacts model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -84,7 +82,7 @@ class ClientController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->clientId]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -93,7 +91,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Deletes an existing ClientData model.
+     * Deletes an existing Contacts model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -106,31 +104,18 @@ class ClientController extends Controller
     }
 
     /**
-     * Finds the ClientData model based on its primary key value.
+     * Finds the Contacts model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return ClientData the loaded model
+     * @return Contacts the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = ClientData::findOne($id)) !== null) {
+        if (($model = Contacts::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
-    
-    public function actionAdd()
-    {
-        $model = new ClientData();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['project/create']);            
-        } else {            
-            return $this->render('create', [
-              'model' => $model,
-           ]);
         }
     }
 }

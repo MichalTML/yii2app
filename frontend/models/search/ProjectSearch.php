@@ -18,7 +18,7 @@ class ProjectSearch extends ProjectData
     public function rules()
     {
         return [
-            [['id', 'clientId', 'creUserId', 'updUserId'], 'integer'],
+            [['id', 'clientId', 'creUserId'], 'integer'],
             [['projectId', 'projectName', 'creDate', 'deadline', 'endDate', 'updDate'], 'safe'],
         ];
     }
@@ -63,7 +63,7 @@ class ProjectSearch extends ProjectData
             'deadline' => $this->deadline,
             'endDate' => $this->endDate,
             'creUserId' => $this->creUserId,
-            'updUserId' => $this->updUserId,
+            'updUser' => $this->updUser,
             'updDate' => $this->updDate,
         ]);
 

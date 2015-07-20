@@ -11,7 +11,6 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 
-
 /**
  * ProjectController implements the CRUD actions for ProjectData model.
  */
@@ -35,12 +34,12 @@ class ProjectController extends Controller {
     public function actionIndex() {
         $searchModel = new ProjectSearch();
         $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
-        
-        
+
+
         return $this->render( 'index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
-        ] );
+                ] );
     }
 
     /**
@@ -49,11 +48,10 @@ class ProjectController extends Controller {
      * @return mixed
      */
     public function actionView( $id ) {
-        
+
         return $this->render( 'view', [
                     'model' => $this->findModel( $id ),
-            
-        ] );
+                ] );
     }
 
     /**
@@ -62,41 +60,27 @@ class ProjectController extends Controller {
      * @return mixed
      */
     public function actionCreate() {
+        $model = new ProjectData();
         
-        $model = new ProjectData();         
-
-       if ( $model->load( Yii::$app->request->post() ) ) {
-            
+        
+        if ( $model->load( Yii::$app->request->post() ) ) {
             $constructorsList = Yii::$app->request->post();
-            
             $model->constructorId = '';
-            foreach($constructorsList['ProjectData']['constructorId'] as $value)
-            {               
-//                var_dump($model->projectId);
-//                var_dump($constructorsList['ProjectData']['constructorId']);
-//                die();
-                $user = User::find()->where(['firstlastName' => $value])->one();
-                
-                
-                $user->projectStatus.= '|' . $model->projectId;
-                
-                $user->save();
-                
-                
-                
-                $model->constructorId.= $value.' | ';             
-            }
-            $model->constructorId = trim($model->constructorId, ' | ');
+            foreach ( $constructorsList[ 'ProjectData' ][ 'constructorId' ] as $value ) {
 
+                $this->updateUserProjectStatus($value, $model->projectId);
+                $model->constructorId.= $value . ' | ';
+            }
+            $model->constructorId = trim( $model->constructorId, ' | ' );
             if ( $model->save() ) {
+                return $this->redirect( ['index' ] );
+            } else {
                 return $this->redirect( ['view', 'id' => $model->id ] );
             }
         } else {
-
-            return $this->render( 'update', [
+            return $this->render( 'create', [
                         'model' => $model,
-                        
-            ] );
+                    ] );
         }
     }
 
@@ -110,37 +94,26 @@ class ProjectController extends Controller {
         $model = $this->findModel( $id );
 
         if ( $model->load( Yii::$app->request->post() ) ) {
-            
+
             $constructorsList = Yii::$app->request->post();
-            
+
             $model->constructorId = '';
-            foreach($constructorsList['ProjectData']['constructorId'] as $value)
-            {               
-//                var_dump($model->projectId);
-//                var_dump($constructorsList['ProjectData']['constructorId']);
-//                die();
-                $user = User::find()->where(['firstlastName' => $value])->one();
-                
-                
-                $user->projectStatus.= '|' . $model->projectId;
-                
-                $user->save();
-                
-                
-                
-                $model->constructorId.= $value.' | ';             
+            foreach ( $constructorsList[ 'ProjectData' ][ 'constructorId' ] as $value ) { 
+                $this->updateUserProjectStatus($value, $model->projectId);
+                $model->constructorId.= $value . ' | ';
             }
-            $model->constructorId = trim($model->constructorId, ' | ');
+            $model->constructorId = trim( $model->constructorId, ' | ' );
 
             if ( $model->save() ) {
+                return $this->redirect( ['index'] );
+            } else {
                 return $this->redirect( ['view', 'id' => $model->id ] );
             }
         } else {
 
             return $this->render( 'update', [
                         'model' => $model,
-                        
-            ] );
+                    ] );
         }
     }
 
@@ -151,8 +124,9 @@ class ProjectController extends Controller {
      * @return mixed
      */
     public function actionDelete( $id ) {
-        $this->findModel( $id )->delete();
-
+        $model = $this->findModel( $id );
+        $this->findModel( $id )->delete();        
+        $this->deleteUserProjectStatus($model->projectId);
         return $this->redirect( ['index' ] );
     }
 
@@ -170,5 +144,47 @@ class ProjectController extends Controller {
             throw new NotFoundHttpException( 'The requested page does not exist.' );
         }
     }
-
+    
+    
+    /**
+     *Update User function with ProjectStatus
+     *@param string $firstlastName string grabbed from post, name of construsctor
+     * check if Project Status already exists if N then add it
+     */
+    protected function updateUserProjectStatus($userName, $projectId){
+        
+        
+        $user = User::find()->where( ['firstlastName' => $userName ] )->one();
+        $projectList = explode('|', $user->projectStatus);
+        
+        if(!in_array( $projectId, $projectList ) ){  
+        $user->projectStatus.= '|' . $projectId;
+        $user->projectStatus = trim($user->projectStatus, '|');      
+       
+        $user->save();        
+        } 
+    }
+    
+    protected function deleteUserProjectStatus($projectId){        
+      
+        $users = User::find()->where( ['role_id' => 1])->all();
+        
+        foreach( $users as $user){
+            $projectList = explode('|', $user->projectStatus);
+             
+            if ( array_search($projectId, $projectList ) !== false){
+            $idToDelte = array_search($projectId, $projectList ); 
+            unset($projectList[$idToDelte]);
+//            var_dump($projectList);
+//            die();
+            
+            $updatedProjectList = implode('|',$projectList);
+           
+            $updatedProjectList = trim($updatedProjectList, '|');
+            $user->projectStatus = $updatedProjectList;
+            $user->save();
+            }
+    }
+  
+    }
 }

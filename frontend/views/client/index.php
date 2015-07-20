@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel frontend\models\search\ClientSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Client Datas';
+$this->title = 'Clients list';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="client-data-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Client Data', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create New Client', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -25,21 +25,24 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'clientNumber',
             'name',
             'abr',
-            'adress',
-            // 'phone',
-            // 'fax',
-            // 'email:email',
-            // 'nip',
-            // 'krs',
-            // 'regon',
-            // 'www',
+            //'adress',
+            //'postal',
+            //'city',
+            'phone',
+            //'fax',
+            'email:email',
+            //'nip',
+            //'krs',
+            //'regon',
+            'www',
+            'description',
             // 'creDate',
             // 'updDate',
-            // 'creUserId',
+            'creUserId',
             // 'updUserId',
             // 'contactId',
 

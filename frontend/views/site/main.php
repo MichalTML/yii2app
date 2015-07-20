@@ -45,7 +45,7 @@ echo Html::a( 'Project manager', ['project/index' ], ['class' => 'btn btn-defaul
 
 
                         <div class="mainbox_info">
-                                *go here if you want to create/update/view/delete project.
+                                * Project managing cetner. You can do here all things that are related to Projects.
                         </div>              
 
                     </div>
@@ -58,14 +58,14 @@ echo Html::a( 'Project manager', ['project/index' ], ['class' => 'btn btn-defaul
 
 
 <?php
-echo Html::a( 'Create New Project', ['user/index' ], ['class' => 'btn btn-default' ] );
+echo Html::a( 'Client manager', ['client/index' ], ['class' => 'btn btn-default' ] );
 ?>
 
 
 
 
                         <div class="mainbox_info">
-                                *go here if you want to create new project.
+                                * This is the place to review, and manage whole Client list.
                         </div>            
 
                     </div>
@@ -78,7 +78,7 @@ echo Html::a( 'Create New Project', ['user/index' ], ['class' => 'btn btn-defaul
 
 
 <?php
-echo Html::a( 'Create New Project', ['user/index' ], ['class' => 'btn btn-default' ] );
+echo Html::a( 'Placeholder', ['' ], ['class' => 'btn btn-default' ] );
 ?>
 
 
@@ -100,7 +100,7 @@ echo Html::a( 'Create New Project', ['user/index' ], ['class' => 'btn btn-defaul
 
 
 <?php
-echo Html::a( 'Create New Project', ['user/index' ], ['class' => 'btn btn-default' ] );
+echo Html::a( 'Placeholder', ['' ], ['class' => 'btn btn-default' ] );
 ?>
 
 
@@ -120,7 +120,7 @@ echo Html::a( 'Create New Project', ['user/index' ], ['class' => 'btn btn-defaul
 
 
 <?php
-echo Html::a( 'Create New Project', ['user/index' ], ['class' => 'btn btn-default' ] );
+echo Html::a( 'Placeholder', ['' ], ['class' => 'btn btn-default' ] );
 ?>
 
 
@@ -140,7 +140,7 @@ echo Html::a( 'Create New Project', ['user/index' ], ['class' => 'btn btn-defaul
 
 
 <?php
-echo Html::a( 'Create New Project', ['user/index' ], ['class' => 'btn btn-default' ] );
+echo Html::a( 'Placeholder', [''], ['class' => 'btn btn-default' ] );
 ?>
 
 

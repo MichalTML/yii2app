@@ -6,8 +6,8 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model frontend\models\ProjectData */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Project Datas', 'url' => ['index']];
+$this->title = $model->projectId.'-'.$model->projectName;
+$this->params['breadcrumbs'][] = ['label' => 'Project list', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="project-data-view">
@@ -28,18 +28,17 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'projectId',
             'projectName',
-            'clientId',
-            'creDate',
             'deadline',
-            'endDate',
-            'creUserId',
-            'updUserId',
-            'updDate',
-            'projectStatus',
             'constructorId',
+            'projectStatus',
+            'clientData.name',
+            'user.firstlastName',
+            'creDate',  
+            'updUser',
+            'updDate',                 
+            'endDate',            
         ],
     ]) ?>
 

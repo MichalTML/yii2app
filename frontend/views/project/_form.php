@@ -3,7 +3,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\jui\DatePicker;
-use kartik\checkbox\CheckboxX;
+
+//use kartik\checkbox\CheckboxX;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\models\ProjectData */
@@ -14,7 +15,11 @@ use kartik\checkbox\CheckboxX;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field( $model, 'clientId', $options = ['options' => ['style' => 'display: inline;'],] )->dropDownList( $model->getClientList(), ['prompt' => 'Choose client' ] ) ?>  
 
+    <?= Html::a( 'Add client', ['client/add' ],['class' => 'btn btn-default', 'style' => 'margin-bottom: 30px;']); ?>
+
+    
 
     <?= $form->field( $model, 'projectId' )->textInput( ['maxlength' => true ] ) ?>
 
@@ -27,13 +32,7 @@ use kartik\checkbox\CheckboxX;
             'yearRange' => '-115:+0',
             'changeYear' => true ]
     ] )
-    ?>
-
-    <?= $form->field( $model, 'clientId' )->dropDownList( $model->getClientList(), ['prompt' => 'Choose client' ] ) ?>  
-
-<?= Html::a( 'Add client', ['client/create' ], ['class' => 'btn btn-default' ] ) ?>
-
-    <br /><br />
+    ?>  
 
     <?= $form->field( $model, 'projectStatus' )->dropDownList( $model->getStatusList(), ['prompt' => 'Choose project status' ] ) ?>   
 
@@ -48,9 +47,9 @@ use kartik\checkbox\CheckboxX;
 
 
     <div class="form-group">
-<?= Html::submitButton( $model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary' ] ) ?>
+        <?= Html::submitButton( $model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary' ] ) ?>
     </div>
 
-<?php ActiveForm::end(); ?>
+    <?php ActiveForm::end(); ?>
 
 </div>

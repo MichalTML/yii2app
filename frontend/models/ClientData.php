@@ -13,7 +13,6 @@ use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\AttributeBehavior;
 
-
 /**
  * This is the model class for table "client_data".
  *
@@ -22,6 +21,8 @@ use yii\behaviors\AttributeBehavior;
  * @property string $name
  * @property string $abr
  * @property string $adress
+ * @property string $postal 
+ * @property string $city 
  * @property integer $phone
  * @property integer $fax
  * @property string $email
@@ -29,58 +30,55 @@ use yii\behaviors\AttributeBehavior;
  * @property integer $krs
  * @property integer $regon
  * @property string $www
- * @property string $creDate
- * @property string $updDate
+ * @property string $creTime
+ * @property string $updTime
  * @property integer $creUserId
  * @property integer $updUserId
  * @property integer $contactId
  */
-class ClientData extends \yii\db\ActiveRecord
-{
+class ClientData extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'client_data';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['clientNumber', 'name', 'abr', 'adress', 'phone', 'fax', 'email', 'nip', 'krs', 'regon', 'www', 'updDate', 'creUserId', 'updUserId', 'contactId'], 'required'],
-            [['clientNumber', 'phone', 'fax', 'krs', 'regon', 'creUserId', 'updUserId', 'contactId'], 'integer'],
-            [['creDate', 'updDate'], 'safe'],
-            [['name'], 'string', 'max' => 45],
-            [['abr'], 'string', 'max' => 10],
-            [['adress', 'www'], 'string', 'max' => 255],
-            [['email'], 'string', 'max' => 60],
-            [['nip'], 'string', 'max' => 12],
-            [['clientNumber', 'name', 'nip', 'krs'], 'unique', 'targetAttribute' => ['clientNumber', 'name', 'nip', 'krs'], 'message' => 'The combination of Client Number, Name, Nip and Krs has already been taken.']
+            [[ 'clientNumber', 'name', 'abr', 'adress', 'phone', 'fax', 'email', 'nip', 'krs', 'regon', 'www', 'contactId' ], 'required' ],
+            [[ 'clientNumber', 'phone', 'fax', 'krs', 'regon', 'creUserId', 'updUserId', 'contactId' ], 'integer' ],
+            [[ 'creDate', 'updDate' ], 'safe' ],
+            [[ 'name' ], 'string', 'max' => 45 ],
+            [[ 'abr' ], 'string', 'max' => 10 ],
+            [[ 'adress', 'www' ], 'string', 'max' => 255 ],
+            [[ 'email' ], 'string', 'max' => 60 ],
+            [[ 'nip' ], 'string', 'max' => 12 ],
+            [[ 'clientNumber', 'name', 'nip', 'krs' ], 'unique', 'targetAttribute' => ['clientNumber', 'name', 'nip', 'krs' ], 'message' => 'The combination of Client Number, Name, Nip and Krs has already been taken.' ]
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
-            'name' => 'Client Number',
+            'clientNumber' => 'Client Number',
             'name' => 'Name',
             'abr' => 'Abbrevation',
             'adress' => 'Adress',
-            'phone' => 'Phone number',
-            'fax' => 'Fax number',
+            'phone' => 'Phone',
+            'fax' => 'Fax',
             'email' => 'Email',
             'nip' => 'Nip',
             'krs' => 'Krs',
             'regon' => 'Regon',
-            'www' => 'www site',
+            'www' => 'Site',
             'creDate' => 'Creation Date',
             'updDate' => 'Update Date',
             'creUserId' => 'Created by',
@@ -88,15 +86,36 @@ class ClientData extends \yii\db\ActiveRecord
             'contactId' => 'Contacts',
         ];
     }
-    
+
+    public function behaviors() {
+
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['creTime', 'updTime' ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updTime' ],
+                ],
+                'value' => new Expression( 'NOW()' ),
+            ],
+            'userstamp' => [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['creUser', 'updUser' ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updUser' ],
+                ],
+                'value' => function ($event) {
+            return Yii::$app->user->identity->firstlastName;
+        }
+            ],
+        ];
+    }
+
     /**
      * get client relationship
      */
-    
-    public function getProjects()
-    {
-        return $this->hasMany(ProjectData::className(), ['clientId' => 'clientNumber']);
-    }  
-    
-    
+    public function getProjects() {
+        return $this->hasMany( ProjectData::className(), ['clientId' => 'clientNumber' ] );
+    }
+
 }

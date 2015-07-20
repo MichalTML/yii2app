@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel frontend\models\search\ProjectSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Project index';
+$this->title = 'Projects list';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="project-data-index">
@@ -20,10 +20,15 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
     <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        'dataProvider' => $dataProvider,        
+        'filterModel' => $searchModel,       
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            ['class' => 'yii\grid\SerialColumn',
+             'contentOptions' => ['style' => 'color: black;'],
+                ],
+            
+
+            
 
             //'id',
             'projectId',
@@ -38,7 +43,17 @@ $this->params['breadcrumbs'][] = $this->title;
             'creDate',
             'updDate',         
             
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+             'header' => 'Action',
+             'headerOptions' => ['style' => 'min-width: 100px; text-align: center;'],
+             'template' => '{update} | {delete} | {view}',
+             
+                
+                
+                
+                
+                ],
+            
         ],
     ]); ?>
 
