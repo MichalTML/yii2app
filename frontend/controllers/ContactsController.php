@@ -10,9 +10,9 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ContatctsController implements the CRUD actions for Contacts model.
+ * ContactsController implements the CRUD actions for Contacts model.
  */
-class ContatctsController extends Controller
+class ContactsController extends Controller
 {
     public function behaviors()
     {

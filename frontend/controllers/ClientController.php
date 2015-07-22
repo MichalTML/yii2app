@@ -21,6 +21,7 @@ class ClientController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                    'addContact' => ['#'],
                 ],
             ],
         ];

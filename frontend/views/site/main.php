@@ -58,7 +58,7 @@ echo Html::a( 'Project manager', ['project/index' ], ['class' => 'btn btn-defaul
 
 
 <?php
-echo Html::a( 'Client manager', ['client/index' ], ['class' => 'btn btn-default' ] );
+echo Html::a( 'Client manager', ['client/index'], ['class' => 'btn btn-default' ] );
 ?>
 
 
@@ -78,14 +78,14 @@ echo Html::a( 'Client manager', ['client/index' ], ['class' => 'btn btn-default'
 
 
 <?php
-echo Html::a( 'Placeholder', ['' ], ['class' => 'btn btn-default' ] );
+echo Html::a( 'Contacts Menager', ['contacts/index'], ['class' => 'btn btn-default' ] );
 ?>
 
 
 
 
                        <div class="mainbox_info">
-                                *go here if you want to create new project.
+                                *go here if you want add new client contacts.
                         </div>            
 
                     </div>

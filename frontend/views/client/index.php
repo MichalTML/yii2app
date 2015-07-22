@@ -45,9 +45,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'creUserId',
             // 'updUserId',
             // 'contactId',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
+           
+            ['class' => 'yii\grid\ActionColumn',],
+            
+            ],
     ]); ?>
 
 </div>
