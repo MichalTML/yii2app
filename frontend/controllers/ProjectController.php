@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use frontend\models\ProjectData;
 use frontend\models\search\ProjectSearch;
+use frontend\models\ProjectPermissions;
 use common\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -56,30 +57,44 @@ class ProjectController extends Controller {
 
     /**
      * Creates a new ProjectData model.
+     * Instert into Project_Permission id and userId and setting default permissions
+     * to view 1 delete 0 update 0 edit 0
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate() {
-        $model = new ProjectData();
-        
-        
-        if ( $model->load( Yii::$app->request->post() ) ) {
-            $constructorsList = Yii::$app->request->post();
-            $model->constructorId = '';
-            foreach ( $constructorsList[ 'ProjectData' ][ 'constructorId' ] as $value ) {
 
-                $this->updateUserProjectStatus($value, $model->projectId);
-                $model->constructorId.= $value . ' | ';
+        $model = new ProjectData();
+        $projectPermissions = new ProjectPermissions();
+
+        if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
+
+            $projectId = $model->id;
+
+            if ( $projectPermissions->load( Yii::$app->request->post() ) ) {
+
+                $userIds = $projectPermissions->userId;
+
+                foreach ( $userIds as $userId ) {
+
+                    $projectPermissions->userId = intval( $userId );
+                    $projectPermissions->projectId = $projectId;
+
+
+                    if ( $projectPermissions->checkPermissionsExists( $projectId, $userId ) ) {
+
+                        $projectPermissions->isNewRecord = true;
+                        $projectPermissions->id = null;
+                        $projectPermissions->save();
+                    }
+                }
             }
-            $model->constructorId = trim( $model->constructorId, ' | ' );
-            if ( $model->save() ) {
-                return $this->redirect( ['index' ] );
-            } else {
-                return $this->redirect( ['view', 'id' => $model->id ] );
-            }
+            $model->setProjectName( $model->id, $model->projectName );
+            return $this->redirect( ['index' ] );
         } else {
             return $this->render( 'create', [
                         'model' => $model,
+                        'projectPermissions' => $projectPermissions,
                     ] );
         }
     }
@@ -92,27 +107,32 @@ class ProjectController extends Controller {
      */
     public function actionUpdate( $id ) {
         $model = $this->findModel( $id );
+        $projectName = preg_replace( '/.*_/', '', $model->projectName );
+        $model->projectName = $projectName;
+        $projectPermissions = new ProjectPermissions();
 
-        if ( $model->load( Yii::$app->request->post() ) ) {
 
-            $constructorsList = Yii::$app->request->post();
+        if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
 
-            $model->constructorId = '';
-            foreach ( $constructorsList[ 'ProjectData' ][ 'constructorId' ] as $value ) { 
-                $this->updateUserProjectStatus($value, $model->projectId);
-                $model->constructorId.= $value . ' | ';
+            if ( $projectPermissions->load( Yii::$app->request->post() ) ) {
+                $projectPermissions->deleteAll( 'projectId ="' . $id . '"' );
+                $userIds = $projectPermissions->userId;
+
+                foreach ( $userIds as $user ) {
+                    $projectPermissions->userId = intval( $user );
+                    $projectPermissions->projectId = $id;
+                    $projectPermissions->isNewRecord = true;
+                    $projectPermissions->id = null;
+                    $projectPermissions->save();
+                }
             }
-            $model->constructorId = trim( $model->constructorId, ' | ' );
-
-            if ( $model->save() ) {
-                return $this->redirect( ['index'] );
-            } else {
-                return $this->redirect( ['view', 'id' => $model->id ] );
-            }
+            $model->setProjectName( $model->id, $model->projectName );    
+            return $this->redirect( ['index' ] );
         } else {
 
             return $this->render( 'update', [
                         'model' => $model,
+                        'projectPermissions' => $projectPermissions,
                     ] );
         }
     }
@@ -125,8 +145,8 @@ class ProjectController extends Controller {
      */
     public function actionDelete( $id ) {
         $model = $this->findModel( $id );
-        $this->findModel( $id )->delete();        
-        $this->deleteUserProjectStatus($model->projectId);
+        $this->findModel( $id )->delete();
+        //$this->deleteUserProjectStatus( $model->id );
         return $this->redirect( ['index' ] );
     }
 
@@ -144,47 +164,35 @@ class ProjectController extends Controller {
             throw new NotFoundHttpException( 'The requested page does not exist.' );
         }
     }
-    
-    
+
     /**
-     *Update User function with ProjectStatus
-     *@param string $firstlastName string grabbed from post, name of construsctor
+     * Update User function with ProjectStatus
+     * @param string $firstlastName string grabbed from post, name of construsctor
      * check if Project Status already exists if N then add it
      */
-    protected function updateUserProjectStatus($userName, $projectId){
-        
-        
-        $user = User::find()->where( ['firstlastName' => $userName ] )->one();
-        $projectList = explode('|', $user->projectStatus);
-        
-        if(!in_array( $projectId, $projectList ) ){  
-        $user->projectStatus.= '|' . $projectId;
-        $user->projectStatus = trim($user->projectStatus, '|');      
-       
-        $user->save();        
-        } 
-    }
-    
-    protected function deleteUserProjectStatus($projectId){        
-      
-        $users = User::find()->where( ['role_id' => 1])->all();
-        
-        foreach( $users as $user){
-            $projectList = explode('|', $user->projectStatus);
-             
-            if ( array_search($projectId, $projectList ) !== false){
-            $idToDelte = array_search($projectId, $projectList ); 
-            unset($projectList[$idToDelte]);
+    //protected function updateUserProjectStatus( $userName, $projectId ) {
+    //$user = User::find()->where( ['firstlastName' => $userName ] )->one();
+    //$projectList = explode('|', $user->projectStatus);
+    //if(!in_array( $projectId, $projectList ) ){  
+    // $user->projectStatus.= '|' . $projectId;
+    // $user->projectStatus = trim($user->projectStatus, '|');      
+    // $user->save();        
+    // } 
+    // }
+    // protected function deleteUserProjectStatus( $projectId ) {
+    //$users = User::find()->where( ['role_id' => 1 ] )->all();
+    // foreach ( $users as $user ) {
+    //  $projectList = explode( '|', $user->projectStatus );
+    //  if ( array_search( $projectId, $projectList ) !== false ) {
+    //    $idToDelte = array_search( $projectId, $projectList );
+    //     unset( $projectList[ $idToDelte ] );
 //            var_dump($projectList);
 //            die();
-            
-            $updatedProjectList = implode('|',$projectList);
-           
-            $updatedProjectList = trim($updatedProjectList, '|');
-            $user->projectStatus = $updatedProjectList;
-            $user->save();
-            }
-    }
-  
-    }
+    //$updatedProjectList = implode( '|', $projectList );
+    //$updatedProjectList = trim( $updatedProjectList, '|' );
+    // $user->projectStatus = $updatedProjectList;
+    // $user->save();
+    //  }
+    //  }
+    //}
 }

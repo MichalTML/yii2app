@@ -31,17 +31,15 @@ $this->params['breadcrumbs'][] = $this->title;
             
 
             //'id',
-            'projectId',
             'projectName',            
             'deadline',
-            'constructorId',
             'projectStatus',
             'clientData.name',
             // 'endDate',
-            'user.firstlastName',
+            'creUserId',
             //'updUserId',
-            'creDate',
-            'updDate',         
+            'creTime',
+            'updTime',         
             
             ['class' => 'yii\grid\ActionColumn',
              'header' => 'Action',

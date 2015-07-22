@@ -17,11 +17,7 @@ use yii\jui\DatePicker;
 
     <?= $form->field( $model, 'clientId', $options = ['options' => ['style' => 'display: inline;'],] )->dropDownList( $model->getClientList(), ['prompt' => 'Choose client' ] ) ?>  
 
-    <?= Html::a( 'Add client', ['client/add' ],['class' => 'btn btn-default', 'style' => 'margin-bottom: 30px;']); ?>
-
-    
-
-    <?= $form->field( $model, 'projectId' )->textInput( ['maxlength' => true ] ) ?>
+    <?= Html::a( 'Add client', ['client/add' ],['class' => 'btn btn-default', 'style' => 'margin-bottom: 30px;']); ?> 
 
     <?= $form->field( $model, 'projectName' )->textInput( ['maxlength' => true ] ) ?>
 
@@ -38,7 +34,7 @@ use yii\jui\DatePicker;
 
 
     <?=
-    $form->field( $model, 'constructorId', ['template' => "{label}<span class='checkbox'>{input}</span>" ] )->checkboxList( $model->getConstructorList(), $options = [
+ $form->field( $projectPermissions, 'userId', ['template' => "{label}<span class='checkbox'>{input}</span>" ] )->checkboxList( $model->getConstructorList(), $options = [
         'separator' => '<br />'
             ]
     );

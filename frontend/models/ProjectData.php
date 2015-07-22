@@ -5,6 +5,7 @@ namespace frontend\models;
 use Yii;
 use yii\db\ActiveRecord;
 use common\models\User;
+use frontend\models\Profile;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
@@ -17,18 +18,15 @@ use frontend\models\ClientData;
  * This is the model class for table "project_data".
  *
  * @property integer $id
- * @property string $projectId
  * @property string $projectName
  * @property integer $clientId
- * @property string $creDate
+ * @property string $creTime
  * @property string $deadline
  * @property string $endDate
  * @property integer $creUserId
- * @property integer $updUser
- * @property string $updDate
+ * @property integer $updUserId
+ * @property string $updTime
  * @property string $projectStatus
- * @property integer $constructorId
- * @property integer $contanctId
  * 
  */
 class ProjectData extends \yii\db\ActiveRecord {
@@ -45,10 +43,8 @@ class ProjectData extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [[ 'projectId', 'projectName', 'clientId', 'deadline', 'projectStatus', 'constructorId' ], 'required' ],
-            [[ 'projectId' ], 'unique' ],
+            [[ 'projectName', 'clientId', 'deadline', 'projectStatus' ], 'required' ],
             [[ 'id', 'clientId' ], 'integer' ],
-            [[ 'projectId' ], 'string', 'max' => 45 ],
             [[ 'projectName' ], 'string', 'max' => 100 ]
         ];
     }
@@ -60,17 +56,17 @@ class ProjectData extends \yii\db\ActiveRecord {
         return [
 
             'id' => 'ID',
-            'projectId' => 'Project ID',
             'projectName' => 'Project Name',
             'clientData.name' => 'Client Name',
-            'creDate' => 'Creation Date',
+            'creTime' => 'Creation Time',
             'deadline' => 'Deadline',
-            'endDate' => 'End Date',
-            'user.firstlastName' => 'Created by',
-            'updUser' => 'Updated by',
-            'updDate' => 'Update date',
+            'endTime' => 'End Time',
+            'creUserId' => 'Created by',
+            //'user.firstlastName' => 'Created by',
+            'updUserId' => 'Updated by',
+            'updTime' => 'Update Time',
             'projectStatus' => 'Project Status',
-            'constructorId' => 'Project Constructors',
+            'constructorNames' => 'Project Constructors',
         ];
     }
 
@@ -80,8 +76,8 @@ class ProjectData extends \yii\db\ActiveRecord {
             'timestamp' => [
                 'class' => TimestampBehavior::className(),
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['creDate', 'updDate' ],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updDate' ],
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['creTime', 'updTime' ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updTime' ],
                 ],
                 'value' => new Expression( 'NOW()' ),
             ],
@@ -97,16 +93,27 @@ class ProjectData extends \yii\db\ActiveRecord {
             'updatestamp' => [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['updUser' ],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updUser' ],
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['updUserId'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updUserId'],
                 ],
                 'value' => function ($event) {
-            return Yii::$app->user->identity->firstlastName;
+            return Yii::$app->user->identity->id;
         }
             ],
         ];
     }
-
+    /**
+     * set project name
+     */
+    public function setProjectName($id, $projectName) {
+        $projectName = 'P'.$id.'_'.$projectName;
+        $this->projectName = $projectName;
+        if($this->save()){
+            return true;
+        }
+        
+        return false;
+    }
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -129,12 +136,27 @@ class ProjectData extends \yii\db\ActiveRecord {
         return ArrayHelper::map( $droptions, 'statusName', 'statusName' );
     }
 
+    /**
+     * get constructor first and last name
+     * from the profile
+     *@return array array that containst 'firstname lastname'
+     */
     public function getConstructorList() {
-        $listoptions = User::find()->where( ['role_id' => 1 ] )->all();
-
-
-
-        return ArrayHelper::map( $listoptions, 'firstlastName', 'firstlastName' );
+        
+       $userIdList = User::find()->where( ['role_id' => 1])->all();
+       $constructorList = [ ];
+        
+       foreach($userIdList as $users => $user){
+       
+       $userProfile = Profile::find()->where(['user_id' => $user['id']])->one();
+       $userFirstName = $userProfile->first_name;
+       $userLastName = $userProfile->last_name;
+       $userCombine = $userFirstName.' '.$userLastName;
+       $constructorList[$user['id']] = $userCombine;
+       
+        }
+        
+        return $constructorList;     
     }
 
     public function getCreUser() {
@@ -173,8 +195,8 @@ class ProjectData extends \yii\db\ActiveRecord {
         return $this->hasOne( User::className(), ['id' => 'creUserId' ] );
     }
 
-    public function getUserfirstlastName() {
-        return $this->user ? $this->user->firstlastName : '- no user name -';
-    }
+    //public function getUserfirstlastName() {
+      //  return $this->user ? $this->user->firstlastName : '- no user name -';
+   // }
 
 }

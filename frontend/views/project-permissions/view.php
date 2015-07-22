@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\ProjectData */
+/* @var $model frontend\models\ProjectPermissions */
 
-$this->title = $model->projectName;
-$this->params['breadcrumbs'][] = ['label' => 'Project list', 'url' => ['index']];
+$this->title = $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Project Permissions', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="project-data-view">
+<div class="project-permissions-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'You are about to delete: '.$model->projectName.' ,are you sure you want to proceed?',
+                'confirm' => 'Are you sure you want to delete this item?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -28,15 +28,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'projectName',
-            'deadline',
-            'projectStatus',
-            'clientData.name',
-            'creUserId',
-            'creTime',  
-            'updUserId',
-            'updTime',                 
-            'endTime',            
+            'id',
+            'projectId',
+            'userId',
+            'create',
+            'edit',
+            'view',
+            'delete',
+            'creTime',
         ],
     ]) ?>
 

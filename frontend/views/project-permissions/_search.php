@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\search\ProjectSearch */
+/* @var $model frontend\models\search\ProjectPermissionsSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="project-data-search">
+<div class="project-permissions-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -17,21 +17,19 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'projectName') ?>
+    <?= $form->field($model, 'projectId') ?>
 
-    <?= $form->field($model, 'clientId') ?>
+    <?= $form->field($model, 'userId') ?>
 
-    <?= $form->field($model, 'creDate') ?>
+    <?= $form->field($model, 'create') ?>
 
-    <?php // echo $form->field($model, 'deadline') ?>
+    <?= $form->field($model, 'edit') ?>
 
-    <?php // echo $form->field($model, 'endDate') ?>
+    <?php // echo $form->field($model, 'view') ?>
 
-    <?php // echo $form->field($model, 'creUserId') ?>
+    <?php // echo $form->field($model, 'delete') ?>
 
-    <?php // echo $form->field($model, 'updUserId') ?>
-
-    <?php // echo $form->field($model, 'updDate') ?>
+    <?php // echo $form->field($model, 'creTime') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

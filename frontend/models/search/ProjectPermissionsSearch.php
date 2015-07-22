@@ -5,12 +5,12 @@ namespace frontend\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use frontend\models\ProjectData;
+use frontend\models\ProjectPermissions;
 
 /**
- * ProjectSearch represents the model behind the search form about `frontend\models\ProjectData`.
+ * ProjectPermissionsSearch represents the model behind the search form about `frontend\models\ProjectPermissions`.
  */
-class ProjectSearch extends ProjectData
+class ProjectPermissionsSearch extends ProjectPermissions
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class ProjectSearch extends ProjectData
     public function rules()
     {
         return [
-            [['id', 'clientId', 'creUserId', 'updUserId'], 'integer'],
-            [['projectName', 'creTime', 'deadline', 'endTime', 'updTime'], 'safe'],
+            [['id', 'userId', 'create', 'edit', 'view', 'delete'], 'integer'],
+            [['projectId', 'creTime'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class ProjectSearch extends ProjectData
      */
     public function search($params)
     {
-        $query = ProjectData::find();
+        $query = ProjectPermissions::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -57,18 +57,15 @@ class ProjectSearch extends ProjectData
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'clientId' => $this->clientId,
+            'userId' => $this->userId,
+            'create' => $this->create,
+            'edit' => $this->edit,
+            'view' => $this->view,
+            'delete' => $this->delete,
             'creTime' => $this->creTime,
-            'clientData.name' => $this->clientId,
-            'deadline' => $this->deadline,
-            'endTime' => $this->endTime,
-            'creUserId' => $this->creUserId,
-            'updUserId' => $this->updUserId,
-            'updTime' => $this->updTime,
         ]);
 
-        $query->andFilterWhere(['like', 'id', $this->id])
-            ->andFilterWhere(['like', 'projectName', $this->projectName]);
+        $query->andFilterWhere(['like', 'projectId', $this->projectId]);
 
         return $dataProvider;
     }

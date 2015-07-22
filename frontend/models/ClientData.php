@@ -32,9 +32,9 @@ use yii\behaviors\AttributeBehavior;
  * @property string $www
  * @property string $creTime
  * @property string $updTime
- * @property integer $creUserId
+ * @property integer $creUser
  * @property integer $updUserId
- * @property integer $contactId
+ * @property integer $contactIdc
  */
 class ClientData extends \yii\db\ActiveRecord {
 
@@ -51,8 +51,8 @@ class ClientData extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [[ 'clientNumber', 'name', 'abr', 'adress', 'phone', 'fax', 'email', 'nip', 'krs', 'regon', 'www', 'contactId' ], 'required' ],
-            [[ 'clientNumber', 'phone', 'fax', 'krs', 'regon', 'creUserId', 'updUserId', 'contactId' ], 'integer' ],
-            [[ 'creDate', 'updDate' ], 'safe' ],
+            [[ 'clientNumber', 'phone', 'fax', 'krs', 'regon', 'creUser', 'updUserId', 'contactId' ], 'integer' ],
+            [[ 'creTime', 'updTime' ], 'safe' ],
             [[ 'name' ], 'string', 'max' => 45 ],
             [[ 'abr' ], 'string', 'max' => 10 ],
             [[ 'adress', 'www' ], 'string', 'max' => 255 ],
@@ -79,9 +79,9 @@ class ClientData extends \yii\db\ActiveRecord {
             'krs' => 'Krs',
             'regon' => 'Regon',
             'www' => 'Site',
-            'creDate' => 'Creation Date',
-            'updDate' => 'Update Date',
-            'creUserId' => 'Created by',
+            'creTime' => 'Create Time',
+            'updTime' => 'Update Time',
+            'creUser' => 'Created by',
             'updUserId' => 'Updated by',
             'contactId' => 'Contacts',
         ];

@@ -111,6 +111,7 @@ use kartik\form\ActiveForm;
 
     <div class="form-group">
     <?= Html::submitButton( $model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary' ] ) ?>
+    <?= Html::submitButton( 'Create' ); ?>
     </div>
 
 <?php ActiveForm::end(); ?>
