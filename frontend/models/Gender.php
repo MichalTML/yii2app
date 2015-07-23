@@ -4,12 +4,16 @@ namespace frontend\models;
 
 use Yii;
 
+use frontend\models\Profile;
+use frontend\models\ClientContacts;
+
 /**
  * This is the model class for table "gender".
  *
  * @property integer $id
- * @property string $gender_name
+ * @property string $genderName
  *
+ * @property ClientContacts[] $clientContacts
  * @property Profile[] $profiles
  */
 class Gender extends \yii\db\ActiveRecord
@@ -28,8 +32,8 @@ class Gender extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['gender_name'], 'required'],
-            [['gender_name'], 'string', 'max' => 45]
+            [['genderName'], 'required'],
+            [['genderName'], 'string', 'max' => 10]
         ];
     }
 
@@ -40,8 +44,16 @@ class Gender extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'gender_name' => 'Gender',
+            'genderName' => 'Gender Name',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getClientContacts()
+    {
+        return $this->hasMany(ClientContacts::className(), ['genderId' => 'id']);
     }
 
     /**

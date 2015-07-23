@@ -6,6 +6,7 @@ use Yii;
 use frontend\models\ProjectData;
 use frontend\models\search\ProjectSearch;
 use frontend\models\ProjectPermissions;
+use frontend\models\search\ProjectPermissionsSearch;
 use common\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -34,13 +35,16 @@ class ProjectController extends Controller {
      */
     public function actionIndex() {
         $searchModel = new ProjectSearch();
-        $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams );      
+        
 
 
         return $this->render( 'index', [
                     'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+                    'dataProvider' => $dataProvider,                    
                 ] );
+        
+        
     }
 
     /**

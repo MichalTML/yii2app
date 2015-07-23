@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\search\ContactsSearch */
+/* @var $model frontend\models\search\ClientContactsSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="contacts-search">
+<div class="client-contacts-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -17,13 +17,15 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'clientId') ?>
 
-    <?= $form->field($model, 'firstlastName') ?>
+    <?= $form->field($model, 'firstName') ?>
+
+    <?= $form->field($model, 'lastName') ?>
 
     <?= $form->field($model, 'gender') ?>
 
     <?= $form->field($model, 'phone') ?>
 
-    <?= $form->field($model, 'fax') ?>
+    <?php // echo $form->field($model, 'fax') ?>
 
     <?php // echo $form->field($model, 'email') ?>
 
@@ -33,11 +35,11 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'creTime') ?>
 
-    <?php // echo $form->field($model, 'creUser') ?>
+    <?php // echo $form->field($model, 'creUserId') ?>
 
     <?php // echo $form->field($model, 'updTime') ?>
 
-    <?php // echo $form->field($model, 'updUser') ?>
+    <?php // echo $form->field($model, 'updUserId') ?>
 
     <?php // echo $form->field($model, 'description') ?>
 

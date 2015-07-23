@@ -340,7 +340,7 @@ class User extends ActiveRecord implements IdentityInterface {
      /**
      * get Project relation
      */
-    public function getProjectData() {
+    public function getProjectDatas() {
         return $this->hasMany(ProjectData::className(), ['creUserId' => 'id' ] );
     }
     

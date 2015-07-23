@@ -6,13 +6,15 @@ use Yii;
 use yii\db\ActiveRecord;
 use common\models\User;
 use frontend\models\Profile;
+use frontend\models\ClientData;
+use frontend\models\ProjectStatus;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\AttributeBehavior;
-use frontend\models\ClientData;
+
 
 /**
  * This is the model class for table "project_data".
@@ -20,14 +22,19 @@ use frontend\models\ClientData;
  * @property integer $id
  * @property string $projectName
  * @property integer $clientId
- * @property string $creTime
  * @property string $deadline
- * @property string $endDate
+ * @property integer $projectStatus
+ * @property string $creTime
  * @property integer $creUserId
- * @property integer $updUserId
  * @property string $updTime
- * @property string $projectStatus
- * 
+ * @property integer $updUserId
+ * @property string $endTime
+ *
+ * @property ProjectStatus $projectStatus0
+ * @property ClientData $client
+ * @property User $creUser
+ * @property User $updUser
+ * @property ProjectPermissions[] $projectPermissions
  */
 class ProjectData extends \yii\db\ActiveRecord {
 
@@ -56,16 +63,16 @@ class ProjectData extends \yii\db\ActiveRecord {
         return [
 
             'id' => 'ID',
+            'clientId' => 'Client Name',
             'projectName' => 'Project Name',
-            'clientData.name' => 'Client Name',
+            'ClientName' => 'Client',
             'creTime' => 'Creation Time',
             'deadline' => 'Deadline',
             'endTime' => 'End Time',
-            'creUserId' => 'Created by',
-            //'user.firstlastName' => 'Created by',
-            'updUserId' => 'Updated by',
+            'updUserName' => 'Updated by',
+            'creUserName' => 'Created by',
             'updTime' => 'Update Time',
-            'projectStatus' => 'Project Status',
+            'projectStatus0Name' => 'Status',
             'constructorNames' => 'Project Constructors',
         ];
     }
@@ -114,26 +121,11 @@ class ProjectData extends \yii\db\ActiveRecord {
         
         return false;
     }
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getClientId() {
-        return $this->hasOne( ClientData::className(), ['clientNumber' => 'clientId' ] );
-    }
-
-    public function getClientList() {
-        $droptions = ClientData::find()->asArray()->all();
-        return ArrayHelper::map( $droptions, 'clientNumber', 'name' );
-    }
-
-    public function getStatusName() {
-        return $this->hasOne( ProjectStatus::className(), ['statusName' => 'projectStatus' ] );
-    }
-
+    
     public function getStatusList() {
 
         $droptions = ProjectStatus::find()->asArray()->all();
-        return ArrayHelper::map( $droptions, 'statusName', 'statusName' );
+        return ArrayHelper::map( $droptions, 'id', 'statusName' );
     }
 
     /**
@@ -159,44 +151,75 @@ class ProjectData extends \yii\db\ActiveRecord {
         return $constructorList;     
     }
 
-    public function getCreUser() {
-        return $this->hasMany( User::className(), ['id' => 'creUserId' ] );
-    }
-
-    public function getCreUserName() {
-        return $this->user->username;
-    }
-
-    public function getCreUserLink() {
-        $url = Url::to( ['user/view', 'id' => $this->userId ] );
-        $options = [ ];
-        return Html::a( $this->getUserName(), $url, $options );
-    }
-
     /**
-     * get client relationship
+     * All user raltions
+     * @return \yii\db\ActiveQuery
+     * 
+     * !!!!!!!! TODO LINK Z PROFILEM I WYWALEINIE IMIENIA I NAZWISKA
      */
-    public function getClientData() {
-        return $this->hasOne( ClientData::className(), ['clientNumber' => 'clientId' ] );
+    public function getCreUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'creUserId']);
     }
+  
+    public function getUpdUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'updUserId']);
+    }
+    
 
-    /*
-     * get client name
+    public function getCreUserName()
+    {
+        return $this->creUser ? $this->creUser->username : ' - no user name -';
+    }
+    
+    public function getUpdUserName()
+    {
+        return $this->updUser ? $this->updUser->username : ' - no user name -';
+    }
+    
+    
+     /**
+     * @return \yii\db\ActiveQuery
      */
-
-    public function getClientDataName() {
-        return $this->clientData ? $this->clientData->name : '- no client name -';
+    public function getProjectPermissions()
+    {
+        return $this->hasMany(ProjectPermissions::className(), ['projectId' => 'id']);
     }
-
+    
     /**
-     * get user relationshi
+     * @return \yii\db\ActiveQuery
+     * 
+     * All client_data table related methods
+     * 
      */
-    public function getUser() {
-        return $this->hasOne( User::className(), ['id' => 'creUserId' ] );
+    public function getClient()
+    {
+        return $this->hasOne(ClientData::className(), ['id' => 'clientId']);
+    }
+    
+     
+    public function getClientName()
+    {
+        return $this->client ? $this->client->name : '- no client name -';
+    }
+    
+    public function getClientList() {
+        $droptions = ClientData::find()->asArray()->all();
+        return ArrayHelper::map( $droptions, 'id', 'name' );
     }
 
-    //public function getUserfirstlastName() {
-      //  return $this->user ? $this->user->firstlastName : '- no user name -';
-   // }
+     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectStatus0()
+    {
+        return $this->hasOne(ProjectStatus::className(), ['id' => 'projectStatus']);
+    }
+    
+    public function getProjectStatus0Name()
+    {
+        return $this->projectStatus0->statusName;
+    }
 
 }

@@ -5,12 +5,12 @@ namespace frontend\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use frontend\models\Contacts;
+use frontend\models\ClientContacts;
 
 /**
- * ContactsSearch represents the model behind the search form about `frontend\models\Contacts`.
+ * ClientContactsSearch represents the model behind the search form about `frontend\models\ClientContacts`.
  */
-class ContactsSearch extends Contacts
+class ClientContactsSearch extends ClientContacts
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class ContactsSearch extends Contacts
     public function rules()
     {
         return [
-            [['clientId'], 'integer'],
-            [['firstlastName', 'gender', 'phone', 'fax', 'email', 'department', 'position', 'creTime', 'creUser', 'updTime', 'updUser', 'description'], 'safe'],
+            [['clientId', 'creUserId', 'updUserId'], 'integer'],
+            [['firstName', 'lastName', 'gender', 'phone', 'fax', 'email', 'department', 'position', 'creTime', 'updTime', 'description'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class ContactsSearch extends Contacts
      */
     public function search($params)
     {
-        $query = Contacts::find();
+        $query = ClientContacts::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -58,18 +58,19 @@ class ContactsSearch extends Contacts
         $query->andFilterWhere([
             'clientId' => $this->clientId,
             'creTime' => $this->creTime,
+            'creUserId' => $this->creUserId,
             'updTime' => $this->updTime,
+            'updUserId' => $this->updUserId,
         ]);
 
-        $query->andFilterWhere(['like', 'firstlastName', $this->firstlastName])
+        $query->andFilterWhere(['like', 'firstName', $this->firstName])
+            ->andFilterWhere(['like', 'lastName', $this->lastName])
             ->andFilterWhere(['like', 'gender', $this->gender])
             ->andFilterWhere(['like', 'phone', $this->phone])
             ->andFilterWhere(['like', 'fax', $this->fax])
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'department', $this->department])
             ->andFilterWhere(['like', 'position', $this->position])
-            ->andFilterWhere(['like', 'creUser', $this->creUser])
-            ->andFilterWhere(['like', 'updUser', $this->updUser])
             ->andFilterWhere(['like', 'description', $this->description]);
 
         return $dataProvider;

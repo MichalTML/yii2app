@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\Contacts */
+/* @var $model frontend\models\ClientContacts */
 
 $this->title = $model->clientId;
-$this->params['breadcrumbs'][] = ['label' => 'Contacts', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Client Contacts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="contacts-view">
+<div class="client-contacts-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,7 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'clientId',
-            'firstlastName',
+            'firstName',
+            'lastName',
             'gender',
             'phone',
             'fax',
@@ -37,9 +38,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'department',
             'position',
             'creTime',
-            'creUser',
+            'creUserId',
             'updTime',
-            'updUser',
+            'updUserId',
             'description',
         ],
     ]) ?>

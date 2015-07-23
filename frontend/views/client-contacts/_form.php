@@ -4,17 +4,19 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\Contacts */
+/* @var $model frontend\models\ClientContacts */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="contacts-form">
+<div class="client-contacts-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'clientId')->textInput() ?>
 
-    <?= $form->field($model, 'firstlastName')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'firstName')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'lastName')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'gender')->textInput(['maxlength' => true]) ?>
 
@@ -30,11 +32,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'creTime')->textInput() ?>
 
-    <?= $form->field($model, 'creUser')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'creUserId')->textInput() ?>
 
     <?= $form->field($model, 'updTime')->textInput() ?>
 
-    <?= $form->field($model, 'updUser')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'updUserId')->textInput() ?>
 
     <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
 

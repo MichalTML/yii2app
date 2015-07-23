@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\Contacts */
+/* @var $model frontend\models\ClientContacts */
 
-$this->title = 'Create Contacts';
-$this->params['breadcrumbs'][] = ['label' => 'Contacts', 'url' => ['index']];
+$this->title = 'Create Client Contacts';
+$this->params['breadcrumbs'][] = ['label' => 'Client Contacts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="contacts-create">
+<div class="client-contacts-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

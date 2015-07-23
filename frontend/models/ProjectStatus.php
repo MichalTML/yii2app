@@ -4,6 +4,8 @@ namespace frontend\models;
 
 use Yii;
 
+use frontend\models\ProjectData;
+
 /**
  * This is the model class for table "project_status".
  *
@@ -41,5 +43,14 @@ class ProjectStatus extends \yii\db\ActiveRecord
             'id' => 'ID',
             'statusName' => 'Status Name',
         ];
+    }
+    
+    /**
+     * get Project data relation
+     */
+
+    public function getProjectDatas()
+    {
+        return $this->hasMany(ProjectData::className(), ['projectStatus' => 'id']);
     }
 }

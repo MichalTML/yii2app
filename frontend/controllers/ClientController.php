@@ -127,9 +127,9 @@ class ClientController extends Controller
         $model = new ClientData();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['project/create']);            
+            return $this->redirect(['client-contacts/add']);            
         } else {            
-            return $this->render('create', [
+            return $this->render('add', [
               'model' => $model,
            ]);
         }

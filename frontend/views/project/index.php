@@ -26,20 +26,16 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn',
              'contentOptions' => ['style' => 'color: black;'],
                 ],
-            
 
-            
-
-            //'id',
             'projectName',            
             'deadline',
-            'projectStatus',
-            'clientData.name',
-            // 'endDate',
-            'creUserId',
-            //'updUserId',
-            'creTime',
-            'updTime',         
+            'projectStatus0Name',
+            'ClientName', 
+            'creUserName',
+            'creTime',            
+            'updUserName',
+            'updTime',
+           
             
             ['class' => 'yii\grid\ActionColumn',
              'header' => 'Action',
@@ -54,5 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
             
         ],
     ]); ?>
+    
+    
 
 </div>
