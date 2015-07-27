@@ -141,6 +141,8 @@ class ProjectData extends \yii\db\ActiveRecord {
        foreach($userIdList as $users => $user){
        
        $userProfile = Profile::find()->where(['user_id' => $user['id']])->one();
+//       var_dump($userProfile->first_name);
+//       die();
        $userFirstName = $userProfile->first_name;
        $userLastName = $userProfile->last_name;
        $userCombine = $userFirstName.' '.$userLastName;

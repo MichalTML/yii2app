@@ -61,7 +61,11 @@ class ClientContactsController extends Controller {
         $model = new ClientContacts();
 
         if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
+            if($_POST[add]){
+                return $this->redirect( ['create']);
+            } else {
             return $this->redirect( ['index' ] );
+            }
         } else {
             return $this->render( 'create', [
                         'model' => $model,

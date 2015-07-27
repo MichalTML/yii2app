@@ -29,7 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'clientNumber',
             'name',
             'abr',
             'adress',
@@ -42,12 +41,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'krs',
             'regon',
             'www',
-            'creDate',
-            'updDate',
+            'creTime',
+            'updTime',
             'creUserId',
             'updUserId',
             'description',
-            'contactId',
         ],
     ]) ?>
 

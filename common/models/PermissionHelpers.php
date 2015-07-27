@@ -36,12 +36,12 @@ class PermissionHelpers {
 
                 $userRoleValue = ValueHelpers::getUsersRoleValue();
             } else {
+                
                 $userRoleValue = ValueHelpers::getUsersRoleValue($userId);
             }
-
-            return $userRoleValue >= ValueHelpers::getRoleValue( $role_name ) ? true : false;
+            return $userRoleValue = ValueHelpers::getRoleValue( $role_name ) ? true : false;
         } else {
-
+            
             return false;
         }
     }

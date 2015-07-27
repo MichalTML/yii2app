@@ -106,7 +106,7 @@ use kartik\form\ActiveForm;
             ] )->textarea() ?>
 
     <br />
-       <?= Html::submitButton( 'Proceed', ['class' => 'btn btn-success'] ); ?>
+       <?= Html::submitButton( 'Proceed', ['class' => 'btn btn-success', 'name' => 'add'] ); ?>
   
 <?php ActiveForm::end(); ?>
 

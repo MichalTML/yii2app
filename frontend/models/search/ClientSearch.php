@@ -18,8 +18,8 @@ class ClientSearch extends ClientData
     public function rules()
     {
         return [
-            [['id', 'clientNumber', 'phone', 'fax', 'krs', 'regon', 'creUserId', 'updUserId', 'contactId'], 'integer'],
-            [['name', 'abr', 'adress', 'email', 'nip', 'www', 'creDate', 'updDate'], 'safe'],
+            [['id', 'phone', 'fax', 'krs', 'regon', 'creUserId', 'updUserId'], 'integer'],
+            [['name', 'abr', 'adress', 'email', 'nip', 'www', 'creTime', 'updTime'], 'safe'],
         ];
     }
 
@@ -57,16 +57,14 @@ class ClientSearch extends ClientData
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'clientNumber' => $this->clientNumber,
             'phone' => $this->phone,
             'fax' => $this->fax,
             'krs' => $this->krs,
             'regon' => $this->regon,
-            'creDate' => $this->creDate,
-            'updDate' => $this->updDate,
+            'creTime' => $this->creTime,
+            'updTime' => $this->updTime,
             'creUserId' => $this->creUserId,
             'updUserId' => $this->updUserId,
-            'contactId' => $this->contactId,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

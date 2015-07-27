@@ -98,7 +98,7 @@ class Profile extends \yii\db\ActiveRecord {
     
     public function getGenderName()
     {
-        return $this->gender->gender_name;
+        return $this->gender->genderName;
     }
     
     /**
@@ -109,7 +109,7 @@ class Profile extends \yii\db\ActiveRecord {
     {
         
         $droptions = Gender::find()->asArray()->all();
-        return ArrayHelper::map($droptions, 'id', 'gender_name');
+        return ArrayHelper::map($droptions, 'id', 'genderName');
     }
     
     /**

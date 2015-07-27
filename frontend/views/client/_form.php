@@ -21,12 +21,6 @@ use kartik\form\ActiveForm;
     );
     ?>
 
-    <?= $form->field( $model, 'clientNumber', ['inputOptions' => 
-            [
-            'placeholder' => $model->getAttributeLabel('clientNumber')
-            ]
-            ])->textInput() ?>
-
     <?= $form->field( $model, 'name', ['inputOptions' => 
             [
             'placeholder' => $model->getAttributeLabel('name')
@@ -104,15 +98,9 @@ use kartik\form\ActiveForm;
             'placeholder' => $model->getAttributeLabel('description'). ' e.g. Additional information about the client that might prove useful.'
             ]
             ] )->textarea() ?>
-
-    <!-- Enter contact id after add contacts to Client_Contacs table
-    -->
-        <?= $form->field( $model, 'contactId' )->textInput() ?>
-
-    <div class="form-group">
+<br />
     <?= Html::submitButton( $model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary' ] ) ?>
-    <?= Html::submitButton( 'Create' ); ?>
-    </div>
+    <?= Html::submitButton( 'Add contact' , ['class' => 'btn btn-success']); ?>
 
 <?php ActiveForm::end(); ?>
 

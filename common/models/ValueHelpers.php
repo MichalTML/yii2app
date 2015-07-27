@@ -60,7 +60,7 @@ class ValueHelpers {
     }
 
     public static function isRoleNameValid( $role_name ) {
-        $role = Role::find( 'role_name' )
+        $role = Role::find( 'role_value' )
                 ->where( ['role_name' => $role_name ] )
                 ->one();
 
