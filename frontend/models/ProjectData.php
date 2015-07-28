@@ -20,6 +20,7 @@ use yii\behaviors\AttributeBehavior;
  * This is the model class for table "project_data".
  *
  * @property integer $id
+ * @property string $sygnature 
  * @property string $projectName
  * @property integer $clientId
  * @property string $deadline
@@ -50,9 +51,11 @@ class ProjectData extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [[ 'projectName', 'clientId', 'deadline', 'projectStatus' ], 'required' ],
+            [[ 'projectName', 'clientId', 'deadline', 'projectStatus', 'sygnature' ], 'required' ],
             [[ 'id', 'clientId' ], 'integer' ],
-            [[ 'projectName' ], 'string', 'max' => 100 ]
+            [[ 'id', 'sygnature', 'clientId'], 'unique' ],
+            [[ 'projectName' ], 'string', 'max' => 100 ],
+            [[ 'sygnature'], 'string', 'max' => 4 ]
         ];
     }
 
@@ -63,6 +66,7 @@ class ProjectData extends \yii\db\ActiveRecord {
         return [
 
             'id' => 'ID',
+            'sygnature' => 'Sygnatura',
             'clientId' => 'Client Name',
             'projectName' => 'Project Name',
             'ClientName' => 'Client',

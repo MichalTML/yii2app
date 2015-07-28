@@ -75,8 +75,20 @@ body {
     background: #e6e6e6;
 }
 
-.mainbox a:hover{
+.mainbox a:hover {
     background: #83C503;
     color: white;
 }
 
+.go-back-button a {
+    margin-top: 30px;
+    border-color: #e6e6e6; 
+    color: white;
+    background-color: #808080;
+    border-radius: 4px;
+}
+
+.go-back-button a:hover {
+    background-color: #83C503;
+    color: white;
+}

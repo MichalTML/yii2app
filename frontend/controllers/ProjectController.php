@@ -6,12 +6,12 @@ use Yii;
 use frontend\models\ProjectData;
 use frontend\models\search\ProjectSearch;
 use frontend\models\ProjectPermissions;
-use frontend\models\search\ProjectPermissionsSearch;
-use common\models\User;
+//use frontend\models\search\ProjectPermissionsSearch;
+//use common\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
+//use yii\helpers\ArrayHelper;
 
 /**
  * ProjectController implements the CRUD actions for ProjectData model.
@@ -70,7 +70,11 @@ class ProjectController extends Controller {
 
         $model = new ProjectData();
         $projectPermissions = new ProjectPermissions();
-
+        $lastId = $model->find()->select('id')->orderBy(['id' => SORT_DESC])->one();
+        $freeId = $lastId->id + 1;
+        
+        
+        
         if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
 
             $projectId = $model->id;
@@ -99,6 +103,7 @@ class ProjectController extends Controller {
             return $this->render( 'create', [
                         'model' => $model,
                         'projectPermissions' => $projectPermissions,
+                        'freeId' => $freeId
                     ] );
         }
     }
@@ -114,7 +119,8 @@ class ProjectController extends Controller {
         $projectName = preg_replace( '/.*_/', '', $model->projectName );
         $model->projectName = $projectName;
         $projectPermissions = new ProjectPermissions();
-
+        $lastId = $model->find()->select('id')->orderBy(['id' => SORT_DESC])->one();
+        $freeId = $lastId->id;
 
         if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
 
@@ -137,6 +143,7 @@ class ProjectController extends Controller {
             return $this->render( 'update', [
                         'model' => $model,
                         'projectPermissions' => $projectPermissions,
+                        'freeId' => $freeId
                     ] );
         }
     }

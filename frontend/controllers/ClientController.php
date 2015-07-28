@@ -62,14 +62,18 @@ class ClientController extends Controller
     public function actionCreate()
     {
         $model = new ClientData();
+        
+        $newClientNumber = $model->setClientNumber();
 
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //return $this->redirect(['view', 'id' => $model->id]);
-            return $this->goBack();
+            return $this->redirect(['index']);
         } else {
             
             return $this->render('create', [
               'model' => $model,
+              'newClientNumber' => $newClientNumber,
            ]);
         }
     }
@@ -83,12 +87,15 @@ class ClientController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        
+        $newClientNumber = $model->setClientNumber();
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'newClientNumber' => $newClientNumber,
             ]);
         }
     }
@@ -125,12 +132,19 @@ class ClientController extends Controller
     public function actionAdd()
     {
         $model = new ClientData();
-
+        
+        $newClientNumber = $model->setClientNumber();
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['client-contacts/add']);            
+            if(isset($_POST['add'])){
+            return $this->redirect(['client-contacts/add']);     
+            } else {
+                return $this->redirect(['project/create']);
+            }
         } else {            
             return $this->render('add', [
               'model' => $model,
+              'newClientNumber' => $newClientNumber,
            ]);
         }
     }

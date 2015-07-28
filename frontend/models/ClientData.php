@@ -5,11 +5,17 @@ namespace frontend\models;
 use Yii;
 
 use frontend\models\ProjectData;
+use common\models\User;
+use yii\db\Expression;
+use yii\db\ActiveRecord;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\AttributeBehavior;
 
 /**
  * This is the model class for table "client_data".
  *
  * @property integer $id
+ * @property int $clientNumber 
  * @property string $name
  * @property string $abr
  * @property string $adress
@@ -35,39 +41,38 @@ use frontend\models\ProjectData;
  */
 class ClientData extends \yii\db\ActiveRecord
 {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'client_data';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['name', 'adress', 'city', 'postal', 'phone', 'email', 'nip', 'krs', 'regon', 'www'], 'required'],
-            [['phone', 'fax', 'krs', 'regon', 'creUserId', 'updUserId'], 'integer'],
-            [['creTime', 'updTime'], 'safe'],
-            [['name', 'city', 'postal'], 'string', 'max' => 45],
-            [['abr'], 'string', 'max' => 10],
-            [['adress', 'www', 'description'], 'string', 'max' => 255],
-            [['email'], 'string', 'max' => 60],
-            [['nip'], 'string', 'max' => 12],
-            [['name', 'regon', 'nip', 'krs'], 'unique', 'targetAttribute' => ['name', 'regon', 'nip', 'krs'], 'message' => 'The combination of name,regon, nip and krs has already been taken.']
+            [[ 'name', 'adress', 'city', 'postal', 'phone', 'email', 'nip', 'krs', 'regon', 'www', 'clientNumber' ], 'required' ],
+            [[ 'phone', 'fax', 'krs', 'regon', 'creUserId', 'updUserId' ], 'integer' ],
+            [[ 'creTime', 'updTime' ], 'safe' ],
+            [[ 'name', 'city', 'postal' ], 'string', 'max' => 45 ],
+            [[ 'abr' ], 'string', 'max' => 10 ],
+            [[ 'adress', 'www', 'description' ], 'string', 'max' => 255 ],
+            [[ 'email' ], 'string', 'max' => 60 ],
+            [[ 'nip' ], 'string', 'max' => 12 ],
+            [[ 'name', 'regon', 'nip', 'krs', 'clientNumber' ], 'unique', 'targetAttribute' => ['name', 'regon', 'nip', 'krs' ], 'message' => 'The combination of client number, name,regon, nip and krs has already been taken.' ]
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'Client Number',
+            'clientNumber' => 'Client Number',
             'name' => 'Name',
             'abr' => 'Abrevation',
             'adress' => 'Adress',
@@ -88,12 +93,46 @@ class ClientData extends \yii\db\ActiveRecord
         ];
     }
 
+    public function behaviors() {
+
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['creTime', 'updTime' ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updTime' ],
+                ],
+                'value' => new Expression( 'NOW()' ),
+            ],
+            'createstamp' => [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['creUserId' ],
+                ],
+                'value' => function ($event)
+        {
+            return Yii::$app->user->identity->id;
+        }
+            ],
+            'updatestamp' => [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['updUserId' ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updUserId' ],
+                ],
+                'value' => function ($event)
+        {
+            return Yii::$app->user->identity->id;
+        }
+            ],
+        ];
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getClientContacts()
-    {
-        return $this->hasOne(ClientContacts::className(), ['clientId' => 'id']);
+    public function getClientContacts() {
+        return $this->hasOne( ClientContacts::className(), ['clientId' => 'id' ] );
     }
 
     /**
@@ -103,21 +142,39 @@ class ClientData extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'updUserId']);
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCreUser()
-    {
+    public function getCreUser(){
         return $this->hasOne(User::className(), ['id' => 'creUserId']);
     }
+     public function getCreUserName()
+    {
+        return $this->creUser ? $this->creUser->username : ' - no user name -';
+    }
+    
+    public function getUpdUserName()
+    {
+        return $this->updUser ? $this->updUser->username : ' - no user name -';
+    }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProjectDatas()
-    {
-        return $this->hasMany(ProjectData::className(), ['clientId' => 'id']);
+    public function getProjectDatas() {
+        return $this->hasMany( ProjectData::className(), ['clientId' => 'id' ] );
     }
-   
+
+    public function setClientNumber() {
+        $currentYear = date( 'Y' );
+        $companyYears = 0 . substr( $currentYear, 3 );
+
+        $stmt = "SELECT * FROM client_data WHERE YEAR(creTime) =" . $currentYear;
+
+        $stmt = Yii::$app->db->createCommand( $stmt )->execute();
+        if ( $stmt < 10 )
+        {
+            $stmt = substr_replace( $stmt, '0', -1 ) . $stmt;
+        }
+        $newClientNumber = $companyYears . $stmt;
+        return $newClientNumber;
+    }
+
 }

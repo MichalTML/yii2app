@@ -12,12 +12,16 @@ use yii\jui\DatePicker;
 ?>
 
 <div class="project-data-form">
-
+<?php
+$model->sygnature = $freeId;
+?>
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field( $model, 'clientId', $options = ['options' => ['style' => 'display: inline;'],] )->dropDownList( $model->getClientList(), ['prompt' => 'Choose client' ] ) ?>  
 
     <?= Html::a( 'Add client', ['client/add' ],['class' => 'btn btn-default', 'style' => 'margin-bottom: 30px;']); ?> 
+    
+    <?= $form->field($model, 'sygnature')->textInput() ?> 
 
     <?= $form->field( $model, 'projectName' )->textInput( ['maxlength' => true ] ) ?>
 

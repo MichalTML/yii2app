@@ -13,16 +13,27 @@ $this->title = 'TMA Project Manager';
 
 <div class="site-index">
     <div class="jumbotron">
-
-        <h1>TMA Project Manager</h1>
-        <h2>Main menu</h2>
-
         <br />
         <br />
-       
+        <br />
 
+        <div class ="well well-e">
+            <p><span>TMA Project Manager</span></p>
+            <p><span>LOGO PLACE HOLDER</span></p>
+        </div>
+        
+        <div class="well">
+            Basic instructions go here.
+            <br/>
+            Basic instructions go here.
+            <br/>
+            Basic instructions go here.
+        </div>
 
-
+    
+        <br />
+      
+        
         <div class="body-content">
 
             <div class="row">
@@ -58,7 +69,7 @@ echo Html::a( 'Project manager', ['project/index' ], ['class' => 'btn btn-defaul
 
 
 <?php
-echo Html::a( 'Client manager', ['client/index'], ['class' => 'btn btn-default' ] );
+echo Html::a( 'Client manager', ['site/clients'], ['class' => 'btn btn-default' ] );
 ?>
 
 
@@ -78,14 +89,14 @@ echo Html::a( 'Client manager', ['client/index'], ['class' => 'btn btn-default' 
 
 
 <?php
-echo Html::a( 'Contacts Menager', ['contacts/index'], ['class' => 'btn btn-default' ] );
+echo Html::a( '--------------------', [''], ['class' => 'btn btn-default' ] );
 ?>
 
 
 
 
                        <div class="mainbox_info">
-                                *go here if you want add new client contacts.
+                                *--------------------.
                         </div>            
 
                     </div>
@@ -100,14 +111,14 @@ echo Html::a( 'Contacts Menager', ['contacts/index'], ['class' => 'btn btn-defau
 
 
 <?php
-echo Html::a( 'Placeholder', ['' ], ['class' => 'btn btn-default' ] );
+echo Html::a( '--------------------', ['' ], ['class' => 'btn btn-default' ] );
 ?>
 
 
 
 
                         <div class="mainbox_info">
-                                *go here if you want to create new project.
+                                *--------------------.
                         </div>             
 
                     </div>
@@ -120,14 +131,14 @@ echo Html::a( 'Placeholder', ['' ], ['class' => 'btn btn-default' ] );
 
 
 <?php
-echo Html::a( 'Placeholder', ['' ], ['class' => 'btn btn-default' ] );
+echo Html::a( '--------------------', ['' ], ['class' => 'btn btn-default' ] );
 ?>
 
 
 
 
                         <div class="mainbox_info">
-                                *go here if you want to create new project.
+                                *--------------------.
                         </div>             
 
                     </div>
@@ -140,14 +151,14 @@ echo Html::a( 'Placeholder', ['' ], ['class' => 'btn btn-default' ] );
 
 
 <?php
-echo Html::a( 'Placeholder', [''], ['class' => 'btn btn-default' ] );
+echo Html::a( '--------------------', [''], ['class' => 'btn btn-default' ] );
 ?>
 
 
 
 
                         <div class="mainbox_info">
-                                *go here if you want to create new project.
+                                *--------------------.
                         </div>             
 
                     </div>

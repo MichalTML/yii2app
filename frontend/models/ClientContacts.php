@@ -66,7 +66,7 @@ class ClientContacts extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'clientId' => 'Client ID',
+            'clientId' => 'Client Name',            
             'firstName' => 'First Name',
             'lastName' => 'Last Name',
             'genderId' => 'Gender',
@@ -124,7 +124,18 @@ class ClientContacts extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'updUserId']);
     }
-
+    public function getCreUser(){
+        return $this->hasOne(User::className(), ['id' => 'creUserId']);
+    }
+     public function getCreUserName()
+    {
+        return $this->creUser ? $this->creUser->username : ' - no user name -';
+    }
+    
+    public function getUpdUserName()
+    {
+        return $this->updUser ? $this->updUser->username : ' - no user name -';
+    }
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -132,21 +143,26 @@ class ClientContacts extends \yii\db\ActiveRecord
     {
         return $this->hasOne(ClientData::className(), ['id' => 'clientId']);
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCreUser()
-    {
-        return $this->hasOne(User::className(), ['id' => 'creUserId']);
-    }
     
+    public function getClientName()
+    {
+        return $this->client ? $this->client->name : '-- no client --';
+    }
+    public function getClientList()
+    {
+        $droptions = ClientData::find()->asArray()->all();
+        return ArrayHelper::map( $droptions, 'id', 'name');
+    }
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getGender()
     {
         return $this->hasOne(Gender::className(), ['id' => 'genderId']);
+    }
+    public function getGenderName()
+    {
+        return $this->gender->genderName;
     }
     
     public function getGenderList() {

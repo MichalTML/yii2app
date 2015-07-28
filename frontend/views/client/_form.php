@@ -9,7 +9,9 @@ use kartik\form\ActiveForm;
 ?>
 
 <div class="client-data-form">
-
+<?php
+$model->clientNumber = $newClientNumber;
+?>
     <?php
     $form = ActiveForm::begin(
                     [
@@ -20,7 +22,9 @@ use kartik\form\ActiveForm;
                     ]
     );
     ?>
-
+    
+    <?= $form->field( $model, 'clientNumber') ?>
+    
     <?= $form->field( $model, 'name', ['inputOptions' => 
             [
             'placeholder' => $model->getAttributeLabel('name')
@@ -100,7 +104,7 @@ use kartik\form\ActiveForm;
             ] )->textarea() ?>
 <br />
     <?= Html::submitButton( $model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary' ] ) ?>
-    <?= Html::submitButton( 'Add contact' , ['class' => 'btn btn-success']); ?>
+    <?= Html::submitButton( 'Add contact' , ['class' => 'btn btn-info', 'name' => 'add']); ?>
 
 <?php ActiveForm::end(); ?>
 

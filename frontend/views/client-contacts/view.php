@@ -6,7 +6,8 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model frontend\models\ClientContacts */
 
-$this->title = $model->clientId;
+$this->title = $model->getClientName();
+$this->params['breadcrumbs'][] = ['label' => 'Clients Manager', 'url' => ['site/clients']];
 $this->params['breadcrumbs'][] = ['label' => 'Client Contacts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -28,19 +29,19 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'clientId',
+            'clientName',
             'firstName',
             'lastName',
-            'gender',
+            'genderName',
             'phone',
             'fax',
             'email:email',
             'department',
             'position',
             'creTime',
-            'creUserId',
+            'creUserName',
             'updTime',
-            'updUserId',
+            'updUserName',
             'description',
         ],
     ]) ?>

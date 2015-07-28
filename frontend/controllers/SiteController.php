@@ -69,6 +69,7 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+        $this->layout = 'menu';
         if(Yii::$app->user->isGuest) {
         return $this->render('index');
         }
@@ -76,13 +77,21 @@ class SiteController extends Controller
     }
     
     public function actionMain()
-    {        
+    {     
+        $this->layout = 'menu';
         return $this->render('main');
      
+    }
+    
+    public function actionClients()
+    {
+        $this->layout = 'menu';
+        return $this->render('clients');
     }
 
     public function actionLogin()
     {
+        $this->layout = 'menu';
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -99,6 +108,7 @@ class SiteController extends Controller
 
     public function actionLogout()
     {
+        $this->layout = 'menu';
         Yii::$app->user->logout();
 
         return $this->goHome();
@@ -106,6 +116,7 @@ class SiteController extends Controller
 
     public function actionContact()
     {
+        $this->layout = 'menu';
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
@@ -124,11 +135,13 @@ class SiteController extends Controller
 
     public function actionAbout()
     {
+        $this->layout = 'menu';
         return $this->render('about');
     }
 
     public function actionSignup()
     {
+        $this->layout = 'menu';
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {

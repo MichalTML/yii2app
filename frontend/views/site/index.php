@@ -1,8 +1,8 @@
 <?php
-use \yii\bootstrap\Modal;
-use kartik\social\FacebookPlugin;
-use \yii\bootstrap\Collapse;
-use \yii\bootstrap\Alert;
+//use \yii\bootstrap\Modal;
+//use kartik\social\FacebookPlugin;
+//use \yii\bootstrap\Collapse;
+//use \yii\bootstrap\Alert;
 use \yii\helpers\Html;
 
 /* @var $this yii\web\View */

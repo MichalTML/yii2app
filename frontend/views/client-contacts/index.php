@@ -7,7 +7,8 @@ use yii\grid\GridView;
 /* @var $searchModel frontend\models\search\ClientContactsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Client Contacts';
+$this->title = 'Clients Contacts';
+$this->params['breadcrumbs'][] = ['label' => 'Clients Manager', 'url' => ['site/clients']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="client-contacts-index">
@@ -16,32 +17,35 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
+        
         <?= Html::a('Create Client Contacts', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    </p> 
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'clientId',
+            'clientName',
             'firstName',
             'lastName',
-            'gender',
+            'genderName',
             'phone',
             // 'fax',
-            // 'email:email',
-            // 'department',
-            // 'position',
-            // 'creTime',
-            // 'creUserId',
+             'email:email',
+            'department',
+            'position',
+            'creUserName',
+            'creTime',
+            //'creUserId',
             // 'updTime',
             // 'updUserId',
             // 'description',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
-    ]); ?>
+    ]);?>
 
 </div>

@@ -17,6 +17,7 @@ use backend\models\Status;
 use backend\models\UserType;
 use frontend\models\Profile;
 use frontend\models\ProjectData;
+use frontend\models\ClientData;
 
 /**
  * User model

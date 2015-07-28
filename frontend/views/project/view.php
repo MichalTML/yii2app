@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
+            'sygnature',
             'projectName',            
             'deadline',
             'projectStatus0Name',

@@ -7,7 +7,8 @@ use yii\widgets\DetailView;
 /* @var $model frontend\models\ClientData */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Clients list', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Clients Manager', 'url' => ['site/clients']];
+$this->params['breadcrumbs'][] = ['label' => 'Actual Clients List', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="client-data-view">
@@ -28,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
+            'clientNumber',
             'name',
             'abr',
             'adress',
@@ -43,8 +44,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'www',
             'creTime',
             'updTime',
-            'creUserId',
-            'updUserId',
+            'creUserName',
+            'updUserName',
             'description',
         ],
     ]) ?>

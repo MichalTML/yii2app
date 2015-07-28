@@ -7,7 +7,8 @@ use yii\grid\GridView;
 /* @var $searchModel frontend\models\search\ClientSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Clients list';
+$this->title = 'Actual Clients List';
+$this->params['breadcrumbs'][] = ['label' => 'Clients Manager', 'url' => ['site/clients']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="client-data-index">
@@ -26,23 +27,21 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
+            'clientNumber',
             'name',
-            'abr',
             //'adress',
             //'postal',
-            //'city',
+            'city',
             'phone',
             //'fax',
             'email:email',
-            //'nip',
-            //'krs',
-            //'regon',
-            'www',
-            'description',
-            // 'creDate',
+            'nip',
+            'krs',
+            'regon',
+            'creTime',
             // 'updDate',
-            'creUserId',
-            // 'updUserId',
+            'creUserName',
+            //'updUserName',
             // 'contactId',
            
             ['class' => 'yii\grid\ActionColumn',],
