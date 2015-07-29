@@ -8,7 +8,6 @@ use common\models\PermissionHelpers;
 /* @var $model frontend\models\Profile */
 
 $this->title = $model->user->username . "'s Profile";
-$this->params['breadcrumbs'][] = ['label' => 'Profiles', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -23,13 +22,13 @@ $this->params['breadcrumbs'][] = $this->title;
                                ['class' => 'btn btn-primary']);        
     }?>
     
-    <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-        'class' => 'btn btn-danger',
-        'data' => [
-            'confirm' => Yii::t('app', 'Are you sure to delete this item?'),
-            'method' => 'post',
-        ],
-        ]); ?>
+    <?php // Html::a('Delete', ['delete', 'id' => $model->id], [
+//        'class' => 'btn btn-danger',
+//        'data' => [
+//            'confirm' => Yii::t('app', 'Are you sure to delete this item?'),
+//            'method' => 'post',
+//        ],
+//        ]); ?>
     
     </p>
 
@@ -38,12 +37,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             //'id',
             'user.username',
-            'first_name',
-            'last_name',
+            'firstName',
+            'lastName',
+            'userEmail',
             'birthdate',
-            'gender.gender_name',
-            'created_at',
-            'updated_at',
+            'gender.genderName',
+            'created',
+            'updated',
             //'user_id',
         ],
     ]) ?>

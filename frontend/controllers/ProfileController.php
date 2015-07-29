@@ -95,7 +95,7 @@ class ProfileController extends Controller {
         
         PermissionHelpers::requireUpgradeTo( 'Paid' );
         
-        if ( $model = Profile::find()->where( ['user_id' => Yii::$app->user->identity->id ] )->one() ) {
+        if ( $model = Profile::find()->where( ['userId' => Yii::$app->user->identity->id ] )->one() ) {
             if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
                 return $this->redirect( ['view' ] );
             } else {
@@ -114,7 +114,7 @@ class ProfileController extends Controller {
      */
     public function actionDelete() {
 
-        $model = Profile::find()->where( ['user_id' => Yii::$app->user->identity->id ] )->one();
+        $model = Profile::find()->where( ['userId' => Yii::$app->user->identity->id ] )->one();
 
         $this->findModel( $model->id )->delete();
         return $this->redirect( ['site/index' ] );

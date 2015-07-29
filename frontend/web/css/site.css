@@ -23,6 +23,11 @@ body {
 .well-e {
     background-color: transparent;
     text-shadow: 0px 1px silver;
+    transition: border-color 1s ease;
+}
+
+.well-e:hover {
+    border-color: #83C503;
 }
 .wrap > .container {
     padding: 70px 15px 20px;
@@ -31,7 +36,7 @@ body {
 .footer {
     height: 60px;
     background-color: #e6e6e6;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #83C503;
     padding-top: 20px;
 }
 

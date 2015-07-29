@@ -8,7 +8,8 @@ use \yii\helpers\Html;
 use yii\web\NotFoundHttpException;
 
 /* @var $this yii\web\View */
-$this->title = 'Client Manager';
+$this->title = 'Prospect Client Manager';
+$this->params['breadcrumbs'][] = ['label' => 'Client Manager', 'url' => ['site/clients']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -23,15 +24,12 @@ $this->params['breadcrumbs'][] = $this->title;
             <p><span>LOGO PLACE HOLDER</span></p>
         </div>
         
-        <div class="well well-e message">
-            <h3>Client Management panel</h3>
+          <div class="well well-e message">
+            <h3>Prospect Client Management panel</h3>
             <ul>
-                <li>Clients - actuall clients list, full manage panel.</li>
-                <li>Clients Contacs - actuall clients contacts manage panel. </li>
-                <li>Other Clients - go here to add new clients, that don`t directly cooperare with <span>TMA-AUTOMATION</span>.</li>
+                <li>Prospects clients - manage clients that aren't dirreclty cooperating with <span>TMA-AUTOMATICS</span>.</li>
+                <li>Contacts - manage contacts for prospect clients. </li>
             </ul>
-           
-
         </div>
 
     
@@ -51,14 +49,14 @@ if(Yii::$app->user->isGuest) {
 }
     
 
-echo Html::a( 'Clients', ['client/index' ], ['class' => 'btn btn-default' ] );
+echo Html::a( 'Prospect Clients', ['o-client-data/index' ], ['class' => 'btn btn-default' ] );
 ?>
 
 
 
 
                         <div class="mainbox_info">
-                                * Manage actual clients list.
+                                * Manage prospect client list.
                         </div>              
 
                     </div>
@@ -71,39 +69,20 @@ echo Html::a( 'Clients', ['client/index' ], ['class' => 'btn btn-default' ] );
 
 
 <?php
-echo Html::a( 'Contacts', ['client-contacts/index'], ['class' => 'btn btn-default' ] );
+echo Html::a( 'Contacts', ['o-client-contacts/index'], ['class' => 'btn btn-default' ] );
 ?>
 
 
 
 
                         <div class="mainbox_info">
-                                * Manage Contacts for actual aclients.
+                                * Manage Contacts for prospect clients.
                         </div>            
 
                     </div>
 
                 </div>
 
-                <div class="col-lg-4">
-
-                    <div class="mainbox">
-
-
-<?php
-echo Html::a( 'Other clients', ['site/other-clients'], ['class' => 'btn btn-default' ] );
-?>
-
-
-
-
-                       <div class="mainbox_info">
-                                *Manage prospect clients list.
-                        </div>            
-
-                    </div>
-
-                </div>
             </div>
             
             <div class="row">
@@ -115,7 +94,7 @@ echo Html::a( 'Other clients', ['site/other-clients'], ['class' => 'btn btn-defa
 
 
 <?php
-echo Html::a( 'Go back', ['site/main'], ['class' => 'btn btn-default' ] );
+echo Html::a( 'Go back', ['site/clients'], ['class' => 'btn btn-default pullright' ] );
 ?>
 
 

@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel frontend\models\search\ClientSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Actual Clients List';
+$this->title = 'Clients List';
 $this->params['breadcrumbs'][] = ['label' => 'Clients Manager', 'url' => ['site/clients']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

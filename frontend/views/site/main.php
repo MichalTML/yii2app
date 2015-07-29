@@ -22,12 +22,12 @@ $this->title = 'TMA Project Manager';
             <p><span>LOGO PLACE HOLDER</span></p>
         </div>
         
-        <div class="well">
-            Basic instructions go here.
-            <br/>
-            Basic instructions go here.
-            <br/>
-            Basic instructions go here.
+         <div class="well well-e message">
+            <h3>Client Management panel</h3>
+            <ul>
+                <li>Project Manager - manage projects, you can also add new clients and client contacts deeper in the menu.</li>
+                <li>Clients Manager - client managament panel, go here to manage clients / clients contacts or add other clients. </li>
+            </ul>
         </div>
 
     

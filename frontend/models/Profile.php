@@ -15,13 +15,13 @@ use yii\behaviors\TimestampBehavior;
  * This is the model class for table "profile".
  *
  * @property string $id
- * @property string $user_id
- * @property string $first_name
- * @property string $last_name
+ * @property string $userId
+ * @property string $firstName
+ * @property string $lastName
  * @property string $birthdate
- * @property integer $gender_id
- * @property string $created_at
- * @property string $updated_at
+ * @property integer $genderId
+ * @property string $created
+ * @property string $updated
  *
  * @property Gender $gender
  */
@@ -39,13 +39,12 @@ class Profile extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [[ 'user_id', 'first_name', 'last_name', 'birthdate'], 'required' ],
-            [[ 'user_id', 'gender_id' ], 'integer' ],
-            [[ 'first_name', 'last_name' ], 'string' ],
-            [[ 'birthdate', 'created_at', 'updated_at' ], 'safe' ],
+            [[ 'userId', 'firstName', 'lastName', 'birthdate', 'genderId'], 'required' ],
+            [[ 'userId', 'genderId' ], 'integer' ],
+            [[ 'firstName', 'lastName' ], 'string' ],
+            [[ 'birthdate', 'created', 'updated' ], 'safe' ],
             [[ 'birthdate' ], 'date', 'format' => 'Y-m-d' ],
             //[['birthdate'], 'date', 'format' => 'php:Y-m-d'];
-            [[ 'gender_id' ], 'in', 'range' => array_keys( $this->getGenderList() ) ],
         ];
     }
 
@@ -55,13 +54,13 @@ class Profile extends \yii\db\ActiveRecord {
     public function attributeLabels() {
         return [
             'id' => 'ID',
-            'user_id' => 'User ID',
-            'first_name' => 'First Name',
-            'last_name' => 'Last Name',
+            'userId' => 'User ID',
+            'firstNme' => 'First Name',
+            'lastName' => 'Last Name',
             'birthdate' => 'Birthdate',
-            'gender_id' => 'Gender ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'genderId' => 'Gender ID',
+            'created' => 'Created At',
+            'updated' => 'Updated At',
             'genderName' => Yii::t( 'app', 'Gender' ),
             'userLink' => Yii::t( 'app', 'User' ),
             'profileLink' => Yii::t( 'app', 'Profile' )
@@ -77,8 +76,8 @@ class Profile extends \yii\db\ActiveRecord {
             'timestamp' => [
                 'class' => TimestampBehavior::className(),
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at' ],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at' ],
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created', 'updated' ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated' ],
                 ],
                 'value' => new Expression( 'NOW()' ),
             ],
@@ -89,7 +88,7 @@ class Profile extends \yii\db\ActiveRecord {
      * @return \yii\db\ActiveQuery
      */
     public function getGender() {
-        return $this->hasOne( Gender::className(), ['id' => 'gender_id' ] );
+        return $this->hasOne( Gender::className(), ['id' => 'genderId' ] );
     }
     
     /**
@@ -118,13 +117,17 @@ class Profile extends \yii\db\ActiveRecord {
     
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'userId']);
     }
     
     /**
      * @get Username
      */
-    
+    public function getUserEmail()
+    {
+        return $this->user->email;
+        
+    }
     public function getUsername()
     {
         return $this->user->username;
@@ -177,7 +180,7 @@ class Profile extends \yii\db\ActiveRecord {
     {
         if ($this->validate()) {
             $user = new Profile();
-            $user->first_name = $this->username;
+            //$user->first_name = $this->username;
             $user->email = $this->email;
             $user->setPassword($this->password);
             $user->generateAuthKey();

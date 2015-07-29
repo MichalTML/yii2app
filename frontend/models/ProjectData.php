@@ -28,7 +28,7 @@ use yii\behaviors\AttributeBehavior;
  * @property string $creTime
  * @property integer $creUserId
  * @property string $updTime
- * @property integer $updUserId
+ * @property integer $updUserId 
  * @property string $endTime
  *
  * @property ProjectStatus $projectStatus0
@@ -77,7 +77,7 @@ class ProjectData extends \yii\db\ActiveRecord {
             'creUserName' => 'Created by',
             'updTime' => 'Update Time',
             'projectStatus0Name' => 'Status',
-            'constructorNames' => 'Project Constructors',
+            'projectPermissionsUsers' => 'Project Constructors',
         ];
     }
 
@@ -144,11 +144,11 @@ class ProjectData extends \yii\db\ActiveRecord {
         
        foreach($userIdList as $users => $user){
        
-       $userProfile = Profile::find()->where(['user_id' => $user['id']])->one();
-//       var_dump($userProfile->first_name);
+       $userProfile = Profile::find()->where(['userId' => $user['id']])->one();
+//       var_dump($userProfile->firstName);
 //       die();
-       $userFirstName = $userProfile->first_name;
-       $userLastName = $userProfile->last_name;
+       $userFirstName = $userProfile->firstName;
+       $userLastName = $userProfile->lastName;
        $userCombine = $userFirstName.' '.$userLastName;
        $constructorList[$user['id']] = $userCombine;
        
@@ -192,6 +192,17 @@ class ProjectData extends \yii\db\ActiveRecord {
     {
         return $this->hasMany(ProjectPermissions::className(), ['projectId' => 'id']);
     }
+    public function getProjectPermissionsUsers()
+    {
+        foreach($this->projectPermissions as $key){
+        $username = Profile::find()->where(['userId' => $key->userId])->one();
+        $userNames[] = $username->firstName . ' ' . $username->lastName;
+        }
+        
+       return $userNames = implode(' ', $userNames );
+        
+    }
+    
     
     /**
      * @return \yii\db\ActiveQuery
@@ -207,7 +218,7 @@ class ProjectData extends \yii\db\ActiveRecord {
      
     public function getClientName()
     {
-        return $this->client ? $this->client->name : '- no client name -';
+        return $this->client ? $this->client->name : '--';
     }
     
     public function getClientList() {

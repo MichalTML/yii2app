@@ -11,7 +11,6 @@ $this->params['breadcrumbs'][] = ['label' => 'Project list', 'url' => ['index']]
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="project-data-view">
-
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
@@ -34,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'projectStatus0Name',
             'ClientName', 
             'creUserName',
+            'projectPermissionsUsers',
             'creTime',            
             'updUserName',
             'updTime',                 

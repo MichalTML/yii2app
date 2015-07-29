@@ -36,7 +36,7 @@ FontAwesomeAsset::register($this);
                 'brandLabel' => '<img syle="margin: 0; padding: 0px;" src="http://workspace.telemobile.pl/test/KAROL/RFswitchATT_Michal/Testing/images/logo.png"> Project Manager <i class="fa fa-plug"></i>',
                 'brandUrl' => ['/site/main'],
                 'options' => [
-                    'class' => 'navbar-inverse navbar-fixed-top',
+                    'class' => 'navbar-inverse navbar-fixed-top nav-border',
                 ],                
             ]);            
             $menuItems = [
@@ -47,7 +47,7 @@ FontAwesomeAsset::register($this);
                 $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
                 $menuItems[] = ['label' => 'Login', 'url' => ['site/login']];
             } else {
-                $menuItems[] = ['label' => 'Profile', 'url' =>['/profile/view']];
+                $menuItems[] = ['label' => 'Profile', 'url' =>['profile/view']];
 //                $menuitems[] = ['label' => 'Create Profile', 'url' =>['/profile']]
                 $menuItems[] = [
                     'label' => 'Logut (' . Yii::$app->user->identity->username . ')',

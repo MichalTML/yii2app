@@ -14,9 +14,9 @@ use yii\jui\DatePicker;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'first_name')->textInput(['maxlength' => 45]) ?>
+    <?= $form->field($model, 'firstName')->textInput(['maxlength' => 45]) ?>
 
-    <?= $form->field($model, 'last_name')->textInput(['maxlength' => 45]) ?>          
+    <?= $form->field($model, 'lastName')->textInput(['maxlength' => 45]) ?>          
 <br />
    <?= $form->field($model, 'birthdate')->widget(DatePicker::className(),[
         'dateFormat' => 'yyyy-MM-dd',
@@ -26,7 +26,7 @@ use yii\jui\DatePicker;
         
     ]) ?>
 <br />
-    <?= $form->field($model, 'gender_id')->dropDownList($model->genderList, ['prompt' => 'Please Choose One']); ?>
+    <?= $form->field($model, 'genderId')->dropDownList($model->genderList, ['prompt' => 'Please Choose One']); ?>
 
 <div class="form-group">
     <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

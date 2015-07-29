@@ -88,6 +88,12 @@ class SiteController extends Controller
         $this->layout = 'menu';
         return $this->render('clients');
     }
+    
+    public function actionOtherClients()
+    {
+        $this->layout = 'menu';
+        return $this->render('otherClients');
+    }
 
     public function actionLogin()
     {
@@ -116,7 +122,7 @@ class SiteController extends Controller
 
     public function actionContact()
     {
-        $this->layout = 'menu';
+        //$this->layout = 'menu';
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail(Yii::$app->params['adminEmail'])) {

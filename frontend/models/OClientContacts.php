@@ -1,0 +1,178 @@
+<?php
+
+namespace frontend\models;
+
+use Yii;
+
+use frontend\models\OClientData;
+use frontend\models\Gender;
+use common\models\User;
+use yii\helpers\ArrayHelper;
+use yii\db\Expression;
+use yii\db\ActiveRecord;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\AttributeBehavior;
+
+/**
+ * This is the model class for table "o_client_contacts".
+ *
+ * @property integer $id
+ * @property integer $clientId
+ * @property string $firstName
+ * @property string $lastName
+ * @property integer $genderId
+ * @property string $phone
+ * @property string $fax
+ * @property string $email
+ * @property string $department
+ * @property string $position
+ * @property string $creTime
+ * @property integer $creUserId
+ * @property string $updTime
+ * @property integer $updUserId
+ * @property string $description
+ *
+ * @property Gender $gender
+ * @property User $creUser
+ * @property User $updUser
+ * @property OClientData $client
+ */
+class OClientContacts extends \yii\db\ActiveRecord
+{
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'o_client_contacts';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['clientId', 'firstName', 'lastName', 'gender', 'phone', 'email'], 'required'],
+            [['clientId', 'genderId', 'creUserId', 'updUserId'], 'integer'],
+            [['creTime', 'updTime'], 'safe'],
+            [['firstName', 'lastName', 'phone', 'fax', 'department', 'position'], 'string', 'max' => 45],
+            [['email'], 'string', 'max' => 100],
+            [['description'], 'string', 'max' => 255]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'clientId' => 'Client ID',
+            'firstName' => 'First Name',
+            'lastName' => 'Last Name',
+            'genderId' => 'Gender ID',
+            'phone' => 'Phone',
+            'fax' => 'Fax',
+            'email' => 'Email',
+            'department' => 'Department',
+            'position' => 'Position',
+            'creTime' => 'Cre Time',
+            'creUserId' => 'Cre User ID',
+            'updTime' => 'Upd Time',
+            'updUserId' => 'Upd User ID',
+            'description' => 'Description',
+        ];
+    }
+    
+      public function behaviors() {
+
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['creTime', 'updTime' ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updTime' ],
+                ],
+                'value' => new Expression( 'NOW()' ),
+            ],
+            'createstamp' => [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['creUserId' ],
+                ],
+                'value' => function ($event)
+        {
+            return Yii::$app->user->identity->id;
+        }
+            ],
+            'updatestamp' => [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['updUserId' ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updUserId' ],
+                ],
+                'value' => function ($event)
+        {
+            return Yii::$app->user->identity->id;
+        }
+            ],
+        ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGender()
+    {
+        return $this->hasOne(Gender::className(), ['id' => 'genderId']);
+    }
+    public function getGenderList()
+    {
+        $droptions = Gender::find()->asArray()->all();
+        return ArrayHelper::map( $droptions, 'id', 'genderName');
+    }
+    public function getGenderName() {
+        return $this->gender->genderName;        
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCreUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'creUserId']);
+    }
+    public function getCreUserName()
+    {
+        return $this->creUser ? $this->creUser->username : '--not set--';
+    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUpdUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'updUserId']);
+    }
+    public function getUpdUserName()
+    {
+        return $this->updUser ? $this->updUser->username : '--not set--';
+    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getClient()
+    {
+        return $this->hasOne(OClientData::className(), ['id' => 'clientId']);
+    }
+    public function getClientList()
+    {
+        $droptions = OClientData::find()->asArray()->all();
+        return ArrayHelper::map( $droptions, 'id', 'name');
+    }
+    public function getClientName()
+    {
+        return $this->client->name;
+    }
+}

@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'deadline',
             'projectStatus0Name',
             'ClientName', 
+            'projectPermissionsUsers',
             'creUserName',
             'creTime',            
             'updUserName',
