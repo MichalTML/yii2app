@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model frontend\models\ProjectData */
 
-$this->title = 'Update Project ' . ' '.$model->projectName;
+$this->title = 'Update Project ' . ' P'.$model->sygnature.'_'.$model->projectName;
 $this->params['breadcrumbs'][] = ['label' => 'Project list', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->projectName, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';

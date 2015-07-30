@@ -2,6 +2,7 @@
 namespace frontend\models;
 
 use common\models\User;
+use frontend\models\Profile;
 use yii\base\Model;
 use Yii;
 
@@ -48,6 +49,7 @@ class SignupForm extends Model
             $user->email = $this->email;
             $user->setPassword($this->password);
             $user->generateAuthKey();
+                        
             if ($user->save()) {
                 return $user;
             }

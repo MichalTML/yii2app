@@ -53,7 +53,7 @@ class ProjectData extends \yii\db\ActiveRecord {
         return [
             [[ 'projectName', 'clientId', 'deadline', 'projectStatus', 'sygnature' ], 'required' ],
             [[ 'id', 'clientId' ], 'integer' ],
-            [[ 'id', 'sygnature', 'clientId'], 'unique' ],
+            [[ 'id', 'sygnature'], 'unique' ],
             [[ 'projectName' ], 'string', 'max' => 100 ],
             [[ 'sygnature'], 'string', 'max' => 4 ]
         ];
@@ -116,8 +116,8 @@ class ProjectData extends \yii\db\ActiveRecord {
     /**
      * set project name
      */
-    public function setProjectName($id, $projectName) {
-        $projectName = 'P'.$id.'_'.$projectName;
+    public function setProjectName($sygnature, $projectName) {
+        $projectName = 'P'.$sygnature.'_'.$projectName;
         $this->projectName = $projectName;
         if($this->save()){
             return true;

@@ -32,6 +32,7 @@ class OClientDataController extends Controller
      */
     public function actionIndex()
     {
+        $this->layout = 'action';
         $searchModel = new OClientDataSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -48,6 +49,7 @@ class OClientDataController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'action';
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -60,6 +62,7 @@ class OClientDataController extends Controller
      */
     public function actionCreate()
     {
+        $this->layout = 'action';
         $model = new OClientData();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -79,6 +82,7 @@ class OClientDataController extends Controller
      */
     public function actionUpdate($id)
     {
+        $this->layout = 'action';
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

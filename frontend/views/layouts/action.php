@@ -28,7 +28,7 @@ FontAwesomeAsset::register($this);
 </head>
 <body>
     <?php $this->beginBody() ?>
-    <div class="wrap bg">
+    <div class="wrap bg2">
         
         <?php
             

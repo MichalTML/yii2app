@@ -16,8 +16,11 @@ use yii\jui\DatePicker;
 
     <?= $form->field($model, 'firstName')->textInput(['maxlength' => 45]) ?>
 
-    <?= $form->field($model, 'lastName')->textInput(['maxlength' => 45]) ?>          
-<br />
+    <?= $form->field($model, 'lastName')->textInput(['maxlength' => 45]) ?> 
+    
+    <?= $form->field($user, 'email')->textInput() ?>
+    
+            <br />
    <?= $form->field($model, 'birthdate')->widget(DatePicker::className(),[
         'dateFormat' => 'yyyy-MM-dd',
         'clientOptions' => [

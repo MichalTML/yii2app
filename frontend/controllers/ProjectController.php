@@ -34,6 +34,7 @@ class ProjectController extends Controller {
      * @return mixed
      */
     public function actionIndex() {
+        $this->layout = 'action';
         $searchModel = new ProjectSearch();
         $dataProvider = $searchModel->search( Yii::$app->request->queryParams );      
         
@@ -53,7 +54,7 @@ class ProjectController extends Controller {
      * @return mixed
      */
     public function actionView( $id ) {
-
+$this->layout = 'action';
         return $this->render( 'view', [
                     'model' => $this->findModel( $id ),
                 ] );
@@ -67,11 +68,11 @@ class ProjectController extends Controller {
      * @return mixed
      */
     public function actionCreate() {
-
+$this->layout = 'action';
         $model = new ProjectData();
         $projectPermissions = new ProjectPermissions();
-        $lastId = $model->find()->select('id')->orderBy(['id' => SORT_DESC])->one();
-        $freeId = $lastId->id + 1;
+        $lastId = $model->find()->select('sygnature')->orderBy(['sygnature' => SORT_DESC])->one();
+        $freeId = $lastId->sygnature + 1;
         
         
         
@@ -97,7 +98,7 @@ class ProjectController extends Controller {
                     }
                 }
             }
-            $model->setProjectName( $model->id, $model->projectName );
+            $model->setProjectName( $model->sygnature, $model->projectName );
             return $this->redirect( ['index' ] );
         } else {
             return $this->render( 'create', [
@@ -115,12 +116,13 @@ class ProjectController extends Controller {
      * @return mixed
      */
     public function actionUpdate( $id ) {
+        $this->layout = 'action';
         $model = $this->findModel( $id );
         $projectName = preg_replace( '/.*_/', '', $model->projectName );
         $model->projectName = $projectName;
         $projectPermissions = new ProjectPermissions();
-        $lastId = $model->find()->select('id')->orderBy(['id' => SORT_DESC])->one();
-        $freeId = $lastId->id;
+        $lastId = $model->find()->select('sygnature')->orderBy(['sygnature' => SORT_DESC])->one();
+        $freeId = $lastId->sygnature;
 
         if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
 

@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use frontend\models\ProjectData;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\search\ProjectSearch */
@@ -16,9 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create new project', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create new project', ['create'], ['class' => 'btn btn-default login']) ?>
     </p>
-
+    
     <?= GridView::widget([
         'dataProvider' => $dataProvider,        
         'filterModel' => $searchModel,       
@@ -26,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn',
              'contentOptions' => ['style' => 'color: black;'],
                 ],
-
+            'sygnature',
             'projectName',            
             'deadline',
             'projectStatus0Name',
@@ -37,7 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'updUserName',
             'updTime',
            
-            
             ['class' => 'yii\grid\ActionColumn',
              'header' => 'Action',
              'headerOptions' => ['style' => 'min-width: 100px; text-align: center;'],

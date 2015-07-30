@@ -32,6 +32,7 @@ class OClientContactsController extends Controller
      */
     public function actionIndex()
     {
+        $this->layout = 'action';
         $searchModel = new OClientContactsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -48,6 +49,7 @@ class OClientContactsController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'action';
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -60,6 +62,7 @@ class OClientContactsController extends Controller
      */
     public function actionCreate()
     {
+        $this->layout = 'action';
         $model = new OClientContacts();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -83,6 +86,7 @@ class OClientContactsController extends Controller
      */
     public function actionUpdate($id)
     {
+        $this->layout = 'action';
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -102,6 +106,7 @@ class OClientContactsController extends Controller
      */
     public function actionDelete($id)
     {
+        $this->layout = 'action';
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -116,6 +121,7 @@ class OClientContactsController extends Controller
      */
     protected function findModel($id)
     {
+        $this->layout = 'action';
         if (($model = OClientContacts::findOne($id)) !== null) {
             return $model;
         } else {

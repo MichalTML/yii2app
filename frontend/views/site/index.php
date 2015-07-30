@@ -1,4 +1,5 @@
 <?php
+
 //use \yii\bootstrap\Modal;
 //use kartik\social\FacebookPlugin;
 //use \yii\bootstrap\Collapse;
@@ -10,33 +11,39 @@ $this->title = 'TMA Project Manager';
 ?>
 
 <div class="site-index">
-  <div class="jumbotron">
-      
-      
-      <?php
-      echo Html::a('Getting started with TMA PM', ['site/login'],
-      ['class' => 'btn btn-lg btn-primary']);
-      echo '<h1 style="text-shadow: 2px 2px silver;">TMA Project Manager</h1>';
-      echo '<br />';
-      echo '<p class="lead">Instructions</p>';
-      echo '<p class="lead">Basic How To</p>';
-      echo '<p class="lead">Some generall ifno</p>';
-      echo '<p class="lead">Some generall message</p>';
-      echo '<br />';      
-      
-      ?>
-     
-    
-    
-      
-      
-      
-      
-      
-      
-      
-      
-  </div>
+    <div class="jumbotron">
+        <br />
+        <br />
+        <br />
+
+        <div class ="well well-e">
+            <p><span>TMA Project Manager</span></p>
+            <p><span>LOGO PLACE HOLDER</span></p>
+        </div>
+
+        <div class="well well-e message">
+            <h3>Project Manager</h3>
+            <ul>
+                <li><b>Sing up</b> - if u dont't have account already, please sing up, and waite for your account to verified.</li>
+                <li><b>Help</b> - if u need any assistance please contact with help form.</li>
+            </ul>
+        </div>
+
+
+        <br />
+
+
+        <div class="body-content">
+
+            <div class="row">
+
+                <div class="col-lg-4">
+
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 

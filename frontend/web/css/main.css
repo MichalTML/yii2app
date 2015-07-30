@@ -49,7 +49,7 @@ NAVBAR
 */
 
 .navbar-inverse {
-    
+
 }
 
 .navbar-inverse {
@@ -74,7 +74,7 @@ NAVBAR
 .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
     background-color: #e6e6e6;
     color: #808080;
-    
+
 }
 
 .navbar-inverse .navbar-nav > li > a {
@@ -100,7 +100,9 @@ NAVBAR
 MAIN BODY
 */
 
-
+.transit {
+    transition: background-color 1s ease;
+}
 .mainbox {    
 }
 
@@ -130,7 +132,7 @@ MAIN BODY
 }
 
 .message ul{
- text-align: center;
+    text-align: center;
 }
 
 .message h3 {
@@ -147,13 +149,13 @@ MAIN BODY
 .message ul{
     padding: 0;
     width: 50%;
-     
+
     margin: auto;
     text-align: left;
 }
 .message li {
-   background: transparent url("http://www.tma-automation.com/wp-content/themes/TM-Automation/images/ul_arrow.png") no-repeat scroll left center;
-   list-style: outside none none;
+    background: transparent url("http://www.tma-automation.com/wp-content/themes/TM-Automation/images/ul_arrow.png") no-repeat scroll left center;
+    list-style: outside none none;
     margin-left: 10px;
     margin-top: 10px;
     padding-bottom: 1px;
@@ -181,3 +183,62 @@ GO BACK BUTTON
     background-color: #83C503;
     color: white;
 }
+
+.login {
+    border-color: #e6e6e6; 
+    color: white;
+    background-color: #808080;
+    border-radius: 4px;
+    transition: background-color 1s ease;
+}
+
+.login:hover {
+    background-color: #83C503;
+    color: white;
+}
+
+.login2 {
+    border-color: #e6e6e6; 
+    color: #808080;
+    background-color: #e6e6e6;
+    border-radius: 4px;
+    transition: background-color 1s ease;
+}
+
+.login2:hover {
+    background-color: #83C503;
+    color: white;
+}
+
+.btn-default {
+    transition: background-color 1s ease;
+}
+
+.btn-success {
+    border-color: #e6e6e6; 
+    color: white;
+    background-color: #808080;
+    border-radius: 4px;
+    transition: background-color 1s ease;
+}
+
+.btn-success:hover {
+    background-color: #83C503;
+    color: white;
+}
+
+.btn-info {
+    border-color: #e6e6e6; 
+    color: #808080;
+    background-color: #e6e6e6;
+    border-radius: 4px;
+    transition: background-color 1s ease;
+}
+
+.btn-info:hover {
+    background-color: #83C503;
+    color: white;
+}
+
+
+

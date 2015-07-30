@@ -21,6 +21,8 @@ $model->sygnature = $freeId;
 
     <?= Html::a( 'Add client', ['client/add' ],['class' => 'btn btn-default', 'style' => 'margin-bottom: 30px;']); ?> 
     
+    <?= Html::a( 'Promote client', ['client/add' ],['class' => 'btn btn-default', 'style' => 'margin-bottom: 30px;']); ?> 
+    
     <?= $form->field($model, 'sygnature')->textInput() ?> 
 
     <?= $form->field( $model, 'projectName' )->textInput( ['maxlength' => true ] ) ?>
@@ -47,7 +49,7 @@ $model->sygnature = $freeId;
 
 
     <div class="form-group">
-        <?= Html::submitButton( $model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary' ] ) ?>
+        <?= Html::submitButton( $model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-default login' : 'btn btn-default login' ] ) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

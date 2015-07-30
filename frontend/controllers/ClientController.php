@@ -33,6 +33,7 @@ class ClientController extends Controller
      */
     public function actionIndex()
     {
+        $this->layout = 'action';
         $searchModel = new ClientSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -49,6 +50,7 @@ class ClientController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'action';
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -61,6 +63,7 @@ class ClientController extends Controller
      */
     public function actionCreate()
     {
+        $this->layout = 'action';
         $model = new ClientData();
         
         $newClientNumber = $model->setClientNumber();
@@ -86,6 +89,7 @@ class ClientController extends Controller
      */
     public function actionUpdate($id)
     {
+        $this->layout = 'action';
         $model = $this->findModel($id);
         
         $newClientNumber = $model->setClientNumber();
@@ -131,6 +135,7 @@ class ClientController extends Controller
     
     public function actionAdd()
     {
+        $this->layout = 'action';
         $model = new ClientData();
         
         $newClientNumber = $model->setClientNumber();

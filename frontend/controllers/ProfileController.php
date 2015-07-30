@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\PermissionHelpers;
 use common\models\RecordHelpers;
+use common\models\User;
 
 /**
  * ProfileController implements the CRUD actions for Profile model.
@@ -56,6 +57,7 @@ class ProfileController extends Controller {
      * @return mixed
      */
     public function actionView() {
+        $this->layout = 'action';
         if ( $already_exists = RecordHelpers::userHas( 'profile' ) ) {
             return $this->render( 'view', ['model' => $this->findModel( $already_exists ), ] );
         } else {
@@ -92,14 +94,20 @@ class ProfileController extends Controller {
      * @return mixed
      */
     public function actionUpdate() {
-        
+        $this->layout = 'action';
         PermissionHelpers::requireUpgradeTo( 'Paid' );
+        $userId = Yii::$app->user->identity->id;
+        $user = User::find()->where(['id' => $userId])->one();
         
-        if ( $model = Profile::find()->where( ['userId' => Yii::$app->user->identity->id ] )->one() ) {
-            if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
+        if ( $model = Profile::find()->where( ['userId' => $userId ])->one() ) {
+            if ( $model->load( Yii::$app->request->post() ) && $model->save() 
+                    && $user->load ( Yii::$app->request->post()) && $user->save() ) {
                 return $this->redirect( ['view' ] );
             } else {
-                return $this->render( 'update', ['model' => $model, ] );
+                return $this->render( 'update', [
+                    'model' => $model, 
+                    'user' => $user,
+                    ]);
             }
         } else {
             throw new NotFoundHttpException( 'No Such Profile.' );

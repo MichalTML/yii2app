@@ -32,6 +32,7 @@ class ClientContactsController extends Controller {
      * @return mixed
      */
     public function actionIndex() {
+        $this->layout = 'action';
         $searchModel = new ClientContactsSearch();
         $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
 
@@ -47,6 +48,7 @@ class ClientContactsController extends Controller {
      * @return mixed
      */
     public function actionView( $id ) {
+        $this->layout = 'action';
         return $this->render( 'view', [
                     'model' => $this->findModel( $id ),
                 ] );
@@ -58,6 +60,7 @@ class ClientContactsController extends Controller {
      * @return mixed
      */
     public function actionCreate() {
+        $this->layout = 'action';
         $model = new ClientContacts();
 
         if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
@@ -74,7 +77,7 @@ class ClientContactsController extends Controller {
     }
 
     public function actionAdd() {
-
+        $this->layout = 'action';
         $model = new ClientContacts();
 
         $clientData = new ClientData();
@@ -113,6 +116,7 @@ class ClientContactsController extends Controller {
      * @return mixed
      */
     public function actionUpdate( $id ) {
+        $this->layout = 'action';
         $model = $this->findModel( $id );
 
         if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {

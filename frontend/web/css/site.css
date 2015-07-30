@@ -16,6 +16,12 @@ body {
     background-position: 0 50px;
 }
 
+.bg2 {
+    background-image: url('../images/bg2.jpg');
+    background-repeat: no-repeat;
+    background-position: 0 50px;
+}
+
 .well span {
     color: #83C503;
 }

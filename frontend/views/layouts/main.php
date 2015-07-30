@@ -40,13 +40,13 @@ FontAwesomeAsset::register($this);
                 ],                
             ]);            
             $menuItems = [
-                ['label' => 'Home', 'url' => ['/site/main']],
                 ['label' => 'Help', 'url' => ['/site/contact']],
             ];
             if (Yii::$app->user->isGuest) {
                 $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
                 $menuItems[] = ['label' => 'Login', 'url' => ['site/login']];
             } else {
+                $menuItems[] = ['label' => 'Home', 'url' => ['/site/main']];
                 $menuItems[] = ['label' => 'Profile', 'url' =>['/profile/view']];
 //                $menuitems[] = ['label' => 'Create Profile', 'url' =>['/profile']]
                 $menuItems[] = [

@@ -39,7 +39,7 @@ class Profile extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [[ 'userId', 'firstName', 'lastName', 'birthdate', 'genderId'], 'required' ],
+            [[ 'userId', 'firstName', 'lastName'], 'required' ],
             [[ 'userId', 'genderId' ], 'integer' ],
             [[ 'firstName', 'lastName' ], 'string' ],
             [[ 'birthdate', 'created', 'updated' ], 'safe' ],
