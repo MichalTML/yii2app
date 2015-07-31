@@ -2,25 +2,22 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\search\OClientDataSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 
-$this->title = 'Prospect Clients List';
-$this->params['breadcrumbs'][] = ['label' => 'Client Manager', 'url' => ['site/clients']];
-$this->params['breadcrumbs'][] = ['label' => 'Prospect Client Manager', 'url' => ['site/other-clients']];
+$this->title = 'Promote Client';
+$this->params['breadcrumbs'][] = ['label' => 'Project List', 'url' => ['project/index']];
+$this->params['breadcrumbs'][] = ['label' => 'Create project', 'url' => ['project/create']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="oclient-data-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('Create Oclient Data', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -47,7 +44,24 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'updTime',
             // 'updUserId',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+                'header' => 'Promote',
+                'template' => '<div class="action">{promote}</div>',
+                'buttons' => [
+                    'promote' => function ( $url, $model) {
+                     return Html::a('<i class="fa fa-plus"></i>', $url.='&id='.$model->id,
+                             [
+                                 'title' => Yii::t('app', 'promote'),
+                             ]);
+                    }
+                ],
+                        'urlCreator' => function ($action, $model, $key, $index) {
+                    if ($action === 'promote') {
+                        return Url::to(['o-client-data/promotion']);
+                    }
+                        }
+                
+                ],
         ],
     ]); ?>
 

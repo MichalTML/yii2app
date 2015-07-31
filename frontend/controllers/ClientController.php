@@ -66,7 +66,7 @@ class ClientController extends Controller
         $this->layout = 'action';
         $model = new ClientData();
         
-        $newClientNumber = $model->setClientNumber();
+        $newClientNumber = $model->setNewClientNumber();
 
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

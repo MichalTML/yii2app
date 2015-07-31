@@ -5,6 +5,8 @@ namespace frontend\controllers;
 use Yii;
 use frontend\models\OClientData;
 use frontend\models\search\OClientDataSearch;
+use frontend\models\ClientData;
+use frontend\models\OClientContacts;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -14,6 +16,7 @@ use yii\filters\VerbFilter;
  */
 class OClientDataController extends Controller
 {
+    
     public function behaviors()
     {
         return [
@@ -41,7 +44,78 @@ class OClientDataController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+    
+    public function actionPromote()
+    {
+        $this->layout = 'action';
+        $searchModel = new OClientDataSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        return $this->render('promote', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    
+    
+    
+    public function actionPromotion($id)
+    {
+        $this->layout = 'action';
+        $model = $this->findModel($id);
+        
+        $clientData = new ClientData; 
+        $newClientNumber = $clientData->setNewClientNumber();
+        
+        $clientContacts = new OClientContacts;
+        
+        
+        if ($model->load(Yii::$app->request->post()) /*&& $model->save()*/) {
+            if($this->moveToClients(Yii::$app->request->post(), $model->id) & $clientContacts->moveContacts($id)){
+         
+                return $this->redirect(['project/create']);
+            } else {
+                return $this->render('promprep', [
+                'model' => $model,
+                'newClientNumber' => $newClientNumber,
+            ]);
+            }
+            
+        } else {
+            return $this->render('promprep', [
+                'model' => $model,
+                'newClientNumber' => $newClientNumber,
+            ]);
+        }
+    }
+    
+    public function moveToClients($post, $id){
+        $ClientData = new ClientData;
+        
+        $ClientData->name = $post['OClientData']['name'];
+        $ClientData->clientNumber = $post['OClientData']['clientNumber'];
+        $ClientData->abr= $post['OClientData']['abr'];
+        $ClientData->adress = $post['OClientData']['adress'];
+        $ClientData->city = $post['OClientData']['city'];
+        $ClientData->postal = $post['OClientData']['postal'];
+        $ClientData->phone = $post['OClientData']['phone'];
+        $ClientData->fax = $post['OClientData']['fax'];
+        $ClientData->email = $post['OClientData']['email'];
+        $ClientData->nip = $post['OClientData']['nip'];
+        $ClientData->krs = $post['OClientData']['krs'];
+        $ClientData->regon = $post['OClientData']['regon'];
+        $ClientData->www = $post['OClientData']['www'];
+        $ClientData->description = $post['OClientData']['description'];
+        $ClientData->isNewRecord = true;
+        $ClientData->id = null;
+        
+        if($ClientData->save()){
+           $this->actionDelete($id);
+            return true;
+        }
+       return false;
+
+    }
     /**
      * Displays a single OClientData model.
      * @param integer $id
@@ -66,7 +140,7 @@ class OClientDataController extends Controller
         $model = new OClientData();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -84,7 +158,9 @@ class OClientDataController extends Controller
     {
         $this->layout = 'action';
         $model = $this->findModel($id);
-
+        
+        
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

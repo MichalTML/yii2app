@@ -76,6 +76,7 @@ class OClientData extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'statusId' => 'Status ID',
+            'statusName' => 'Status',
             'clientNumber' => 'Client Number',
             'name' => 'Name',
             'abr' => 'Abr',

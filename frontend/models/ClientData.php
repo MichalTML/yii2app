@@ -164,7 +164,8 @@ class ClientData extends \yii\db\ActiveRecord
 
     public function setClientNumber() {
         $currentYear = date( 'Y' );
-        $companyYears = 0 . substr( $currentYear, 3 );
+        $companyYears = (string)substr( $currentYear, 3 );
+        $companyYears = '0' . $companyYears;
 
         $stmt = "SELECT * FROM client_data WHERE YEAR(creTime) =" . $currentYear;
 
@@ -175,6 +176,12 @@ class ClientData extends \yii\db\ActiveRecord
         }
         $newClientNumber = $companyYears . $stmt;
         return $newClientNumber;
+    }
+    
+    public function setNewClientNumber() {
+        $newNumber = $this->setClientNumber() + 1;
+        $newNumber = (string)'0' . $newNumber;
+        return $newNumber;
     }
 
 }

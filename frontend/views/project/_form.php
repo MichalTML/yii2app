@@ -21,7 +21,7 @@ $model->sygnature = $freeId;
 
     <?= Html::a( 'Add client', ['client/add' ],['class' => 'btn btn-default', 'style' => 'margin-bottom: 30px;']); ?> 
     
-    <?= Html::a( 'Promote client', ['client/add' ],['class' => 'btn btn-default', 'style' => 'margin-bottom: 30px;']); ?> 
+    <?= Html::a( 'Promote client', ['o-client-data/promote' ],['class' => 'btn btn-default', 'style' => 'margin-bottom: 30px;']); ?> 
     
     <?= $form->field($model, 'sygnature')->textInput() ?> 
 

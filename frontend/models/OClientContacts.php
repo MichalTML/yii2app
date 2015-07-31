@@ -5,6 +5,7 @@ namespace frontend\models;
 use Yii;
 
 use frontend\models\OClientData;
+use frontend\models\ClientContacts;
 use frontend\models\Gender;
 use common\models\User;
 use yii\helpers\ArrayHelper;
@@ -12,6 +13,7 @@ use yii\db\Expression;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\AttributeBehavior;
+use frontend\controllers\OClientContactsController;
 
 /**
  * This is the model class for table "o_client_contacts".
@@ -120,7 +122,41 @@ class OClientContacts extends \yii\db\ActiveRecord
             ],
         ];
     }
-
+    
+    public function moveContacts( $clientId ) {
+        $contacts = $this->find()->where( ['clientId' => $clientId])->all();
+        $clientContacts = new ClientContacts;
+        
+        foreach($contacts as $contact){
+            $clientContacts->clientId = $clientId;
+            $clientContacts->firstName = $contact->firstName;
+            $clientContacts->lastName = $contact->lastName;
+            $clientContacts->genderId = $contact->genderId;
+            $clientContacts->phone = $contact->phone;
+            $clientContacts->fax = $contact->fax;
+            $clientContacts->email = $contact->email;
+            $clientContacts->department = $contact->department;
+            $clientContacts->position = $contact->position;
+            $clientContacts->creTime = $contact->creTime;
+            $clientContacts->creUserId = $contact->creUserId;
+            $clientContacts->updTime = $contact->updTime;
+            $clientContacts->updUserId = $contact->updUserId;
+            $clientContacts->description = $contact->description;
+            $clientContacts->isNewRecord = true;
+            $clientContacts->id = null;
+            
+            if($clientContacts->save()){
+            $delete = $this->find()->where(['id' => $contact->id])->one();
+            
+            
+            $delete->delete();
+            return true;
+            } else {
+               return false;
+            }
+       
+       }
+    }
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -175,4 +211,5 @@ class OClientContacts extends \yii\db\ActiveRecord
     {
         return $this->client->name;
     }
+    
 }

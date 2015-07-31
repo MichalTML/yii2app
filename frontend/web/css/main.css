@@ -240,5 +240,17 @@ GO BACK BUTTON
     color: white;
 }
 
+.action {
+    text-align: center;
+    width: auto;
+}
+.action a {
+    color: #337ab7;
+    transition: color 1s ease;
+}
+.action a:hover {
+    color: #83C503;
+}
+
 
 

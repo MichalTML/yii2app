@@ -97,7 +97,7 @@ class OClientContactsController extends Controller
             ]);
         }
     }
-
+    
     /**
      * Deletes an existing OClientContacts model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -128,4 +128,5 @@ class OClientContactsController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
 }
