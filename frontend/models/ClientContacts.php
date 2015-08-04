@@ -74,8 +74,10 @@ class ClientContacts extends \yii\db\ActiveRecord
             'position' => 'Position',
             'creTime' => 'Cre Time',
             'creUserId' => 'Cre User ID',
+            'creUserName' => 'Created by',
             'updTime' => 'Upd Time',
             'updUserId' => 'Upd User ID',
+            'updUserName' => 'Updated by',
             'description' => 'Description',
         ];
     }

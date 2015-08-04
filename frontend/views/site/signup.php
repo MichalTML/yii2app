@@ -11,19 +11,23 @@ $this->title = 'Signup';
 $this->params[ 'breadcrumbs' ][] = $this->title;
 ?>
 <div class="site-signup">
-    <h1><?= Html::encode( $this->title ) ?></h1>
+    
+   
 
-
+    <br />
+    <br />
+    <br />
 
     <div class="row">
-        <div class="col-lg-5">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            
+            <div class="well well-e">
+               <h1><?= Html::encode( $this->title ) ?></h1> 
+                <p>Your signup will be reviewed by admin.</p>
+                <br />
             <?php
             $form = ActiveForm::begin(
-                            [
-                                'type' => ActiveForm::TYPE_HORIZONTAL,
-                                'formConfig' => ['showLabels' => false, 'labelSpan' => 2, 'showHints' => true ],
-                                'fullSpan' => 6,
-                            ]
             );
             ?>
 
@@ -68,6 +72,14 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                 ]
             ] )->passwordInput()
             ?>
+                
+            <?=
+            $form->field( $model, 'passwordRepeat', ['inputOptions' =>
+                [
+                    'placeholder' => $model->getAttributeLabel( 'passwordRepeat' )
+                ]
+            ] )->passwordInput()
+            ?>
 
             <br />
 
@@ -76,4 +88,6 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
 <?php ActiveForm::end(); ?>
         </div>
     </div>
+        <div class="col-lg-4"></div>
+</div>
 </div>

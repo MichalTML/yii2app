@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use common\models\PermissionHelpers;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\models\ClientData */
@@ -16,14 +17,20 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+<?php if(PermissionHelpers::requireMinimumPower(Yii::$app->user->identity->id) > 30) {      
+       echo Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
                 'method' => 'post',
             ],
-        ]) ?>
+        ]);
+        
+ } else { 
+        echo Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']);
+ } ?>
+        
+        
     </p>
 
     <?= DetailView::widget([
@@ -47,6 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'creUserName',
             'updUserName',
             'description',
+            
         ],
     ]) ?>
 

@@ -150,12 +150,9 @@ class OClientContacts extends \yii\db\ActiveRecord
             
             
             $delete->delete();
-            return true;
-            } else {
-               return false;
-            }
-       
        }
+        }
+       return true;
     }
     /**
      * @return \yii\db\ActiveQuery

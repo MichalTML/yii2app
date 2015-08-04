@@ -46,6 +46,20 @@ class PermissionHelpers {
         }
     }
     
+    public static function requireMinimumPower( $userId = null) {
+        
+ 
+        if ( $userId == null) {
+           $userRoleValue = ValueHelpers::getUsersRoleValue();
+        } else {
+           $userRoleValue = ValueHelpers::getUsersRoleValue($userId);
+        }
+        
+        return $userRoleValue;
+        
+    }
+ 
+    
     public static function userMustBeOwner($model_name, $model_id)
     {
         

@@ -42,12 +42,11 @@ use frontend\models\ClientData;
  */
 class User extends ActiveRecord implements IdentityInterface {
 
-    const STATUS_ACTIVE = 1;
-
+    
     public static function tableName() {
         return 'user';
     }
-
+    
     /**
      * behaviors
      */
@@ -70,7 +69,7 @@ class User extends ActiveRecord implements IdentityInterface {
     public function rules() {
         return [
 
-            ['status_id', 'default', 'value' => self::STATUS_ACTIVE ],
+            ['status_id', 'default', 'value' => 2],
             [[ 'status_id' ], 'in', 'range' => array_keys( $this->getStatusList() ) ],
             
             ['role_id', 'default', 'value' => 1 ],
@@ -87,7 +86,8 @@ class User extends ActiveRecord implements IdentityInterface {
             ['email', 'filter', 'filter' => 'trim' ],
             ['email', 'required' ],
             ['email', 'email' ],
-            ['email', 'unique' ],
+            ['email', 'unique' ]
+           
         ];
     }
 
@@ -113,7 +113,7 @@ class User extends ActiveRecord implements IdentityInterface {
 
     public static function findIdentity($id)
     {
-        return static::findOne( ['id' => $id, 'status_id' => self::STATUS_ACTIVE ] );
+        return static::findOne( ['id' => $id] );
     }
 
     /**
@@ -130,7 +130,7 @@ class User extends ActiveRecord implements IdentityInterface {
      */
     public static function findByusername( $username ) {
 
-        return static::findOne( ['username' => $username, 'status_id' => self::STATUS_ACTIVE ] );
+        return static::findOne( ['username' => $username] );
     }
 
     /**
@@ -145,7 +145,6 @@ class User extends ActiveRecord implements IdentityInterface {
 
         return static::findOne( [
                     'password_reset_token' => $token,
-                    'status_id' => self::STATUS_ACTIVE,
                 ] );
     }
 

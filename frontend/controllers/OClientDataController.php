@@ -72,7 +72,6 @@ class OClientDataController extends Controller
         
         if ($model->load(Yii::$app->request->post()) /*&& $model->save()*/) {
             if($this->moveToClients(Yii::$app->request->post(), $model->id) & $clientContacts->moveContacts($id)){
-         
                 return $this->redirect(['project/create']);
             } else {
                 return $this->render('promprep', [

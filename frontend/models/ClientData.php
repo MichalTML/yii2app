@@ -88,6 +88,8 @@ class ClientData extends \yii\db\ActiveRecord
             'description' => 'Description',
             'creTime' => 'Creation Time',
             'creUserId' => 'Created by ',
+            'creUserName' => 'Created by',
+            'updUserName' => 'Updated by',
             'updTime' => 'Update Time',
             'updUserId' => 'Updated by',
         ];
@@ -147,12 +149,12 @@ class ClientData extends \yii\db\ActiveRecord
     }
      public function getCreUserName()
     {
-        return $this->creUser ? $this->creUser->username : ' - no user name -';
+        return $this->creUser ? $this->creUser->username : '---';
     }
     
     public function getUpdUserName()
     {
-        return $this->updUser ? $this->updUser->username : ' - no user name -';
+        return $this->updUser ? $this->updUser->username : '---';
     }
 
     /**

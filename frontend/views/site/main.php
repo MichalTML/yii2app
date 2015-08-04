@@ -1,11 +1,12 @@
 <?php
 
-use \yii\bootstrap\Modal;
-use kartik\social\FacebookPlugin;
-use \yii\bootstrap\Collapse;
-use \yii\bootstrap\Alert;
-use \yii\helpers\Html;
+//use \yii\bootstrap\Modal;
+//use kartik\social\FacebookPlugin;
+//use \yii\bootstrap\Collapse;
+//use \yii\bootstrap\Alert;
+use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
+use common\models\PermissionHelpers;
 
 /* @var $this yii\web\View */
 $this->title = 'TMA Project Manager';
@@ -25,7 +26,13 @@ $this->title = 'TMA Project Manager';
          <div class="well well-e message">
             <h3>Client Management panel</h3>
             <ul>
-                <li>Project Manager - manage projects, you can also add new clients and client contacts deeper in the menu.</li>
+                <?php
+if(Yii::$app->user->isGuest) {
+    throw new NotFoundHttpException( 'Please login to view this page.' );
+}?>
+               <?php if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 30 ) {
+               echo '<li>Project Manager - manage projects, you can also add new clients and client contacts deeper in the menu.</li>';
+               }?>
                 <li>Clients Manager - client managament panel, go here to manage clients / clients contacts or add other clients. </li>
             </ul>
         </div>
@@ -48,7 +55,7 @@ if(Yii::$app->user->isGuest) {
     throw new NotFoundHttpException( 'Please login to view this page.' );
 }
     
-
+if(PermissionHelpers::requireMinimumPower(Yii::$app->user->identity->id) > 10){
 echo Html::a( 'Project manager', ['project/index' ], ['class' => 'btn btn-default' ] );
 ?>
 
@@ -69,6 +76,7 @@ echo Html::a( 'Project manager', ['project/index' ], ['class' => 'btn btn-defaul
 
 
 <?php
+}
 echo Html::a( 'Client manager', ['site/clients'], ['class' => 'btn btn-default' ] );
 ?>
 

@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use common\models\PermissionHelpers;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\search\ClientSearch */
@@ -19,8 +20,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create New Client', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
-    <?= GridView::widget([
+    <?php
+    if(PermissionHelpers::requireMinimumPower(Yii::$app->user->identity->id) > 30){
+        
+    echo  GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
@@ -43,10 +46,47 @@ $this->params['breadcrumbs'][] = $this->title;
             'creUserName',
             //'updUserName',
             // 'contactId',
-           
-            ['class' => 'yii\grid\ActionColumn',],
+            ['class' => 'yii\grid\ActionColumn',
+                'template' => '{view}{update}{delete}',
+                
             
             ],
-    ]); ?>
+            ],
+    ]);  
+       
+    } else {
+        
+    echo GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
 
+            //'id',
+            'clientNumber',
+            'name',
+            //'adress',
+            //'postal',
+            'city',
+            'phone',
+            //'fax',
+            'email:email',
+            'nip',
+            'krs',
+            'regon',
+            'creTime',
+            // 'updDate',
+            'creUserName',
+            //'updUserName',
+            // 'contactId',
+           ['class' => 'yii\grid\ActionColumn',
+               'template' => '{view}',                         
+           ],
+            ],
+    ]);
+    }
+    ?>
+
+        
+       
 </div>

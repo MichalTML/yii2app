@@ -14,6 +14,7 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
+    public $passwordRepeat;
 
     /**
      * @inheritdoc
@@ -32,7 +33,9 @@ class SignupForm extends Model
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
             ['password', 'required'],
+            ['passwordRepeat', 'compare', 'compareAttribute' => 'password', 'message' => 'Password doesn`t match'],
             ['password', 'string', 'min' => 6],
+            ['passwordRepeat', 'safe']
         ];
     }
 
@@ -49,7 +52,7 @@ class SignupForm extends Model
             $user->email = $this->email;
             $user->setPassword($this->password);
             $user->generateAuthKey();
-                        
+               
             if ($user->save()) {
                 return $user;
             }
