@@ -4,7 +4,7 @@
 //use kartik\social\FacebookPlugin;
 //use \yii\bootstrap\Collapse;
 //use \yii\bootstrap\Alert;
-use \yii\helpers\Html;
+//use \yii\helpers\Html;
 
 /* @var $this yii\web\View */
 $this->title = 'TMA Project Manager';
@@ -24,8 +24,10 @@ $this->title = 'TMA Project Manager';
         <div class="well well-e message">
             <h3>Project Manager</h3>
             <ul>
-                <li><b>Sing up</b> - if u dont't have account already, please sing up, and waite for your account to verified.</li>
-                <li><b>Help</b> - if u need any assistance please contact with help form.</li>
+                <li><b>Help</b> - if you need any assistance use contact form.</li>
+                <li><b>Home</b> - you can always go back to this site.</li>
+                <li><b>Sing up</b> - if you dont't have account, sign up and wait for verification.</li>
+                <li><b>Log In</b> - remember that your account need to be accepted by the admin before you can log in for the first time.</li>
             </ul>
         </div>
 

@@ -8,6 +8,7 @@ use frontend\widgets\Alert;
 use frontend\assets\FontAwesomeAsset;
 use yii\helpers\Url;
 use yii\grid\GridView;
+use yii\web\UrlManager;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -32,23 +33,39 @@ FontAwesomeAsset::register($this);
         
         <?php
             
-        NavBar::begin([
+        if(Yii::$app->user->isGuest){ 
+            
+               NavBar::begin([
                 'brandLabel' => '<img syle="margin: 0; padding: 0px;" src="http://workspace.telemobile.pl/test/KAROL/RFswitchATT_Michal/Testing/images/logo.png"> Project Manager <i class="fa fa-plug"></i>',
-                'brandUrl' => ['/site/main'],
+                'brandUrl' => ['site/login'],
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top nav-border',
                 ],                
-            ]);            
+            ]);  
+               
+           } else {
+              
+             NavBar::begin([
+                'brandLabel' => '<img syle="margin: 0; padding: 0px;" src="http://workspace.telemobile.pl/test/KAROL/RFswitchATT_Michal/Testing/images/logo.png"> Project Manager <i class="fa fa-plug"></i>',
+                'brandUrl' => ['site/main'],
+                'options' => [
+                    'class' => 'navbar-inverse navbar-fixed-top nav-border',
+                ],                
+            ]);  
+             
+           }         
             $menuItems = [
                 
                 ['label' => 'Help', 'url' => ['/site/contact']],
             ];
             if (Yii::$app->user->isGuest) {
-                $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-                $menuItems[] = ['label' => 'Login', 'url' => ['site/login']];
+                $menuItems[] = ['label' => 'Home', 'url' => ['site/index']];
+                $menuItems[] = ['label' => 'Sign up', 'url' => ['/site/signup']];
+                $menuItems[] = ['label' => 'Log In', 'url' => ['site/login']];
             } else {
                 $menuItems[] = ['label' => 'Home', 'url' => ['/site/main']];
                 $menuItems[] = ['label' => 'Profile', 'url' =>['profile/view']];
+                //$menuItems[] = ['label' => 'Administration', 'url' =>[\Yii::$app->urlManagerBackEnd->baseUrl]];
 //                $menuitems[] = ['label' => 'Create Profile', 'url' =>['/profile']]
                 $menuItems[] = [
                     'label' => 'Logut (' . Yii::$app->user->identity->username . ')',
@@ -75,7 +92,7 @@ FontAwesomeAsset::register($this);
 
     <footer class="footer">
         <div class="container">
-        <p class="pull-left">&copy; TMA-AUTOMATICS <?= date('Y') ?></p>
+        <p class="pull-left">&copy; <?= date('Y') ?> TMA AUTOMATION Sp. z o.o.</p>
         <p class="pull-right"><?= Yii::powered() ?></p>
         </div>
     </footer>

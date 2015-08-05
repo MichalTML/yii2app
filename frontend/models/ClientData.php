@@ -88,7 +88,7 @@ class ClientData extends \yii\db\ActiveRecord
             'description' => 'Description',
             'creTime' => 'Creation Time',
             'creUserId' => 'Created by ',
-            'creUserName' => 'Created by',
+            'creUser.username' => 'Created by',
             'updUserName' => 'Updated by',
             'updTime' => 'Update Time',
             'updUserId' => 'Updated by',

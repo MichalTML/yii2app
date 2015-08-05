@@ -116,6 +116,7 @@ class ClientContacts extends \yii\db\ActiveRecord
             ],
         ];
     }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -128,11 +129,11 @@ class ClientContacts extends \yii\db\ActiveRecord
     }
 
     public function getCreUserName() {
-        return $this->creUser ? $this->creUser->username : ' - no user name -';
+        return $this->creUser ? $this->creUser->username : '---';
     }
 
     public function getUpdUserName() {
-        return $this->updUser ? $this->updUser->username : ' - no user name -';
+        return $this->updUser ? $this->updUser->username : '---';
     }
 
     /**
@@ -143,7 +144,7 @@ class ClientContacts extends \yii\db\ActiveRecord
     }
 
     public function getClientName() {
-        return $this->client ? $this->client->name : '-- no client --';
+        return $this->client ? $this->client->name : '---';
     }
 
     public function getClientList() {

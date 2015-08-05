@@ -42,11 +42,21 @@ class OClientDataSearch extends OClientData
     public function search($params)
     {
         $query = OClientData::find();
-
+        $query->joinWith(['creUser', 'status']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        $dataProvider->sort->attributes['creUserName'] = 
+                [
+                    'asc' => ['user.username' => SORT_ASC],
+                    'desc' => ['user.username' => SORT_DESC],
+                ];
+        $dataProvider->sort->attributes['statusName'] =
+                [
+                    'asc' => ['o_client_data_status.statusName' => SORT_ASC],
+                    'desc' => ['o_client_data_status.statusName' => SORT_DESC],
+                ];
+        
         $this->load($params);
 
         if (!$this->validate()) {
@@ -77,7 +87,9 @@ class OClientDataSearch extends OClientData
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'nip', $this->nip])
             ->andFilterWhere(['like', 'www', $this->www])
-            ->andFilterWhere(['like', 'description', $this->description]);
+            ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'user.username', $this->creUser])
+            ->andFilterWhere(['like', 'status.status_name', $this->status]);
 
         return $dataProvider;
     }

@@ -18,8 +18,7 @@ class ClientSearch extends ClientData
     public function rules()
     {
         return [
-            [['id', 'phone', 'fax', 'krs', 'regon', 'creUserId', 'updUserId'], 'integer'],
-            [['name', 'abr', 'adress', 'email', 'nip', 'www', 'creTime', 'updTime'], 'safe'],
+            [['name', 'abr', 'adress', 'email', 'nip', 'www', 'creTime', 'updTime', 'city', 'clientNumber', 'phone', 'krs', 'regon', 'creUser'], 'safe'],
         ];
     }
 
@@ -42,12 +41,21 @@ class ClientSearch extends ClientData
     public function search($params)
     {
         $query = ClientData::find();
-
+        $query->joinWith(['creUser']);
+        
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
+        $dataProvider->sort->attributes['creUser.username'] =
+                [
+                    'asc' => ['user.username' => SORT_ASC],
+                    'desc' => ['user.username' => SORT_DESC],
+                ];
+        
         $this->load($params);
+        
+        
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -55,24 +63,32 @@ class ClientSearch extends ClientData
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'phone' => $this->phone,
-            'fax' => $this->fax,
-            'krs' => $this->krs,
-            'regon' => $this->regon,
-            'creTime' => $this->creTime,
-            'updTime' => $this->updTime,
-            'creUserId' => $this->creUserId,
-            'updUserId' => $this->updUserId,
-        ]);
+//        $query->andFilterWhere([
+//            
+//            'id' => $this->id,
+//            'phone' => $this->phone,
+//            'fax' => $this->fax,
+//            'krs' => $this->krs,
+//            'regon' => $this->regon,
+//            'creTime' => $this->creTime,
+//            'updTime' => $this->updTime,
+//            'creUserId' => $this->creUserId,
+//            'updUserId' => $this->updUserId,
+//        ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'regon', $this->regon])
+            ->andFilterWhere(['like', 'creTime', $this->creTime])
+            ->andFilterWhere( ['like', 'krs', $this->krs])
+            ->andFilterWhere(['like', 'phone', $this->phone])
+            ->andFilterWhere( ['like', 'clientNumber', $this->clientNumber])
+            ->andFilterWhere(['like', 'city', $this->city])
             ->andFilterWhere(['like', 'abr', $this->abr])
             ->andFilterWhere(['like', 'adress', $this->adress])
-            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'client_data.email', $this->email])
             ->andFilterWhere(['like', 'nip', $this->nip])
-            ->andFilterWhere(['like', 'www', $this->www]);
+            ->andFilterWhere(['like', 'www', $this->www])
+            ->andFilterWhere(['like', 'user.username', $this->creUser]);
 
         return $dataProvider;
     }

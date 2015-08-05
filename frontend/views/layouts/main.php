@@ -48,6 +48,7 @@ FontAwesomeAsset::register($this);
             } else {
                 $menuItems[] = ['label' => 'Home', 'url' => ['/site/main']];
                 $menuItems[] = ['label' => 'Profile', 'url' =>['/profile/view']];
+                $menuItems[] = ['label' => 'Administration', 'url' =>[  Yii::$app->urlManagerBackEnd->createUrl()]];
 //                $menuitems[] = ['label' => 'Create Profile', 'url' =>['/profile']]
                 $menuItems[] = [
                     'label' => 'Logut (' . Yii::$app->user->identity->username . ')',
@@ -74,7 +75,7 @@ FontAwesomeAsset::register($this);
 
     <footer class="footer">
         <div class="container">
-        <p class="pull-left">&copy; TMA-AUTOMATICS <?= date('Y') ?></p>
+        <p class="pull-left">&copy; <?= date('Y') ?> TMA AUTOMATION Sp. z o.o.</p>
         <p class="pull-right"><?= Yii::powered() ?></p>
         </div>
     </footer>

@@ -55,7 +55,7 @@ class OClientContacts extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['clientId', 'firstName', 'lastName', 'gender', 'phone', 'email'], 'required'],
+            [['clientId', 'firstName', 'lastName', 'genderId', 'phone', 'email'], 'required'],
             [['clientId', 'genderId', 'creUserId', 'updUserId'], 'integer'],
             [['creTime', 'updTime'], 'safe'],
             [['firstName', 'lastName', 'phone', 'fax', 'department', 'position'], 'string', 'max' => 45],
@@ -82,6 +82,7 @@ class OClientContacts extends \yii\db\ActiveRecord
             'position' => 'Position',
             'creTime' => 'Cre Time',
             'creUserId' => 'Cre User ID',
+            'creUserName' => 'Created by',
             'updTime' => 'Upd Time',
             'updUserId' => 'Upd User ID',
             'description' => 'Description',

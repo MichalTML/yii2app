@@ -42,11 +42,29 @@ class ClientContactsSearch extends ClientContacts
     public function search($params)
     {
         $query = ClientContacts::find();
+        $query->joinWith(['client', 'gender', 'creUser']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        
+        $dataProvider->sort->attributes['clientName'] =
+                [
+                    'asc' => ['client_data.name' => SORT_ASC],
+                    'desc' => ['client_data.name' => SORT_DESC],
+                ];
+        
+        $dataProvider->sort->attributes['genderName'] =
+                [
+                    'asc' => ['gender.genderName' => SORT_ASC],
+                    'desc' => ['gender.genderName' => SORT_DESC],
+                ];
+        $dataProvider->sort->attributes['creUserName'] =
+                [
+                    'asc' => ['user.username' => SORT_ASC],
+                    'desc' => ['user.username' => SORT_DESC],
+                ];
+        
         $this->load($params);
 
         if (!$this->validate()) {
@@ -71,7 +89,10 @@ class ClientContactsSearch extends ClientContacts
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'department', $this->department])
             ->andFilterWhere(['like', 'position', $this->position])
-            ->andFilterWhere(['like', 'description', $this->description]);
+            ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'user.username', $this->creUser])
+            ->andFilterWhere(['like', 'gender.genderName', $this->gender])
+            ->andFilterWhere(['like', 'client_data.name', $this->client]);
 
         return $dataProvider;
     }

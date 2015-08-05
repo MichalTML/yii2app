@@ -7,24 +7,18 @@ use kartik\form\ActiveForm;
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model \frontend\models\SignupForm */
 
-$this->title = 'Signup';
-$this->params[ 'breadcrumbs' ][] = $this->title;
+$this->title = 'Sign up';
 ?>
 <div class="site-signup">
-    
-   
-
-    <br />
-    <br />
-    <br />
-
+ <br />
+ <br />
     <div class="row">
         <div class="col-lg-4"></div>
         <div class="col-lg-4">
             
             <div class="well well-e">
                <h1><?= Html::encode( $this->title ) ?></h1> 
-                <p>Your signup will be reviewed by admin.</p>
+                <p>Your sign up will be reviewed by admin.</p>
                 <br />
             <?php
             $form = ActiveForm::begin(

@@ -68,12 +68,15 @@ $this->layout = 'action';
      * @return mixed
      */
     public function actionCreate() {
-$this->layout = 'action';
+        $this->layout = 'action';
         $model = new ProjectData();
         $projectPermissions = new ProjectPermissions();
         $lastId = $model->find()->select('sygnature')->orderBy(['sygnature' => SORT_DESC])->one();
+        if(isset($lastId->sygnature)){
         $freeId = $lastId->sygnature + 1;
-        
+        } else {
+            $freeid = 1;
+        }
         
         
         if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {

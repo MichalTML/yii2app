@@ -176,12 +176,12 @@ class ProjectData extends \yii\db\ActiveRecord {
 
     public function getCreUserName()
     {
-        return $this->creUser ? $this->creUser->username : ' - no user name -';
+        return $this->creUser ? $this->creUser->username : '---';
     }
     
     public function getUpdUserName()
     {
-        return $this->updUser ? $this->updUser->username : ' - no user name -';
+        return $this->updUser ? $this->updUser->username : '---';
     }
     
     
@@ -199,7 +199,7 @@ class ProjectData extends \yii\db\ActiveRecord {
         $userNames[] = $username->firstName . ' ' . $username->lastName;
         }
         
-       return $userNames = implode(' ', $userNames );
+       return $userNames = implode(' | ', $userNames );
         
     }
     
@@ -218,7 +218,7 @@ class ProjectData extends \yii\db\ActiveRecord {
      
     public function getClientName()
     {
-        return $this->client ? $this->client->name : '--';
+        return $this->client ? $this->client->name : '---';
     }
     
     public function getClientList() {
@@ -226,17 +226,27 @@ class ProjectData extends \yii\db\ActiveRecord {
         return ArrayHelper::map( $droptions, 'id', 'name' );
     }
 
-     /**
-     * @return \yii\db\ActiveQuery
-     */
+//     /**
+//     * @return \yii\db\ActiveQuery
+//     */
+//    public function getProjectStatus0()
+//    {
+//        return $this->hasOne(ProjectStatus::className(), ['id' => 'projectStatus']);
+//    }
+//    
+//    public function getProjectStatus0Name()
+//   {
+//       return $this->projectStatus0->statusName;
+//   }
+//
     public function getProjectStatus0()
     {
         return $this->hasOne(ProjectStatus::className(), ['id' => 'projectStatus']);
     }
     
-    public function getProjectStatus0Name()
+    public function getStatusName()
     {
         return $this->projectStatus0->statusName;
     }
-
+    
 }

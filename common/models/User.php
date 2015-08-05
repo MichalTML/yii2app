@@ -41,8 +41,7 @@ use frontend\models\ClientData;
  * @property int $genderId  
  */
 class User extends ActiveRecord implements IdentityInterface {
-
-    
+        
     public static function tableName() {
         return 'user';
     }
@@ -72,7 +71,7 @@ class User extends ActiveRecord implements IdentityInterface {
             ['status_id', 'default', 'value' => 2],
             [[ 'status_id' ], 'in', 'range' => array_keys( $this->getStatusList() ) ],
             
-            ['role_id', 'default', 'value' => 1 ],
+            ['role_id', 'default', 'value' => 8 ],
             [[ 'role_id' ], 'in', 'range' => array_keys( $this->getRoleList() ) ],
             
             ['user_type_id', 'default', 'value' => 1 ],

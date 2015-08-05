@@ -16,7 +16,6 @@ use yii\filters\VerbFilter;
  */
 class OClientDataController extends Controller
 {
-    
     public function behaviors()
     {
         return [
@@ -47,6 +46,7 @@ class OClientDataController extends Controller
     
     public function actionPromote()
     {
+        
         $this->layout = 'action';
         $searchModel = new OClientDataSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -60,9 +60,12 @@ class OClientDataController extends Controller
     
     
     public function actionPromotion($id)
-    {
+    {      
+        //$scenario->scenario = 'promotion';
+        
         $this->layout = 'action';
         $model = $this->findModel($id);
+        $model->scenario = 'promotion';
         
         $clientData = new ClientData; 
         $newClientNumber = $clientData->setNewClientNumber();

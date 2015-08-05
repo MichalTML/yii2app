@@ -48,15 +48,18 @@ class OClientData extends \yii\db\ActiveRecord
     {
         return 'o_client_data';
     }
-
     /**
      * @inheritdoc
      */
+    
+    
     public function rules()
     {
         return [
+            
             [['statusId', 'phone', 'fax', 'krs', 'regon', 'creUserId', 'updUserId'], 'integer'],
-            [['name', 'phone', 'email'], 'required'],
+            [['name', 'phone', 'email'], 'required'], // normal scenario
+            [[ 'name', 'adress', 'city', 'postal', 'phone', 'email', 'nip', 'krs', 'regon', 'www', 'clientNumber'], 'required', 'on' => 'promotion'], // promotion scenario
             [['creTime', 'updTime'], 'safe'],
             [['clientNumber'], 'string', 'max' => 6],
             [['name', 'city', 'postal'], 'string', 'max' => 45],
@@ -67,7 +70,7 @@ class OClientData extends \yii\db\ActiveRecord
             [['name', 'nip', 'krs'], 'unique', 'targetAttribute' => ['name', 'nip', 'krs'], 'message' => 'The combination of Name, Nip and Krs has already been taken.']
         ];
     }
-
+    
     /**
      * @inheritdoc
      */

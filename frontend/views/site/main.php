@@ -30,10 +30,10 @@ $this->title = 'TMA Project Manager';
 if(Yii::$app->user->isGuest) {
     throw new NotFoundHttpException( 'Please login to view this page.' );
 }?>
-               <?php if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 30 ) {
-               echo '<li>Project Manager - manage projects, you can also add new clients and client contacts deeper in the menu.</li>';
+               <?php if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 10 ) {
+               echo '<li>Project Manager - manage projects, add new clients and client contacts.</li>';
                }?>
-                <li>Clients Manager - client managament panel, go here to manage clients / clients contacts or add other clients. </li>
+                <li>Clients Manager - manage clients, clients contacts, other clients and their contacts. </li>
             </ul>
         </div>
 
@@ -63,7 +63,7 @@ echo Html::a( 'Project manager', ['project/index' ], ['class' => 'btn btn-defaul
 
 
                         <div class="mainbox_info">
-                                * Project managing cetner. You can do here all things that are related to Projects.
+                                * Project manager zone.
                         </div>              
 
                     </div>
@@ -83,27 +83,27 @@ echo Html::a( 'Client manager', ['site/clients'], ['class' => 'btn btn-default' 
 
 
 
-                        <div class="mainbox_info">
-                                * This is the place to review, and manage whole Client list.
+                       <div class="mainbox_info">
+                                * Client manager zone.
                         </div>            
 
                     </div>
 
                 </div>
 
-                <div class="col-lg-4">
+<!--                <div class="col-lg-4">
 
-                    <div class="mainbox">
+                    <div class="mainbox">-->
 
 
 <?php
-echo Html::a( '--------------------', [''], ['class' => 'btn btn-default' ] );
+//echo Html::a( '--------------------', [''], ['class' => 'btn btn-default' ] );
 ?>
 
 
 
 
-                       <div class="mainbox_info">
+<!--                       <div class="mainbox_info">
                                 *--------------------.
                         </div>            
 
@@ -115,14 +115,34 @@ echo Html::a( '--------------------', [''], ['class' => 'btn btn-default' ] );
                 <div class="row">
                 <div class="col-lg-4">
 
-                    <div class="mainbox">
+                    <div class="mainbox">-->
 
 
 <?php
-echo Html::a( '--------------------', ['' ], ['class' => 'btn btn-default' ] );
+//echo Html::a( '--------------------', ['' ], ['class' => 'btn btn-default' ] );
 ?>
 
 
+
+<!--
+                        <div class="mainbox_info">
+                                *--------------------.
+                        </div>             
+
+                    </div>
+
+                </div>
+                    
+                    <div class="col-lg-4">
+
+                    <div class="mainbox">-->
+
+
+<?php
+//echo Html::a( '--------------------', ['' ], ['class' => 'btn btn-default' ] );
+?>
+
+<!--
 
 
                         <div class="mainbox_info">
@@ -135,14 +155,14 @@ echo Html::a( '--------------------', ['' ], ['class' => 'btn btn-default' ] );
                     
                     <div class="col-lg-4">
 
-                    <div class="mainbox">
+                    <div class="mainbox">-->
 
 
 <?php
-echo Html::a( '--------------------', ['' ], ['class' => 'btn btn-default' ] );
+//echo Html::a( '--------------------', [''], ['class' => 'btn btn-default' ] );
 ?>
 
-
+<!--
 
 
                         <div class="mainbox_info">
@@ -153,27 +173,7 @@ echo Html::a( '--------------------', ['' ], ['class' => 'btn btn-default' ] );
 
                 </div>
                     
-                    <div class="col-lg-4">
-
-                    <div class="mainbox">
-
-
-<?php
-echo Html::a( '--------------------', [''], ['class' => 'btn btn-default' ] );
-?>
-
-
-
-
-                        <div class="mainbox_info">
-                                *--------------------.
-                        </div>             
-
-                    </div>
-
-                </div>
-                    
-                </div>
+                </div>-->
 
             </div>
         </div>

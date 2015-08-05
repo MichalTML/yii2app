@@ -15,14 +15,17 @@ class ProjectSearch extends ProjectData
     /**
      * @inheritdoc
      */
+    
+    public function attributes() {
+        return array_merge(parent::attributes(), ['projectStatus0.statusName']);
+    }
     public function rules()
     {
         return [
-            [['id', 'clientId', 'creUserId', 'updUserId'], 'integer'],
-            [['projectName', 'creTime', 'deadline', 'endTime', 'updTime'], 'safe'],
+            [['projectName', 'creTime', 'deadline', 'endTime', 'sygnature', 'updTime', 'projectStatus0.statusName'], 'safe'],
         ];
     }
-
+   
     /**
      * @inheritdoc
      */
@@ -42,11 +45,20 @@ class ProjectSearch extends ProjectData
     public function search($params)
     {
         $query = ProjectData::find();
-
+        
+        $query->joinWith(['projectStatus0']);
+                
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        
+        $dataProvider->sort->attributes['projectStatus0.statusName'] =
+                [
+                    'asc' => ['project_status.statusName' => SORT_ASC],
+                    'desc' => ['project_status.statusName' => SORT_DESC],
+                ];
+        
+        
         $this->load($params);
 
         if (!$this->validate()) {
@@ -55,21 +67,12 @@ class ProjectSearch extends ProjectData
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'clientId' => $this->clientId,
-            'creTime' => $this->creTime,
-            'clientData.name' => $this->clientId,
-            'deadline' => $this->deadline,
-            'endTime' => $this->endTime,
-            'creUserId' => $this->creUserId,
-            'updUserId' => $this->updUserId,
-            'updTime' => $this->updTime,
-        ]);
-
         $query->andFilterWhere(['like', 'id', $this->id])
-            ->andFilterWhere(['like', 'projectName', $this->projectName]);
-
+            ->andFilterWhere(['like', 'deadline', $this->deadline])
+            ->andFilterWhere(['like', 'sygnature', $this->sygnature])
+            ->andFilterWhere(['like', 'projectName', $this->projectName])
+            ->andFilterWhere(['like', 'project_data.creTime', $this->creTime])
+            ->andFilterWhere(['like', 'project_status.statusName', $this->getAttribute('projectStatus0.statusName')]);
         return $dataProvider;
     }
 }

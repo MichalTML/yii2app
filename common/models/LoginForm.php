@@ -46,8 +46,9 @@ class LoginForm extends Model {
             if ( !$user || !$user->validatePassword( $this->password ) ) {
                 $this->addError( $attribute, 'Incorrect username or password.' );
             }
-            if ($user->status_id == 2){
-                $this->addError( $attribute, 'Sry your account is innactive, please contact administrator.' );
+            if ($user->status_id !== 1){
+                Yii::$app->getSession()->setFlash( 'error', 'Your account credentials are being reviewed by admin.' );
+                $this->addError( $attribute, '' );
             }
         }
     }

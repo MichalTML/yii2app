@@ -69,7 +69,7 @@ class SiteController extends Controller
     }
 
     public function actionIndex() {
-        $this->layout = 'menu';
+        $this->layout = 'action';
         if ( Yii::$app->user->isGuest )
         {
             return $this->render( 'index' );
@@ -120,11 +120,11 @@ class SiteController extends Controller
     public function actionContact() {
         $this->layout = 'action';
         $model = new ContactForm();
-        if ( $model->load( Yii::$app->request->post() ) && $model->validate() )
+        if ( $model->load( Yii::$app->request->post() ) & $model->validate() )
         {
-            if ( $model->sendEmail( Yii::$app->params[ 'adminEmail' ] ) )
+            if ( $model->sendEmail('michal.kungonda@telemobile.pl') )
             {
-                Yii::$app->session->setFlash( 'success', 'Thank you for contacting us. We will respond to you as soon as possible.' );
+                Yii::$app->session->setFlash( 'success', 'We will respond to you as soon as possible.' );
             } else
             {
                 Yii::$app->session->setFlash( 'error', 'There was an error sending email.' );
@@ -148,19 +148,21 @@ class SiteController extends Controller
         $this->layout = 'action';
         $profile = new Profile();
         $model = new SignupForm();
-        $userm = new User;
+        $user = new User;
 
-        if ( $model->load( Yii::$app->request->post() )
-                && $profile->load( Yii::$app->request->post() ) )
-        {
+        if ( $model->load( Yii::$app->request->post())
+                && $profile->load( Yii::$app->request->post() ) )            
+        { 
+            
             if ( $user = $model->signup() )
             {
                 $userId = $user->find()->where( ['email' => $model->email ] )->one();
                 $profile->userId = $userId->id;
 
-                if ( Yii::$app->getUser()->login( $user ) && $profile->save() )
+                if ( $profile->save() )
                 {
                     $this->signUpInfo($userId->username, $profile->firstName, $profile->lastName);
+                    Yii::$app->getSession()->setFlash( 'info', 'Your account credentials are being reviewed by admin.' );
                     return $this->redirect(['index']);
                 }
             }

@@ -56,4 +56,10 @@ class ContactForm extends Model
             ->setTextBody($this->body)
             ->send();
     }
+    
+    public function getSubjects()
+    {
+        $subjectlist = ['aplication errors' => 'Application related errors','account problems' => 'Account related errors', 'other' => 'Other problems'];
+        return $subjectlist;
+    }
 }
