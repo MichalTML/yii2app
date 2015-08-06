@@ -19,17 +19,19 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         <?php
         if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 30 )
         {
-            echo Html::a( 'Delete', ['delete', 'id' => $model->clientId ], [
+            echo Html::a( 'Update', ['update', 'id' => $model->id ], ['class' => 'btn btn-primary' ] ).' ';
+          
+            echo Html::a( 'Delete', ['delete', 'id' => $model->id ], [
                 'class' => 'btn btn-danger',
                 'data' => [
                     'confirm' => 'Are you sure you want to delete this item?',
                     'method' => 'post',
                 ],
             ] );
+
         } else
         {
-
-            echo Html::a( 'Update', ['update', 'id' => $model->clientId ], ['class' => 'btn btn-primary' ] );
+            echo Html::a( 'Update', ['update', 'id' => $model->id ], ['class' => 'btn btn-primary' ] );
         }
         ?>
     </p>
@@ -38,20 +40,20 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
     DetailView::widget( [
         'model' => $model,
         'attributes' => [
-            'clientName',
+            'client.name',
             'firstName',
             'lastName',
-            'genderName',
+            'gender.genderName',
             'phone',
             'fax',
             'email:email',
             'department',
             'position',
-            'creTime',
-            'creUserName',
-            'updTime',
-            'updUserName',
             'description',
+            'creTime',
+            'creUser.username',
+            'updTime',
+            'updUser.username',
         ],
     ] )
     ?>

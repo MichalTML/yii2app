@@ -240,6 +240,19 @@ GO BACK BUTTON
     color: white;
 }
 
+
+.btn-primary {
+    border-color: #e6e6e6; 
+    color: white;
+    background-color: #808080;
+    border-radius: 4px;
+    transition: background-color 1s ease;
+}
+
+.btn-primary:hover {
+    background-color: #83C503;
+    color: white;
+}
 .action {
     text-align: center;
     width: auto;
@@ -260,4 +273,14 @@ GO BACK BUTTON
     margin-right:auto;
     width: 50%;
     text-align: center;  
+}
+
+// GRID VIEW
+
+.tdwrap {
+    color: black;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow:ellipsis;
+    min-width: 400px;
 }

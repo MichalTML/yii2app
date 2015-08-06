@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use frontend\models\OClientContacts;
 use frontend\models\search\OClientContactsSearch;
+use frontend\models\OClientData;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -75,6 +76,39 @@ class OClientContactsController extends Controller
             return $this->render('create', [
                 'model' => $model,
             ]);
+        }
+    }
+    
+    public function actionAdd() {
+        $this->layout = 'action';
+        $model = new OClientContacts();
+
+        $clientData = new OClientData;
+
+        if ( $model->load( Yii::$app->request->post() ) ) {
+
+            $client = $clientData->find()->select( 'id' )->orderBy( ['id' => SORT_DESC ] )->one();
+
+            $clientid = $client->id;
+            
+            $model->clientId = $clientid;
+            
+            if ( $model->save() ) {
+            
+                if ( isset( $_POST[ 'create' ] ) ) {
+                    return $this->redirect( ['o-client-data/index']);
+                }
+                if ( isset( $_POST[ 'add' ] ) ) {
+                    return $this->redirect( ['o-client-contacts/add']);
+                }
+            } else {
+            return $this->render( 'add', [
+                        'model' => $model,
+            ] );}
+        } else {
+            return $this->render( 'add', [
+                        'model' => $model,
+                    ] );
         }
     }
 

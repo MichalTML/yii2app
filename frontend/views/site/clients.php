@@ -26,9 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="well well-e message">
             <h3>Client Management panel</h3>
             <ul>
-                <li>Clients - actuall clients list, full manage panel.</li>
-                <li>Clients Contacs - actuall clients contacts manage panel. </li>
-                <li>Other Clients - go here to add new clients, that don`t directly cooperare with <span>TMA-AUTOMATION</span>.</li>
+                <li>Clients - clients manager panel.</li>
+                <li>Clients Contacs - clients contacts manager panel.</li>
+                <li>Other Clients - go here to manage clients, that don`t directly cooperare with <span>TMA AUTOMATION</span>.</li>
             </ul>
            
 

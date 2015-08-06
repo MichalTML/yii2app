@@ -58,6 +58,7 @@ class OClientContacts extends \yii\db\ActiveRecord
             [['clientId', 'firstName', 'lastName', 'genderId', 'phone', 'email'], 'required'],
             [['clientId', 'genderId', 'creUserId', 'updUserId'], 'integer'],
             [['creTime', 'updTime'], 'safe'],
+            ['email', 'email'],
             [['firstName', 'lastName', 'phone', 'fax', 'department', 'position'], 'string', 'max' => 45],
             [['email'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 255]
@@ -71,20 +72,19 @@ class OClientContacts extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'clientId' => 'Client ID',
+            'client.name' => 'Client Name',
+            'gender.genderName' => 'Gender',
             'firstName' => 'First Name',
             'lastName' => 'Last Name',
-            'genderId' => 'Gender ID',
             'phone' => 'Phone',
             'fax' => 'Fax',
             'email' => 'Email',
             'department' => 'Department',
             'position' => 'Position',
-            'creTime' => 'Cre Time',
-            'creUserId' => 'Cre User ID',
-            'creUserName' => 'Created by',
-            'updTime' => 'Upd Time',
-            'updUserId' => 'Upd User ID',
+            'creTime' => 'Created at',
+            'creUser.username' => 'Created by',
+            'updTime' => 'Updated at',
+            'updUser.username' => 'Updated by',
             'description' => 'Description',
         ];
     }
@@ -167,20 +167,12 @@ class OClientContacts extends \yii\db\ActiveRecord
         $droptions = Gender::find()->asArray()->all();
         return ArrayHelper::map( $droptions, 'id', 'genderName');
     }
-    public function getGenderName() {
-        return $this->gender->genderName;        
-    }
-
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getCreUser()
     {
         return $this->hasOne(User::className(), ['id' => 'creUserId']);
-    }
-    public function getCreUserName()
-    {
-        return $this->creUser ? $this->creUser->username : '--not set--';
     }
     /**
      * @return \yii\db\ActiveQuery
@@ -189,10 +181,6 @@ class OClientContacts extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'updUserId']);
     }
-    public function getUpdUserName()
-    {
-        return $this->updUser ? $this->updUser->username : '--not set--';
-    }
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -200,14 +188,15 @@ class OClientContacts extends \yii\db\ActiveRecord
     {
         return $this->hasOne(OClientData::className(), ['id' => 'clientId']);
     }
+    
+    public function getClientName()
+    {
+        return $this->client->name;
+    }
     public function getClientList()
     {
         $droptions = OClientData::find()->asArray()->all();
         return ArrayHelper::map( $droptions, 'id', 'name');
-    }
-    public function getClientName()
-    {
-        return $this->client->name;
     }
     
 }

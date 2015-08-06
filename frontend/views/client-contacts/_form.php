@@ -75,11 +75,10 @@ use kartik\form\ActiveForm;
             ]
             ])->textInput(['maxlength' => true]) ?>
 
-   <br />
-        <?= Html::submitButton( $model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary' ] ) ?>
-   
-        <?= Html::submitButton( 'Add another', ['class' => 'btn btn-info', 'name' => 'add']) ?>
-   
-    <?php ActiveForm::end(); ?>
+        <br />
+    <?= Html::submitButton( $model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary' ] ).' ' ?>
+<?php if( $model->isNewRecord == true ){
+echo Html::submitButton( 'Add contact' , ['class' => 'btn btn-info', 'name' => 'add']); 
+}?>
 
 </div>

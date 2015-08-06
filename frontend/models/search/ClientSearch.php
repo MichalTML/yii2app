@@ -15,10 +15,14 @@ class ClientSearch extends ClientData
     /**
      * @inheritdoc
      */
+      public function attributes() {
+        return array_merge(parent::attributes(), ['creUser.username']);
+    }
+    
     public function rules()
     {
         return [
-            [['name', 'abr', 'adress', 'email', 'nip', 'www', 'creTime', 'updTime', 'city', 'clientNumber', 'phone', 'krs', 'regon', 'creUser'], 'safe'],
+            [['name', 'abr', 'adress', 'email', 'nip', 'www', 'creTime', 'updTime', 'city', 'clientNumber', 'phone', 'krs', 'regon', 'creUser.username'], 'safe'],
         ];
     }
 
@@ -88,7 +92,7 @@ class ClientSearch extends ClientData
             ->andFilterWhere(['like', 'client_data.email', $this->email])
             ->andFilterWhere(['like', 'nip', $this->nip])
             ->andFilterWhere(['like', 'www', $this->www])
-            ->andFilterWhere(['like', 'user.username', $this->creUser]);
+            ->andFilterWhere(['like', 'user.username', $this->getAttribute( 'creUser.username')]);
 
         return $dataProvider;
     }

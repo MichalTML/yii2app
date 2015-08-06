@@ -28,7 +28,7 @@ $this->title = 'Help';
                     <?= $form->field( $model, 'name' ) ?>
                     <?= $form->field( $model, 'email' ) ?>
 
-                    <?= $form->field( $model, 'subject' )->dropDownList( $model->getSubjects()) ?>
+                    <?= $form->field( $model, 'subject' )->dropDownList( $model->getSubjects(), ['prompt' => ' ']) ?>
                     <?= $form->field( $model, 'body' )->textArea( ['rows' => 6 ] ) ?>
                     <?=
                     $form->field( $model, 'verifyCode' )->widget( Captcha::className(), [

@@ -120,11 +120,22 @@ class SiteController extends Controller
     public function actionContact() {
         $this->layout = 'action';
         $model = new ContactForm();
-        if ( $model->load( Yii::$app->request->post() ) & $model->validate() )
+        
+        if(\Yii::$app->user->isGuest == false){
+                $userEmail = Yii::$app->user->identity->email;
+                $userName = Yii::$app->user->identity->username;
+            
+                $model->email = $userEmail;
+                $model->name = $userName;
+            }
+        
+        if ( $model->load( Yii::$app->request->post() ) && $model->validate() )
         {
+            
             if ( $model->sendEmail('michal.kungonda@telemobile.pl') )
             {
                 Yii::$app->session->setFlash( 'success', 'We will respond to you as soon as possible.' );
+                return $this->redirect(['main']);
             } else
             {
                 Yii::$app->session->setFlash( 'error', 'There was an error sending email.' );
@@ -133,9 +144,15 @@ class SiteController extends Controller
             return $this->refresh();
         } else
         {
+            if(Yii::$app->user->isGuest){
             return $this->render( 'contact', [
                         'model' => $model,
             ] );
+            } else {
+                return $this->render( 'userContact', [
+                    'model' => $model,
+                ]);
+            }
         }
     }
 

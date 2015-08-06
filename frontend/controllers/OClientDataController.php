@@ -136,17 +136,21 @@ class OClientDataController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+   public function actionCreate()
     {
         $this->layout = 'action';
         $model = new OClientData();
-
+                
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
-        } else {
+            if(isset($_POST['add'])){
+            return $this->redirect(['o-client-contacts/add']);     
+            } else {
+                return $this->redirect(['index']);
+            }
+        } else {            
             return $this->render('create', [
-                'model' => $model,
-            ]);
+              'model' => $model,
+           ]);
         }
     }
 

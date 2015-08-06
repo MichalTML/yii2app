@@ -102,9 +102,11 @@ use kartik\form\ActiveForm;
             ] )->textarea() ?>
 
     <br />
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-
-
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'name' => 'create']) .' ' ?>
+<?php if($model->isNewRecord == true){
+        echo Html::submitButton( 'Add contact' , ['class' => 'btn btn-info', 'name' => 'add']);
+} ?>
+    
     <?php ActiveForm::end(); ?>
 
 </div>

@@ -66,17 +66,19 @@ class ProjectData extends \yii\db\ActiveRecord {
         return [
 
             'id' => 'ID',
-            'sygnature' => 'Sygnatura',
+            'sygnature' => 'Sygnature',
             'clientId' => 'Client Name',
             'projectName' => 'Project Name',
             'ClientName' => 'Client',
-            'creTime' => 'Creation Time',
+            'creTime' => 'Createt at',
             'deadline' => 'Deadline',
             'endTime' => 'End Time',
-            'updUserName' => 'Updated by',
-            'creUserName' => 'Created by',
-            'updTime' => 'Update Time',
-            'projectStatus0Name' => 'Status',
+            'creUser.username' => 'Created by',
+            'updTime' => 'Updated at',
+            'updUser.username' => 'Updated by',
+            'client.name' => 'Client',
+            'projectStatus' => 'Status',
+            'projectStatus0.statusName' => 'Status',
             'projectPermissionsUsers' => 'Project Constructors',
         ];
     }
@@ -173,18 +175,6 @@ class ProjectData extends \yii\db\ActiveRecord {
         return $this->hasOne(User::className(), ['id' => 'updUserId']);
     }
     
-
-    public function getCreUserName()
-    {
-        return $this->creUser ? $this->creUser->username : '---';
-    }
-    
-    public function getUpdUserName()
-    {
-        return $this->updUser ? $this->updUser->username : '---';
-    }
-    
-    
      /**
      * @return \yii\db\ActiveQuery
      */
@@ -192,14 +182,15 @@ class ProjectData extends \yii\db\ActiveRecord {
     {
         return $this->hasMany(ProjectPermissions::className(), ['projectId' => 'id']);
     }
+    
     public function getProjectPermissionsUsers()
     {
         foreach($this->projectPermissions as $key){
         $username = Profile::find()->where(['userId' => $key->userId])->one();
-        $userNames[] = $username->firstName . ' ' . $username->lastName;
+        $userNames[] = $username->firstName . '.' . $username->lastName;
         }
         
-       return $userNames = implode(' | ', $userNames );
+       return $userNames = implode(' ', $userNames );
         
     }
     
@@ -215,11 +206,6 @@ class ProjectData extends \yii\db\ActiveRecord {
         return $this->hasOne(ClientData::className(), ['id' => 'clientId']);
     }
     
-     
-    public function getClientName()
-    {
-        return $this->client ? $this->client->name : '---';
-    }
     
     public function getClientList() {
         $droptions = ClientData::find()->asArray()->all();
@@ -242,11 +228,6 @@ class ProjectData extends \yii\db\ActiveRecord {
     public function getProjectStatus0()
     {
         return $this->hasOne(ProjectStatus::className(), ['id' => 'projectStatus']);
-    }
-    
-    public function getStatusName()
-    {
-        return $this->projectStatus0->statusName;
     }
     
 }

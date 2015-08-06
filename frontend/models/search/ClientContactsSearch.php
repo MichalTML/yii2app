@@ -15,11 +15,15 @@ class ClientContactsSearch extends ClientContacts
     /**
      * @inheritdoc
      */
+    
+    public function attributes() {
+        return array_merge(parent::attributes(), ['client.name', 'gender.genderName', 'creUser.username']);
+    }
+    
     public function rules()
     {
         return [
-            [['clientId', 'creUserId', 'updUserId'], 'integer'],
-            [['firstName', 'lastName', 'gender', 'phone', 'fax', 'email', 'department', 'position', 'creTime', 'updTime', 'description'], 'safe'],
+            [['firstName', 'lastName', 'gender', 'phone', 'fax', 'email', 'department', 'position', 'creTime', 'updTime', 'description', 'client.name', 'gender.genderName', 'creUser.username'], 'safe'],
         ];
     }
 
@@ -48,18 +52,18 @@ class ClientContactsSearch extends ClientContacts
             'query' => $query,
         ]);
         
-        $dataProvider->sort->attributes['clientName'] =
+        $dataProvider->sort->attributes['client.name'] =
                 [
                     'asc' => ['client_data.name' => SORT_ASC],
                     'desc' => ['client_data.name' => SORT_DESC],
                 ];
         
-        $dataProvider->sort->attributes['genderName'] =
+        $dataProvider->sort->attributes['gender.genderName'] =
                 [
                     'asc' => ['gender.genderName' => SORT_ASC],
                     'desc' => ['gender.genderName' => SORT_DESC],
                 ];
-        $dataProvider->sort->attributes['creUserName'] =
+        $dataProvider->sort->attributes['creUser.username'] =
                 [
                     'asc' => ['user.username' => SORT_ASC],
                     'desc' => ['user.username' => SORT_DESC],
@@ -73,26 +77,18 @@ class ClientContactsSearch extends ClientContacts
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'clientId' => $this->clientId,
-            'creTime' => $this->creTime,
-            'creUserId' => $this->creUserId,
-            'updTime' => $this->updTime,
-            'updUserId' => $this->updUserId,
-        ]);
-
         $query->andFilterWhere(['like', 'firstName', $this->firstName])
             ->andFilterWhere(['like', 'lastName', $this->lastName])
             ->andFilterWhere(['like', 'gender', $this->gender])
-            ->andFilterWhere(['like', 'phone', $this->phone])
+            ->andFilterWhere(['like', 'client_contacts.phone', $this->phone])
             ->andFilterWhere(['like', 'fax', $this->fax])
-            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'client_contacts.email', $this->email])
             ->andFilterWhere(['like', 'department', $this->department])
             ->andFilterWhere(['like', 'position', $this->position])
             ->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'user.username', $this->creUser])
-            ->andFilterWhere(['like', 'gender.genderName', $this->gender])
-            ->andFilterWhere(['like', 'client_data.name', $this->client]);
+            ->andFilterWhere(['like', 'user.username', $this->getAttribute('creUser.name')])
+            ->andFilterWhere(['=', 'gender.genderName', $this->getAttribute('gender.genderName')])
+            ->andFilterWhere(['like', 'client_data.name', $this->getAttribute('client.name')]);
 
         return $dataProvider;
     }

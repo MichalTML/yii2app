@@ -112,7 +112,7 @@ $model->clientNumber = $newClientNumber;
 
     <br />
     <?= Html::submitButton( 'Create', ['class' => 'btn btn-success'] ) ?>
-       <?= Html::submitButton( 'Add Contacts', ['class' => 'btn btn-info', 'name' => 'add'] ); ?>
+    <?= Html::submitButton( 'Add Contacts', ['class' => 'btn btn-info', 'name' => 'add'] ); ?>
   
 <?php ActiveForm::end(); ?>
 

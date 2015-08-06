@@ -67,13 +67,14 @@ class ClientController extends Controller
         $model = new ClientData();
         
         $newClientNumber = $model->setNewClientNumber();
-
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //return $this->redirect(['view', 'id' => $model->id]);
-            return $this->redirect(['index']);
-        } else {
-            
+            if(isset($_POST['add'])){
+            return $this->redirect(['client-contacts/addn']);     
+            } else {
+                return $this->redirect(['index']);
+            }
+        } else {            
             return $this->render('create', [
               'model' => $model,
               'newClientNumber' => $newClientNumber,
@@ -138,7 +139,7 @@ class ClientController extends Controller
         $this->layout = 'action';
         $model = new ClientData();
         
-        $newClientNumber = $model->setClientNumber();
+        $newClientNumber = $model->setNewClientNumber();
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             if(isset($_POST['add'])){

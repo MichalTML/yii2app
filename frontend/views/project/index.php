@@ -22,18 +22,43 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <?= GridView::widget([
         'dataProvider' => $dataProvider,        
-        'filterModel' => $searchModel,       
+        'filterModel' => $searchModel,  
+        'rowOptions' => function($model){
+        return ['class' => 'tablew'];
+        },
         'columns' => [
             ['class' => 'yii\grid\SerialColumn',
              'contentOptions' => ['style' => 'color: black;'],
                 ],
             'sygnature',
-            'projectName',            
+            //'projectName',
+            [
+                'attribute' => 'projectName',
+                'value' => 'projectName',
+                'contentOptions' => ['style' => 'white-space: nowrap;']
+                
+            ],
+            [
+                'attribute' => 'Constructors',
+                'value' => 'ProjectPermissionsUsers',
+                'contentOptions' => ['style' => 'word-wrap: break-word;']
+                
+            ],
             'deadline',
             'projectStatus0.statusName',
-            'ClientName', 
-            'projectPermissionsUsers',
-            'creUserName',
+            'client.name', 
+//          [
+//                'attribute' => 'projectPermissions.userId',
+//                'value' => function ($data) {
+//                 $str = '';
+//                 foreach($data->projectPermissions as $permission) {
+//                 $str .= $permission->userId.',';
+//                 }
+//                 return $str;
+//                },
+//            ],
+            //'projectPermissionsUsers',
+            'creUser.username',
             'creTime',            
             //'updUserName',
             //'updTime',

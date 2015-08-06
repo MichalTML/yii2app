@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\search\OClientContactsSearch */
@@ -28,16 +29,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'clientName',
+            'client.name',
             'firstName',
             'lastName',
-            'genderName',
+            [
+                'attribute' => 'gender.genderName',
+                'value' => 'gender.genderName',
+                'filter' => Html::activeDropDownList($searchModel, 'gender.genderName', ArrayHelper::map(\frontend\models\Gender::find()->asArray()->all(), 'genderName','genderName'),['class'=>'form-control', 'prompt' => ' ']),
+],
             'phone',
             // 'fax',
             'email:email',
             'department',
             'position',
-            'creUserName',
+            'creUser.username',
             'creTime',
             // 'creUserId',
             // 'updTime',

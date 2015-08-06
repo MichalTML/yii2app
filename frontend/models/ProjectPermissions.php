@@ -51,7 +51,7 @@ class ProjectPermissions extends ActiveRecord
         return [
             'id' => 'ID',
             'projectId' => 'Project ID',
-            'userId' => 'User ID',
+            'userId' => 'Constructors',
             'create' => 'Create',
             'edit' => 'Edit',
             'view' => 'View',

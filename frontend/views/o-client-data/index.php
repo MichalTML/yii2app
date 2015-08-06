@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\search\OClientDataSearch */
@@ -27,12 +28,15 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'statusName',
+            [
+                'attribute' => 'status.statusName',
+                'value' => 'status.statusName',
+                'filter' => Html::activeDropDownList($searchModel, 'status.statusName', ArrayHelper::map(  \frontend\models\OClientDataStatus::find()->asArray()->all(), 'statusName','statusName'),['class'=>'form-control', 'prompt' => ' ']),
+],
             'name',
             //'abr',
             // 'adress',
-            // 'city',
+            'city',
             // 'postal',
             'phone',
             // 'fax',
@@ -43,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'www',
             // 'description',
             'creTime',
-            'creUserName',
+            'creUser.username',
             // 'updTime',
             // 'updUserId',
 

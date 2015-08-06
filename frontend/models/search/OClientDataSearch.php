@@ -15,11 +15,14 @@ class OClientDataSearch extends OClientData
     /**
      * @inheritdoc
      */
+    public function attributes() {
+        return array_merge(parent::attributes(), ['status.statusName', 'creUser.username']);
+    }
+    
     public function rules()
     {
         return [
-            [['id', 'statusId', 'phone', 'fax', 'krs', 'regon', 'creUserId', 'updUserId'], 'integer'],
-            [['clientNumber', 'name', 'abr', 'adress', 'city', 'postal', 'email', 'nip', 'www', 'description', 'creTime', 'updTime'], 'safe'],
+            [['status.statusName', 'name', 'phone', 'email', 'nip', 'krs', 'regon', 'creTime', 'creUser.username', 'city'], 'safe'],
         ];
     }
 
@@ -46,12 +49,12 @@ class OClientDataSearch extends OClientData
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-        $dataProvider->sort->attributes['creUserName'] = 
+        $dataProvider->sort->attributes['creUser.username'] = 
                 [
                     'asc' => ['user.username' => SORT_ASC],
                     'desc' => ['user.username' => SORT_DESC],
                 ];
-        $dataProvider->sort->attributes['statusName'] =
+        $dataProvider->sort->attributes['status.statusName'] =
                 [
                     'asc' => ['o_client_data_status.statusName' => SORT_ASC],
                     'desc' => ['o_client_data_status.statusName' => SORT_DESC],
@@ -65,31 +68,22 @@ class OClientDataSearch extends OClientData
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'statusId' => $this->statusId,
-            'phone' => $this->phone,
-            'fax' => $this->fax,
-            'krs' => $this->krs,
-            'regon' => $this->regon,
-            'creTime' => $this->creTime,
-            'creUserId' => $this->creUserId,
-            'updTime' => $this->updTime,
-            'updUserId' => $this->updUserId,
-        ]);
-
         $query->andFilterWhere(['like', 'clientNumber', $this->clientNumber])
             ->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere( ['like', 'phone', $this->phone])
             ->andFilterWhere(['like', 'abr', $this->abr])
             ->andFilterWhere(['like', 'adress', $this->adress])
             ->andFilterWhere(['like', 'city', $this->city])
             ->andFilterWhere(['like', 'postal', $this->postal])
-            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'o_client_data.email', $this->email])
             ->andFilterWhere(['like', 'nip', $this->nip])
+            ->andFilterWhere(['like', 'regon', $this->regon])
+            ->andFilterWhere(['like', 'krs', $this->krs])
             ->andFilterWhere(['like', 'www', $this->www])
+            ->andFilterWhere(['like', 'creTime', $this->creTime])
             ->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'user.username', $this->creUser])
-            ->andFilterWhere(['like', 'status.status_name', $this->status]);
+            ->andFilterWhere(['like', 'user.username', $this->getAttribute('creUser.username')])
+            ->andFilterWhere(['=', 'o_client_data_status.statusName', $this->getAttribute('status.statusName')]);
 
         return $dataProvider;
     }

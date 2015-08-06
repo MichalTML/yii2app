@@ -56,14 +56,14 @@ class ClientData extends \yii\db\ActiveRecord
         return [
             [[ 'name', 'adress', 'city', 'postal', 'phone', 'email', 'nip', 'krs', 'regon', 'www', 'clientNumber' ], 'required' ],
             [[ 'phone', 'fax', 'krs', 'regon', 'creUserId', 'updUserId' ], 'integer' ],
+            ['email', 'email'],
             [[ 'creTime', 'updTime' ], 'safe' ],
+            [[ 'clientNumber', 'name', 'regon', 'nip', 'krs',  ], 'unique'],
             [[ 'name', 'city', 'postal' ], 'string', 'max' => 45 ],
             [[ 'abr' ], 'string', 'max' => 10 ],
             [[ 'adress', 'www', 'description' ], 'string', 'max' => 255 ],
             [[ 'email' ], 'string', 'max' => 60 ],
-            [[ 'nip' ], 'string', 'max' => 12 ],
-            [[ 'name', 'regon', 'nip', 'krs', 'clientNumber' ], 'unique', 'targetAttribute' => ['name', 'regon', 'nip', 'krs' ], 'message' => 'The combination of client number, name,regon, nip and krs has already been taken.' ]
-        ];
+            [[ 'nip' ], 'string', 'max' => 12 ]];
     }
 
     /**
@@ -84,14 +84,12 @@ class ClientData extends \yii\db\ActiveRecord
             'nip' => 'Nip',
             'krs' => 'Krs',
             'regon' => 'Regon',
-            'www' => 'Www',
+            'www' => 'www site',
             'description' => 'Description',
-            'creTime' => 'Creation Time',
-            'creUserId' => 'Created by ',
+            'creTime' => 'Created at',
             'creUser.username' => 'Created by',
-            'updUserName' => 'Updated by',
-            'updTime' => 'Update Time',
-            'updUserId' => 'Updated by',
+            'updUser.username' => 'Updated by',
+            'updTime' => 'Updated at',
         ];
     }
 
@@ -147,16 +145,6 @@ class ClientData extends \yii\db\ActiveRecord
     public function getCreUser(){
         return $this->hasOne(User::className(), ['id' => 'creUserId']);
     }
-     public function getCreUserName()
-    {
-        return $this->creUser ? $this->creUser->username : '---';
-    }
-    
-    public function getUpdUserName()
-    {
-        return $this->updUser ? $this->updUser->username : '---';
-    }
-
     /**
      * @return \yii\db\ActiveQuery
      */

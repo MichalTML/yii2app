@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use kartik\form\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\ClientContacts */
+/* @var $model frontend\models\OClientContacts */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="client-contacts-form">
+<div class="oclient-contacts-form">
 
-   <?php
+    <?php
     $form = ActiveForm::begin(
                     [
                         'type' => ActiveForm::TYPE_HORIZONTAL,
@@ -20,7 +20,9 @@ use kartik\form\ActiveForm;
                     ]
     );
     ?>
-
+    
+<!--    Html::a( 'Add client', ['o-client-data/create' ],['class' => 'btn btn-default', 'style' => 'margin-bottom: 30px; margin-top: 10px']);-->
+    
     <?= $form->field($model, 'firstName', ['inputOptions' => 
             [
             'placeholder' => $model->getAttributeLabel('firstName')
@@ -70,11 +72,12 @@ use kartik\form\ActiveForm;
             'placeholder' => $model->getAttributeLabel('description')
             ]
             ])->textInput(['maxlength' => true]) ?>
+<br />
 
-  <br />
-    <?= Html::submitButton( $model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary' ] ).' ' ?>
-<?php if( $model->isNewRecord == true ){
-echo Html::submitButton( 'Add contact' , ['class' => 'btn btn-info', 'name' => 'add']); 
-}?>
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'name' => 'create']) ?>
+        
+        <?= Html::submitButton( 'Add another', ['class' => 'btn btn-info', 'name' => 'add']) ?>
+
+    <?php ActiveForm::end(); ?>
 
 </div>

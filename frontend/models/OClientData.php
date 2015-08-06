@@ -66,6 +66,7 @@ class OClientData extends \yii\db\ActiveRecord
             [['abr'], 'string', 'max' => 10],
             [['adress', 'www', 'description'], 'string', 'max' => 255],
             [['email'], 'string', 'max' => 60],
+            ['email', 'email'],
             [['nip'], 'string', 'max' => 12],
             [['name', 'nip', 'krs'], 'unique', 'targetAttribute' => ['name', 'nip', 'krs'], 'message' => 'The combination of Name, Nip and Krs has already been taken.']
         ];
@@ -79,11 +80,11 @@ class OClientData extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'statusId' => 'Status ID',
-            'statusName' => 'Status',
+            'status.statusName' => 'Status',
             'clientNumber' => 'Client Number',
             'name' => 'Name',
-            'abr' => 'Abr',
-            'adress' => 'Adress',
+            'abr' => 'Abrevation',
+            'adress' => 'Address',
             'city' => 'City',
             'postal' => 'Postal',
             'phone' => 'Phone',
@@ -92,14 +93,12 @@ class OClientData extends \yii\db\ActiveRecord
             'nip' => 'Nip',
             'krs' => 'Krs',
             'regon' => 'Regon',
-            'www' => 'Www',
+            'www' => 'www site',
             'description' => 'Description',
-            'creTime' => 'Cre Time',
-            'creUserId' => 'Cre User ID',
-            'creUserName' => 'Created by',
-            'updTime' => 'Upd Time',
-            'updUserName' => 'Updated by',
-            'updUserId' => 'Upd User ID',
+            'creTime' => 'Created at',
+            'creUser.username' => 'Created by',
+            'updTime' => 'Updated at',
+            'updUser.username' => 'Updated by',
         ];
     }
     
@@ -154,10 +153,6 @@ class OClientData extends \yii\db\ActiveRecord
         return $this->hasOne(OClientDataStatus::className(), ['id' => 'statusId']);
     }
     
-    public function getStatusName()
-    {
-        return $this->status->statusName;
-    }
     public function getStatusList()
     {
         $droptions = OClientDataStatus::find()->asArray()->all();
@@ -181,10 +176,5 @@ class OClientData extends \yii\db\ActiveRecord
     public function getCreUser()
     {
         return $this->hasOne(User::className(), ['id' => 'creUserId']);
-    }
-    public function getCreUserName()
-    {
-        return $this->creUser ? $this->creUser->username : '--not set--';
-    }
-    
+    }    
 }

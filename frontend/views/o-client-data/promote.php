@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'statusName',
+            'status.statusName',
             'name',
             //'abr',
             // 'adress',
@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'www',
             // 'description',
             'creTime',
-            'creUserName',
+            'creUser.username',
             // 'updTime',
             // 'updUserId',
 

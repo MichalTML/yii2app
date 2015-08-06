@@ -28,7 +28,7 @@ $this->title = 'TMA Project Manager';
             <ul>
                 <?php
 if(Yii::$app->user->isGuest) {
-    throw new NotFoundHttpException( 'Please login to view this page.' );
+    Yii::$app->getResponse()->redirect(['site/index']);
 }?>
                <?php if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 10 ) {
                echo '<li>Project Manager - manage projects, add new clients and client contacts.</li>';

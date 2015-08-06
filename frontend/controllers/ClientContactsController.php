@@ -93,10 +93,10 @@ class ClientContactsController extends Controller {
             if ( $model->save() ) {
             
                 if ( isset( $_POST[ 'create' ] ) ) {
-                    return $this->redirect( ['project/create' ] );
+                    return $this->redirect( ['project/create']);
                 }
                 if ( isset( $_POST[ 'add' ] ) ) {
-                    return $this->redirect( ['client-contacts/add'] );
+                    return $this->redirect( ['client-contacts/add']);
                 }
             } else {
             return $this->render( 'add', [
@@ -107,6 +107,39 @@ class ClientContactsController extends Controller {
                         'model' => $model,
                     ] );
         }
+    }
+    
+    public function actionAddn(){
+       $this->layout = 'action';
+        $model = new ClientContacts();
+
+        $clientData = new ClientData();
+
+        if ( $model->load( Yii::$app->request->post() ) ) {
+
+            $client = $clientData->find()->select( 'id' )->orderBy( ['id' => SORT_DESC ] )->one();
+
+            $clientid = $client->id;
+            
+            $model->clientId = $clientid;
+            
+            if ( $model->save() ) {
+            
+                if ( isset( $_POST[ 'create' ] ) ) {
+                    return $this->redirect( ['client/index']);
+                }
+                if ( isset( $_POST[ 'add' ] ) ) {
+                    return $this->redirect( ['client-contacts/addn']);
+                }
+            } else {
+            return $this->render( 'addn', [
+                        'model' => $model,
+            ] );}
+        } else {
+            return $this->render( 'addn', [
+                        'model' => $model,
+                    ] );
+        } 
     }
 
     /**

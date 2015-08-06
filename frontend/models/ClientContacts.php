@@ -52,6 +52,7 @@ class ClientContacts extends \yii\db\ActiveRecord
             [[ 'clientId', 'firstName', 'lastName', 'genderId', 'phone', 'email' ], 'required' ],
             [[ 'clientId', 'creUserId', 'updUserId' ], 'integer' ],
             [[ 'creTime', 'updTime' ], 'safe' ],
+            ['email', 'email'],
             [[ 'firstName', 'lastName', 'department', 'position' ], 'string', 'max' => 45 ],
             [[ 'email' ], 'string', 'max' => 100 ],
             [[ 'description' ], 'string', 'max' => 255 ]
@@ -66,19 +67,18 @@ class ClientContacts extends \yii\db\ActiveRecord
             'clientId' => 'Client Name',
             'firstName' => 'First Name',
             'lastName' => 'Last Name',
-            'genderId' => 'Gender',
+            'gender.genderName' => 'Gender',
             'phone' => 'Phone',
             'fax' => 'Fax',
             'email' => 'Email',
             'department' => 'Department',
             'position' => 'Position',
-            'creTime' => 'Cre Time',
-            'creUserId' => 'Cre User ID',
-            'creUserName' => 'Created by',
-            'updTime' => 'Upd Time',
-            'updUserId' => 'Upd User ID',
-            'updUserName' => 'Updated by',
+            'creTime' => 'Created at',
+            'creUser.username' => 'Created by',
+            'updTime' => 'Updated at',
+            'updUser.username' => 'Updated by',
             'description' => 'Description',
+            'client.name' => 'Client Name',
         ];
     }
 
@@ -128,23 +128,15 @@ class ClientContacts extends \yii\db\ActiveRecord
         return $this->hasOne( User::className(), ['id' => 'creUserId' ] );
     }
 
-    public function getCreUserName() {
-        return $this->creUser ? $this->creUser->username : '---';
-    }
-
-    public function getUpdUserName() {
-        return $this->updUser ? $this->updUser->username : '---';
-    }
-
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getClient() {
         return $this->hasOne( ClientData::className(), ['id' => 'clientId' ] );
     }
-
-    public function getClientName() {
-        return $this->client ? $this->client->name : '---';
+    public function getClientName() 
+    {
+        return $this->client->name;
     }
 
     public function getClientList() {
@@ -157,10 +149,6 @@ class ClientContacts extends \yii\db\ActiveRecord
      */
     public function getGender() {
         return $this->hasOne( Gender::className(), ['id' => 'genderId' ] );
-    }
-
-    public function getGenderName() {
-        return $this->gender->genderName;
     }
 
     public function getGenderList() {

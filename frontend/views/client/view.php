@@ -17,7 +17,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-<?php if(PermissionHelpers::requireMinimumPower(Yii::$app->user->identity->id) > 30) {      
+<?php if(PermissionHelpers::requireMinimumPower(Yii::$app->user->identity->id) > 30) {    
+    echo Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) . ' ';
        echo Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -40,8 +41,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'abr',
             'adress',
-            'postal',
             'city',
+            'postal',
             'phone',
             'fax',
             'email:email',
@@ -49,11 +50,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'krs',
             'regon',
             'www',
+            'description',
             'creTime',
             'updTime',
-            'creUserName',
-            'updUserName',
-            'description',
+            'creUser.username',
+            'updUser.username',
+            
             
         ],
     ]) ?>
