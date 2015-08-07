@@ -22,10 +22,6 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            ['username', 'filter', 'filter' => 'trim'],
-            ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
-            ['username', 'string', 'min' => 2, 'max' => 255],
 
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'required'],
@@ -48,7 +44,7 @@ class SignupForm extends Model
     {
         if ($this->validate()) {
             $user = new User();
-            $user->username = $this->username;
+            $user->username = $this->setUsername($this->email);
             $user->email = $this->email;
             $user->setPassword($this->password);
             $user->generateAuthKey();
@@ -58,5 +54,19 @@ class SignupForm extends Model
         }
 
         return null;
+    }
+    
+    /**
+     * Generating new user name from email data.dat format from xxxx.xxxxx@xxxxx.xx
+     * @param type $email
+     * @return string
+     */
+    private function setUsername($email) {
+        
+    $login = preg_filter('/@{1}.*$/', '', $email);
+    $login = explode('.', $login);
+    $login = ucfirst($login[0]) . '.' . ucfirst(substr($login[1], 0, 3));
+    
+    return $login;
     }
 }

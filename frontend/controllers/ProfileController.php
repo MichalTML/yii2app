@@ -95,7 +95,6 @@ class ProfileController extends Controller {
      */
     public function actionUpdate() {
         $this->layout = 'action';
-        PermissionHelpers::requireUpgradeTo( 'Paid' );
         $userId = Yii::$app->user->identity->id;
         $user = User::find()->where(['id' => $userId])->one();
         

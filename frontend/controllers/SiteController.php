@@ -9,12 +9,12 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use frontend\models\Profile;
+use common\models\PermissionHelpers;
 use common\models\User;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\PermissionHelpers;
 use yii\helpers\Url;
 
 /**
@@ -68,13 +68,13 @@ class SiteController extends Controller
         ];
     }
 
-    public function actionIndex() {
-        $this->layout = 'action';
+     public function actionIndex() {
+        $this->layout = 'menu';
         if ( Yii::$app->user->isGuest )
         {
-            return $this->render( 'index' );
+            return $this->redirect(['site/login']);
         }
-        return $this->render( 'main' );
+       return $this->redirect(['site/main']);
     }
 
     public function actionMain() {
@@ -93,7 +93,7 @@ class SiteController extends Controller
     }
 
     public function actionLogin() {
-        $this->layout = 'action';
+        $this->layout = 'login';
         if ( !\Yii::$app->user->isGuest )
         {
             return $this->goHome();
@@ -122,11 +122,15 @@ class SiteController extends Controller
         $model = new ContactForm();
         
         if(\Yii::$app->user->isGuest == false){
+                
+                
                 $userEmail = Yii::$app->user->identity->email;
                 $userName = Yii::$app->user->identity->username;
             
                 $model->email = $userEmail;
                 $model->name = $userName;
+            } else {
+                $model->scenario = 'captcha';
             }
         
         if ( $model->load( Yii::$app->request->post() ) && $model->validate() )

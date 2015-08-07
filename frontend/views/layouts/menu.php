@@ -25,6 +25,7 @@ FontAwesomeAsset::register($this);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
+    <link rel="shortcut icon" href="<?php \Yii::getAlias('@web') ?>/images/favicon.ico" type="image/x-icon" />
     <?php $this->head() ?>
 </head>
 <body>
@@ -56,20 +57,21 @@ FontAwesomeAsset::register($this);
            }         
             $menuItems = [
                 
-                ['label' => 'Help', 'url' => ['/site/contact']],
+                ['label' => '', 'url' => ['/site/contact'], 'options' => ['class' =>'help']],
             ];
             if (Yii::$app->user->isGuest) {
-                $menuItems[] = ['label' => 'Home', 'url' => ['site/index']];
-                $menuItems[] = ['label' => 'Sign up', 'url' => ['/site/signup']];
-                $menuItems[] = ['label' => 'Log In', 'url' => ['site/login']];
+                $menuItems[] = ['label' => '', 'url' => ['site/index'], 'options' => ['class' =>'fa fa-user']];
+                $menuItems[] = ['label' => '', 'url' => ['/site/signup']];
+                $menuItems[] = ['label' => '', 'url' => ['site/login']];
             } else {
-                $menuItems[] = ['label' => 'Home', 'url' => ['/site/main']];
-                $menuItems[] = ['label' => 'Profile', 'url' =>['profile/view']];
+                $menuItems[] = ['label' => '', 'url' => ['/site/main'], 'options' => ['class' =>'home']];
+                $menuItems[] = ['label' => '', 'url' =>['profile/view'], 'options' => ['class' =>'profile']];
                 //$menuItems[] = ['label' => 'Administration', 'url' =>[\Yii::$app->urlManagerBackEnd->baseUrl]];
 //                $menuitems[] = ['label' => 'Create Profile', 'url' =>['/profile']]
                 $menuItems[] = [
-                    'label' => 'Logut (' . Yii::$app->user->identity->username . ')',
+                    'label' => '',
                     'url' => ['/site/logout'],
+                    'options' => ['class' =>'logout'],
                     'linkOptions' => ['data-method' => 'post']                    
                 ];
             }

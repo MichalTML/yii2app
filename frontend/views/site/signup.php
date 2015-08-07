@@ -24,17 +24,15 @@ $this->title = 'Sign up';
             $form = ActiveForm::begin(
             );
             ?>
-
-
-
+                
             <?=
-            $form->field( $model, 'username', ['inputOptions' =>
+            $form->field( $model, 'email', ['inputOptions' =>
                 [
-                    'placeholder' => $model->getAttributeLabel( 'username' )
+                    'placeholder' => $model->getAttributeLabel( 'email' )
                 ]
             ] )->textInput()
             ?>
-            
+                
             <?=
             $form->field( $profile, 'firstName', ['inputOptions' =>
                 [
@@ -51,13 +49,7 @@ $this->title = 'Sign up';
             ] )->textInput()
             ?>
             
-            <?=
-            $form->field( $model, 'email', ['inputOptions' =>
-                [
-                    'placeholder' => $model->getAttributeLabel( 'email' )
-                ]
-            ] )->textInput()
-            ?>
+            <br />
 
             <?=
             $form->field( $model, 'password', ['inputOptions' =>

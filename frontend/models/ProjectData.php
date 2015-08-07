@@ -54,8 +54,10 @@ class ProjectData extends \yii\db\ActiveRecord {
             [[ 'projectName', 'clientId', 'deadline', 'projectStatus', 'sygnature' ], 'required' ],
             [[ 'id', 'clientId' ], 'integer' ],
             [[ 'id', 'sygnature'], 'unique' ],
-            [[ 'projectName' ], 'string', 'max' => 100 ],
-            [[ 'sygnature'], 'string', 'max' => 4 ]
+            [ 'projectName', 'match', 'pattern' => '/^[a-zA-Z]*$/', 'message' => 'Project name can only contain letters.' ],
+            [ 'sygnature', 'string', 'length' => [3, 3]],
+            [ 'sygnature', 'integer'],
+           
         ];
     }
 
