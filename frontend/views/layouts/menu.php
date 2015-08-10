@@ -30,14 +30,14 @@ FontAwesomeAsset::register($this);
 </head>
 <body>
     <?php $this->beginBody() ?>
-    <div class="wrap bg">
+    <div class="wrap-menu">
         
         <?php
             
         if(Yii::$app->user->isGuest){ 
             
                NavBar::begin([
-                'brandLabel' => '<img syle="margin: 0; padding: 0px;" src="http://workspace.telemobile.pl/test/KAROL/RFswitchATT_Michal/Testing/images/logo.png"> Project Manager <i class="fa fa-plug"></i>',
+                'brandLabel' => '<div class="login-logo "></div>',
                 'brandUrl' => ['site/login'],
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top nav-border',
@@ -47,7 +47,7 @@ FontAwesomeAsset::register($this);
            } else {
               
              NavBar::begin([
-                'brandLabel' => '<img syle="margin: 0; padding: 0px;" src="http://workspace.telemobile.pl/test/KAROL/RFswitchATT_Michal/Testing/images/logo.png"> Project Manager <i class="fa fa-plug"></i>',
+                'brandLabel' => '<div class="menu-logo"><img src="http://www.tma-automation.com/wp-content/themes/TM-Automation/images/logo_pm.png"></img></div>',
                 'brandUrl' => ['site/main'],
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top nav-border',
@@ -92,10 +92,47 @@ FontAwesomeAsset::register($this);
         </div>
     </div>
 
-    <footer class="footer">
+    <footer class="footer-menu">
         <div class="container">
-        <p class="pull-left">&copy; <?= date('Y') ?> TMA AUTOMATION Sp. z o.o.</p>
-        <p class="pull-right"><?= Yii::powered() ?></p>
+            <div class="row">
+                <!-- TMA FOOT LOGO -->
+                <div class="col-md-1 cols-xs-1 pull-left">
+                    <div class="tma-logo"></div>
+                </div>
+                
+              <!-- FIRST LINE -->
+            
+              
+                <div class="col-md-11 cols-xs-3 pull-left" style="margin-top:10px"> 
+                    <div class="tma-kontakt-images email"></div>
+                    
+                    <div class="tma-kontakt">
+                        <a href="mailto:info@tma-automation.com">info@tma-automation.com</a>
+                    </div>
+                </div>
+                
+              <!-- SEcond Line -->
+            
+           
+                <div class="col-md-5 cols-xs-2 pull-left">
+                    <div class="tma-kontakt-images site"></div>
+                    <div class="tma-kontakt">
+                        <a href="www.TMA-AUTOMATION.com">www.tma-automation.com</a>
+                    </div>
+                </div>
+               <div class="col-md-5 pull-right">
+                    <div class="tma-kontakt" style="float: right;">
+                        <span style="text-align:right;">&copy; <?= date('Y') ?> TMA AUTOMATION Sp. z o.o.</span>
+                    </div>
+                </div>  
+                
+            
+               <!-- THIRD LINE -->
+            
+
+              
+            </div>    
+           
         </div>
     </footer>
 

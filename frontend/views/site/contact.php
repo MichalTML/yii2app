@@ -11,40 +11,117 @@ use yii\captcha\Captcha;
 $this->title = 'Help';
 
 ?>
+
+
 <div class ="site-help">
-    <div class=""jumbotron">
-   <br />
+    
 
-        <div class="row">
-            <div class="col-lg-3"></div>
-            <div class="col-lg-6">
-                <div class="well well-e">
-                    <h1><?= Html::encode( $this->title ) ?></h1>
-                    <p>
-                        If u have problems, question, you can use this form to contact system administrator.
-                    </p>
+    <br />
+    <br />
+    <br />
 
-                    <?php $form = ActiveForm::begin( ['id' => 'contact-form' ] ); ?>
-                    <?= $form->field( $model, 'name' ) ?>
-                    <?= $form->field( $model, 'email' ) ?>
-
-                    <?= $form->field( $model, 'subject' )->dropDownList( $model->getSubjects(), ['prompt' => ' ']) ?>
-                    <?= $form->field( $model, 'body' )->textArea( ['rows' => 6 ] ) ?>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="well well-e well-login">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="login-logo "></div>
+                    </div>
+                </div>
+              <div class="row">  
+            <?php $form = ActiveForm::begin( ['id' => 'contact-form' ] ); ?>
+                    
+           <?= $form->field($model, 'name', [
+            'template' => '{beginWrapper}{input}{error}{endWrapper}',
+               'options' => [
+                   'class' => 'col-sm-12'
+                   ],
+            'inputOptions' => 
+            [
+            'placeholder' => $model->getAttributeLabel('name')
+            ],
+                    ]) ?>
+                    
+                    <?= $form->field($model, 'email', [
+            'template' => '{beginWrapper}{input}{error}{endWrapper}',
+               'options' => [
+                   'class' => 'col-sm-12'
+                   ],
+            'inputOptions' => 
+            [
+            'placeholder' => $model->getAttributeLabel('email')
+            ],
+                    ]) ?>
+                    
+                     <?= $form->field( $model, 'subject', [
+                         'template' => '{beginWrapper}{input}{error}{endWrapper}',
+                        'options' => [
+                        'class' => 'col-sm-12'
+                        ],
+                        'inputOptions' => 
+                        [
+                        'placeholder' => $model->getAttributeLabel('subject')
+                       ],])->dropDownList( $model->getSubjects(), [
+                         'prompt' => '',
+                          ]) ?>
+                    
+                    
+                     <?= $form->field( $model, 'body', [
+            'template' => '{beginWrapper}{input}{error}{endWrapper}',
+               'options' => [
+                   'class' => 'col-sm-12'
+                   ],
+            'inputOptions' => 
+            [
+            'placeholder' => $model->getAttributeLabel('Put your message here......')
+            ],])->textArea( ['rows' => 6 ] ) ?>
+                  </div> 
+                   <div class="row"> 
                     <?=
-                    $form->field( $model, 'verifyCode' )->widget( Captcha::className(), [
-                        'template' => '<div class="row"><div class="col-lg-3">{image}</div><div class="col-lg-6">{input}</div></div>',
+                    $form->field( $model, 'verifyCode',
+                            [
+                                'template' => '{beginWrapper}{input}{error}{endWrapper}',
+                                'options' => [
+                                    'class' => 'col-sm-12'
+                                    ],
+                                'inputOptions' => 
+            [
+            'placeholder' => $model->getAttributeLabel('')
+            ],])->widget( Captcha::className(), [
+                        'template' => '{image}<div style="max-width: 200px; float: right;">{input}</div>',
                     ] )
                     ?>
-                    <div class="form-group">
-                    <?= Html::submitButton( 'Submit', ['class' => 'btn btn-primary login', 'name' => 'contact-button' ] ) ?>
-                    </div>
-                    <?php ActiveForm::end(); ?>
+                   </div>
+            
+                    
+                <div class="row">
+             <div class="col-sm-12">
+              <?= Html::submitButton( 'Send', ['class' => 'btn btn-default login login-btn signup-btn', 'name' => 'contact-button' ] ) ?>
+             </div>
                 </div>
-            </div>
-            <div class="col-lg-3">
-            </div>
+                
+               
+                
+                
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul class="login-helpers">           
+                            <li><?= Html::a('Sign Up', ['site/signup']) ?> </li>   
+                            <li><?= Html::a('Forgot Password?', ['site/request-password-reset'])?></li>   
+                            <li><?= Html::a('Help', ['site/contact']) ?> </li>
+                        </ul>
+                        
+                    </div>
+                </div>
+                
+                   
 
 
+                    
+                   
+                </div>
+            <?php ActiveForm::end(); ?>
+            </div>
+        <div class="col-lg-8"></div>
         </div>
     </div>
-</div>

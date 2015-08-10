@@ -47,14 +47,44 @@ FontAwesomeAsset::register($this);
     <footer class="footer-login">
         <div class="container">
             <div class="row">
-                <div class="col-sm-2 pull-left">
+                <!-- TMA FOOT LOGO -->
+                <div class="col-md-1 cols-xs-1 pull-left">
                     <div class="tma-logo"></div>
                 </div>
-                <div class="col-sm-2 pull-left">
-                    <h3>Kontakt</h3>
+                
+              <!-- FIRST LINE -->
+            
+              
+                <div class="col-md-11 cols-xs-3 pull-left" style="margin-top:10px"> 
+                    <div class="tma-kontakt-images email"></div>
+                    
+                    <div class="tma-kontakt">
+                        <a href="mailto:info@tma-automation.com">info@tma-automation.com</a>
+                    </div>
                 </div>
-        <p class="pull-right">&copy; <?= date('Y') ?> TMA AUTOMATION Sp. z o.o.</p>
-        </div>
+                
+              <!-- SEcond Line -->
+            
+           
+                <div class="col-md-5 cols-xs-2 pull-left">
+                    <div class="tma-kontakt-images site"></div>
+                    <div class="tma-kontakt">
+                        <a href="www.TMA-AUTOMATION.com">tma-automation.com</a>
+                    </div>
+                </div>
+               <div class="col-md-5 pull-right">
+                    <div class="tma-kontakt" style="float: right;">
+                        <span style="text-align:right;">&copy; <?= date('Y') ?> TMA AUTOMATION Sp. z o.o.</span>
+                    </div>
+                </div>  
+                
+            
+               <!-- THIRD LINE -->
+            
+
+              
+            </div>    
+           
         </div>
     </footer>
 

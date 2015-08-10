@@ -13,13 +13,14 @@ $this->title = 'Sign up';
  <br />
  <br />
     <div class="row">
-        <div class="col-lg-4"></div>
+        
         <div class="col-lg-4">
-            
-            <div class="well well-e">
-               <h1><?= Html::encode( $this->title ) ?></h1> 
-                <p>Your sign up will be reviewed by admin.</p>
-                <br />
+           
+            <div class="well well-e well-login">
+                 <div class="col-sm-12">
+                        <div class="login-logo "></div>
+                    </div> 
+
             <?php
             $form = ActiveForm::begin(
             );
@@ -66,14 +67,27 @@ $this->title = 'Sign up';
                 ]
             ] )->passwordInput()
             ?>
+            <div class="row">
+             <div class="col-sm-12">
+                <?= Html::submitButton( 'Sign up', ['class' => 'btn btn-default login login-btn signup-btn', 'name' => 'signup-button'] ); ?>
+             </div>
+                </div>
+            
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul class="login-helpers">           
+                            <li><?= Html::a('Log in', ['site/login']) ?> </li>   
+                            <li><?= Html::a('Forgot Password?', ['site/request-password-reset'])?></li>   
+                            <li><?= Html::a('Help', ['site/contact']) ?> </li>
+                        </ul>
+                        
+                    </div>
+                </div>
 
-            <br />
-
-<?= Html::submitButton( 'Signup', ['class' => 'btn btn-default login', 'name' => 'signup-button' ] ) ?>
 
 <?php ActiveForm::end(); ?>
         </div>
     </div>
-        <div class="col-lg-4"></div>
+        <div class="col-lg-8"></div>
 </div>
 </div>

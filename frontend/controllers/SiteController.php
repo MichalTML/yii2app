@@ -96,7 +96,7 @@ class SiteController extends Controller
         $this->layout = 'login';
         if ( !\Yii::$app->user->isGuest )
         {
-            return $this->goHome();
+            return $this->redirect( ['site/main']);
         }
 
         $model = new LoginForm();
@@ -118,7 +118,7 @@ class SiteController extends Controller
     }
 
     public function actionContact() {
-        $this->layout = 'action';
+        $this->layout = 'login';
         $model = new ContactForm();
         
         if(\Yii::$app->user->isGuest == false){
@@ -166,7 +166,7 @@ class SiteController extends Controller
     }
 
     public function actionSignup() {
-        $this->layout = 'action';
+        $this->layout = 'login';
         $profile = new Profile();
         $model = new SignupForm();
         $user = new User;
@@ -207,6 +207,7 @@ class SiteController extends Controller
     }
 
     public function actionRequestPasswordReset() {
+        $this->layout = "login";
         $model = new PasswordResetRequestForm();
         if ( $model->load( Yii::$app->request->post() ) && $model->validate() )
         {

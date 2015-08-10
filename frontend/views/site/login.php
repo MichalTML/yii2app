@@ -36,6 +36,7 @@ $this->title = 'Login';
             ],
                     ]) ?>
                 </div>
+                
                 <div class="row">
                 <?= $form->field($model, 'password', [
             'template' => '{beginWrapper}{input}{error}{endWrapper}',
@@ -46,18 +47,18 @@ $this->title = 'Login';
             [
             'placeholder' => $model->getAttributeLabel('password')
             ],
-                    ]) ?>
+                    ])->passwordInput() ?>
                 
                 </div>
                 <div class="row">
                 <?= $form->field($model, 'rememberMe', [
                     'template' => '{beginWrapper}{input}{endWrapper}',
                     'options' => [
-                    'class' => 'col-sm-6',
+                    'class' => 'col-xs-6',
                    ],
                 ])->checkbox() ?>
                 
-                <div class="form-group col-sm-6">
+                <div class="form-group col-xs-6">
                 <?= Html::submitButton( 'Login', ['class' => 'btn btn-default login login-btn', 'name' => 'login-button'] ); ?>
                 </div>
                 </div>
