@@ -14,125 +14,56 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="site-index">
     <div class="jumbotron">
-        <br />
-        <br />
-        <br />
-
-        <div class ="well well-e">
-            <p><span>TMA Project Manager</span></p>
-            <p><span>LOGO PLACE HOLDER</span></p>
-        </div>
         
-        <div class="well well-e message">
-            <h3>Client Management panel</h3>
-            <ul>
-                <li>Clients - clients manager panel.</li>
-                <li>Clients Contacs - clients contacts manager panel.</li>
-                <li>Other Clients - go here to manage clients, that don`t directly cooperare with <span>TMA AUTOMATION</span>.</li>
-            </ul>
-           
-
-        </div>
-
-    
-        <br />
-      
-        
-        <div class="body-content">
-
-            <div class="row">
-
-                <div class="col-lg-4">
-
-                    <div class="mainbox">
-<?php
-if(Yii::$app->user->isGuest) {
-    throw new NotFoundHttpException( 'Please login to view this page.' );
-}
-    
-
-echo Html::a( 'Clients', ['client/index' ], ['class' => 'btn btn-default' ] );
-?>
-
-
-
-
-                        <div class="mainbox_info">
-                                * Manage actual clients list.
-                        </div>              
-
-                    </div>
-
-                </div>
-
-                <div class="col-lg-4">
-
-                    <div class="mainbox">
-
-
-<?php
-echo Html::a( 'Contacts', ['client-contacts/index'], ['class' => 'btn btn-default' ] );
-?>
-
-
-
-
-                        <div class="mainbox_info">
-                                * Manage Contacts for actual aclients.
-                        </div>            
-
-                    </div>
-
-                </div>
-
-                <div class="col-lg-4">
-
-                    <div class="mainbox">
-
-
-<?php
-echo Html::a( 'Other clients', ['site/other-clients'], ['class' => 'btn btn-default' ] );
-?>
-
-
-
-
-                       <div class="mainbox_info">
-                                *Manage prospect clients list.
-                        </div>            
-
-                    </div>
-
-                </div>
-            </div>
+   <div class="col-lg-12" style="min-width: 700px; padding: 0; margin-top: 50px;">     
+<div class="row" style="margin-top: 100px">
             
-            <div class="row">
-                <div class="col-lg-4"></div>
-                <div class="col-lg-4"></div>
-            <div class="col-lg-4">
-
-                    <div class="go-back-button">
-
-
 <?php
-echo Html::a( 'Go back', ['site/main'], ['class' => 'btn btn-default' ] );
-?>
-
-
-
-
-                                 
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            </div>
-        </div>
-    </div>
+if(Yii::$app->user->isGuest){
+    throw new NotFoundHttpException( 'Please login to view this page.' );
+}?>
+                    <div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">
+                    <?php
+                        echo Html::a('<div class="mainbox-ind">'
+                                . '<div class="btn btn-default">Client Manager</div>'
+                                . '<div class="mainbox_info"><span>Client Manager</span>
+                                    - Lorem ipsum dolor sit amet, consectetur adipiscing
+                                    elit. Sed molestie mi velit, et tincidunt neque mollis et. 
+                                  </div>'
+                                . '</div>', ['client/index']);
+                    ?>
+                    </div>               
+<div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">
+<?php
+    echo Html::a('<div class="mainbox-indc">'
+                                . '<div class="btn btn-default">Contacts Manager</div>'
+                                . '<div class="mainbox_info"><span>Contacts Manager</span> 
+                                    - Lorem ipsum dolor sit amet, consectetur adipiscing
+                                    elit. Sed molestie mi velit, et tincidunt neque mollis et.  
+                                  </div>'
+                                . '</div>', ['client-contacts/index']);              
+ ?>
 </div>
+    <div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">
+    <?php
+    echo Html::a('<div class="mainbox-ocm">'
+                                . '<div class="btn btn-default">Other Clients</div>'
+                                . '<div class="mainbox_info"><span>Other Clients</span> 
+                                    - Lorem ipsum dolor sit amet, consectetur adipiscing
+                                    elit. Sed molestie mi velit, et tincidunt neque mollis et.  
+                                  </div>'
+                                . '</div>', ['site/other-clients']);              
+ ?>
+    </div>
+    
+                                     
+
+                    
+                    </div>
+                </div>
+            </div>       
+        </div>
+
 
 
 

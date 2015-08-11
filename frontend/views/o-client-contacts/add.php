@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="oclient-contacts-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    
 
     <?= $this->render('_addform', [
         'model' => $model,

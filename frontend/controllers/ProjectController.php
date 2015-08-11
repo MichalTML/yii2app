@@ -124,8 +124,8 @@ $this->layout = 'action';
         $projectName = preg_replace( '/.*_/', '', $model->projectName );
         $model->projectName = $projectName;
         $projectPermissions = new ProjectPermissions();
-        $lastId = $model->find()->select('sygnature')->orderBy(['sygnature' => SORT_DESC])->one();
-        $freeId = $lastId->sygnature;
+        //$lastId = $model->find()->select('sygnature')->orderBy(['sygnature' => SORT_DESC])->one();
+        $freeId = $model->sygnature;
 
         if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
 

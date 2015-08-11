@@ -33,19 +33,15 @@ FontAwesomeAsset::register($this);
     <div class="wrap-menu">
         
         <?php
-            
-        if(Yii::$app->user->isGuest){ 
-            
+        // IF USER IS A GUEST brand--> login else brand --> main page    
+        if(Yii::$app->user->isGuest){             
                NavBar::begin([
-                'brandLabel' => '<div class="login-logo "></div>',
+                'brandLabel' => '<div class="menu-logo"><img src="http://www.tma-automation.com/wp-content/themes/TM-Automation/images/logo_pm.png"></img></div>',
                 'brandUrl' => ['site/login'],
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top nav-border',
-                ],                
-            ]);  
-               
-           } else {
-              
+                ],]);  
+        } else {
              NavBar::begin([
                 'brandLabel' => '<div class="menu-logo"><img src="http://www.tma-automation.com/wp-content/themes/TM-Automation/images/logo_pm.png"></img></div>',
                 'brandUrl' => ['site/main'],
@@ -55,25 +51,19 @@ FontAwesomeAsset::register($this);
             ]);  
              
            }         
-            $menuItems = [
-                
-                ['label' => '', 'url' => ['/site/contact'], 'options' => ['class' =>'help']],
-            ];
+            
             if (Yii::$app->user->isGuest) {
                 $menuItems[] = ['label' => '', 'url' => ['site/index'], 'options' => ['class' =>'fa fa-user']];
                 $menuItems[] = ['label' => '', 'url' => ['/site/signup']];
                 $menuItems[] = ['label' => '', 'url' => ['site/login']];
             } else {
                 $menuItems[] = ['label' => '', 'url' => ['/site/main'], 'options' => ['class' =>'home']];
+                $menuItems[] = ['label' => '', 'url' => ['/site/contact'], 'options' => ['class' =>'help'],];
                 $menuItems[] = ['label' => '', 'url' =>['profile/view'], 'options' => ['class' =>'profile']];
                 //$menuItems[] = ['label' => 'Administration', 'url' =>[\Yii::$app->urlManagerBackEnd->baseUrl]];
 //                $menuitems[] = ['label' => 'Create Profile', 'url' =>['/profile']]
-                $menuItems[] = [
-                    'label' => '',
-                    'url' => ['/site/logout'],
-                    'options' => ['class' =>'logout'],
-                    'linkOptions' => ['data-method' => 'post']                    
-                ];
+                $menuItems[] = ['label' => '(' . Yii::$app->user->identity->username . ')', 'url' => ['/site/logout'], 'options' => ['class' =>'logout'],
+                                'linkOptions' => ['data-method' => 'post']];
             }
             
             echo Nav::widget([
@@ -96,14 +86,14 @@ FontAwesomeAsset::register($this);
         <div class="container">
             <div class="row">
                 <!-- TMA FOOT LOGO -->
-                <div class="col-md-1 cols-xs-1 pull-left">
+<!--                <div class="col-md-1 cols-xs-1 pull-left">
                     <div class="tma-logo"></div>
-                </div>
+                </div>-->
                 
               <!-- FIRST LINE -->
             
               
-                <div class="col-md-11 cols-xs-3 pull-left" style="margin-top:10px"> 
+                <div class="col-md-12 pull-left" style="margin-top:10px; min-width: 620px"> 
                     <div class="tma-kontakt-images email"></div>
                     
                     <div class="tma-kontakt">
@@ -114,13 +104,12 @@ FontAwesomeAsset::register($this);
               <!-- SEcond Line -->
             
            
-                <div class="col-md-5 cols-xs-2 pull-left">
+                <div class="col-md-12 pull-left" style="min-width: 620px">
                     <div class="tma-kontakt-images site"></div>
                     <div class="tma-kontakt">
                         <a href="www.TMA-AUTOMATION.com">www.tma-automation.com</a>
                     </div>
-                </div>
-               <div class="col-md-5 pull-right">
+
                     <div class="tma-kontakt" style="float: right;">
                         <span style="text-align:right;">&copy; <?= date('Y') ?> TMA AUTOMATION Sp. z o.o.</span>
                     </div>

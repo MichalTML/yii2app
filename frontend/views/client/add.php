@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Project list', 'url' => ['project/
 $this->params['breadcrumbs'][] = ['label' => 'Create new project', 'url' => ['project/create']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="client-data-create">
+
 
     <h1><?= Html::encode($this->title) ?></h1>
 

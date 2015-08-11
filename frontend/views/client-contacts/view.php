@@ -14,7 +14,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
 ?>
 <div class="client-contacts-view">
 
-    <h1><?= Html::encode( $this->title ) ?></h1>
+   
     <p>
         <?php
         if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 30 )

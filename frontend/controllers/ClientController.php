@@ -8,6 +8,7 @@ use frontend\models\search\ClientSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\Pagination;
 
 /**
  * ClientController implements the CRUD actions for ClientData model.
@@ -36,9 +37,11 @@ class ClientController extends Controller
         $this->layout = 'action';
         $searchModel = new ClientSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        
+        $dataProvider->pagination->pageSize = 5;
+        
         return $this->render('index', [
-            'searchModel' => $searchModel,
+            'searchModel' => $searchModel, 
             'dataProvider' => $dataProvider,
         ]);
     }

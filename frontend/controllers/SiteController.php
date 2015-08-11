@@ -118,11 +118,11 @@ class SiteController extends Controller
     }
 
     public function actionContact() {
-        $this->layout = 'login';
+        
         $model = new ContactForm();
         
         if(\Yii::$app->user->isGuest == false){
-                
+               
                 
                 $userEmail = Yii::$app->user->identity->email;
                 $userName = Yii::$app->user->identity->username;
@@ -149,10 +149,12 @@ class SiteController extends Controller
         } else
         {
             if(Yii::$app->user->isGuest){
+                $this->layout = 'login'; 
             return $this->render( 'contact', [
                         'model' => $model,
             ] );
             } else {
+                $this->layout = 'menu'; 
                 return $this->render( 'userContact', [
                     'model' => $model,
                 ]);

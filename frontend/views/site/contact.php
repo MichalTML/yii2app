@@ -19,7 +19,7 @@ $this->title = 'Help';
     <br />
     <br />
     <br />
-
+    
     <div class="row">
         <div class="col-lg-4">
             <div class="well well-e well-login">
@@ -106,9 +106,9 @@ $this->title = 'Help';
                 <div class="row">
                     <div class="col-sm-12">
                         <ul class="login-helpers">           
-                            <li><?= Html::a('Sign Up', ['site/signup']) ?> </li>   
+                            <li><?= Html::a('Log in', ['site/login']) ?> </li>   
                             <li><?= Html::a('Forgot Password?', ['site/request-password-reset'])?></li>   
-                            <li><?= Html::a('Help', ['site/contact']) ?> </li>
+                            <li><?= Html::a('sing up', ['site/singup']) ?> </li>
                         </ul>
                         
                     </div>

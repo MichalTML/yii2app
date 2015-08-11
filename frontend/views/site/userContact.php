@@ -12,6 +12,7 @@ $this->title = 'Help';
 
 ?>
 <div class ="site-help">
+    <div style="margin-top: 150px"></div>
     <div class=""jumbotron">
    <br />
 

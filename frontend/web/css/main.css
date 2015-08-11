@@ -162,9 +162,9 @@ NAVBAR
     vertical-align: middle;
     background: url("/images/home_gray.png") no-repeat;
     color: transparent;
-    background-size: 60px 50px;
-    width: 60px;
-    height: 50px;
+    background-size: 40px 35px;
+    width: 40px;
+    height: 35px;
     
     //padding: 10px;
 }
@@ -172,9 +172,9 @@ NAVBAR
 .home a:hover{
     background: url("/images/home_green.png") no-repeat;
     background-size: contain;
-    background-size: 60px 50px;
-    width: 60px;
-    height: 50px;
+    background-size: 40px 35px;
+    width: 40px;
+    height: 35px;
 }
 
 .logout {
@@ -182,20 +182,19 @@ NAVBAR
 }
 
 .logout a{
-    text-align: center;
-    vertical-align: middle;
+   // border: 1px black solid;    
     background: url("/images/logout_gray.png") no-repeat;
     color: transparent;
     background-size: contain;
-    width: 50px;
-    height: 50px;
-    
-    //padding: 10px;
+    background-size: 35px 35px;
+    height: 35px;
+    width: 110px;
 }
 
 .logout a:hover{
     background: url("/images/logout_green.png") no-repeat;
     background-size: contain;
+    background-size: 35px 35px;
 }
 
 .profile {
@@ -208,8 +207,8 @@ NAVBAR
     background: url("/images/profile_gray.png") no-repeat;
     color: transparent;
     background-size: contain;
-    width: 50px;
-    height: 50px;
+    width: 35px;
+    height: 35px;
     
     //padding: 10px;
 }
@@ -228,8 +227,8 @@ NAVBAR
     background: url("/images/help_gray.png") no-repeat;
     color: transparent;
     background-size: contain;
-    width: 50px;
-    height: 50px;
+    width: 35px;
+    height: 35px;
     
     //padding: 10px;
 }
@@ -242,6 +241,37 @@ NAVBAR
     background-color:#e6e6e6;
     border-color: #e6e6e6;
     border-bottom-color: #83C503;
+}
+
+.nav li {
+    padding: 15px;
+    padding-top: 13px;
+    padding-bottom: 5px;
+    text-align: right;
+    color: white;
+}
+
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+    border-color: #88CD00;
+    
+}
+
+#w0-collapse ul li{
+    float: left;
+}
+
+.navbar-inverse .navbar-toggle {
+    border-color: #88CD00;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    line-height: 0em;
+    font-size: 16px;
+    padding-right: 0;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover {
+    color: #88CD00;
 }
 
 /*.navbar-brand {
@@ -289,32 +319,348 @@ MAIN BODY
 .transit {
     transition: background-color 1s ease;
 }
-.mainbox {    
-}
 
 .mainbox_info{
-    background: #e6e6e6 url("images/iml-bg.jpg") no-repeat scroll 0 60px;
-    color: black;
-    margin-top: 5px;
-    font-size: 12px;
-    text-align: center;
-    width: 100%;
+    background: #e6e6e6;
+    color: #808080;
+    border-top: 1px solid #83C503;
+    height: 70px;
     padding: 10px;
-    margin-bottom: 10px;
+    font-size: 12px;
+    text-align: justify;
+    //width: 100%;
+    bottom: 0;
+    position: absolute;
 }
 
-.mainbox a{
-    text-transform: uppercase;
+.mainbox_info span{
+    color: #83C503;
+    
+}
+/* PROJECT MANAGER */
+
+.mainbox-pm {
+    //min-width: 100%;
+    min-height: 250px;
+    max-height: 250px;
+   // border: 1px solid black;
+    background: url("/images/project_gray.jpg") no-repeat;
+    background-size: contain;
+    //padding-bottom: 200px;
+    position: relative;
+    transition: background-color 5s ease;
+    background-color: transparent;
+}
+
+.mainbox-pm .btn-default {
+    height: 45px;
     width: 100%;
-    font-size: 25px;
+ 
+    line-height: 1em;
+    font-size: 16px;
+    
+    border: 0px;
+    border-radius: 0;
+    border-bottom: 1px solid #83C503;
+    
+    text-transform: uppercase;
+ 
     color: #808080;
     background: #e6e6e6;
-    transition: background-color 1s ease;
+    text-align: left;
+    
+    transition: all 1s ease;    
 }
 
-.mainbox a:hover {
-    background: #83C503;
+.mainbox-pm:hover .btn-default {
+    background-color: #83C503;
     color: white;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.mainbox-pm:hover {
+    background: url("/images/project_green.jpg") no-repeat;
+    background-size: contain;
+}
+
+/* CLIENT MANAGER */
+
+.mainbox-cm {
+    //min-width: 100%;
+    min-height: 250px;
+    
+    max-height: 250px;
+   // border: 1px solid black;
+    background: url("/images/client_gray.jpg") no-repeat;
+    background-size: contain;
+    //padding-bottom: 200px;
+    position: relative;
+    transition: background-color 5s ease;
+    background-color: transparent;
+}
+
+.mainbox-cm .btn-default {
+    height: 45px;
+    width: 100%;
+ 
+    line-height: 1em;
+    font-size: 16px;
+    
+    border: 0px;
+    border-radius: 0;
+    border-bottom: 1px solid #83C503;
+    
+    text-transform: uppercase;
+ 
+    color: #808080;
+    background: #e6e6e6;
+    text-align: left;
+    
+    transition: all 1s ease;    
+}
+
+.mainbox-cm:hover .btn-default {
+    background-color: #83C503;
+    color: white;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.mainbox-cm:hover {
+    background: url("/images/client_green.jpg") no-repeat;
+    background-size: contain;
+}
+
+/* CLIENT INDEX*/
+
+.mainbox-ind {
+    //min-width: 100%;
+    min-height: 250px;
+    
+    max-height: 250px;
+   // border: 1px solid black;
+    background: url("/images/client_index_gray.jpg") no-repeat;
+    background-size: contain;
+    //padding-bottom: 200px;
+    position: relative;
+    transition: background-color 5s ease;
+    background-color: transparent;
+}
+
+.mainbox-ind .btn-default {
+    height: 45px;
+    width: 100%;
+ 
+    line-height: 1em;
+    font-size: 16px;
+    
+    border: 0px;
+    border-radius: 0;
+    border-bottom: 1px solid #83C503;
+    
+    text-transform: uppercase;
+ 
+    color: #808080;
+    background: #e6e6e6;
+    text-align: left;
+    
+    transition: all 1s ease;    
+}
+
+.mainbox-ind:hover .btn-default {
+    background-color: #83C503;
+    color: white;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.mainbox-ind:hover {
+    background: url("/images/client_index_green.jpg") no-repeat;
+    background-size: contain;
+}
+/* CONTACT INDEX*/
+
+.mainbox-indc {
+    //min-width: 100%;
+    min-height: 250px;
+    
+    max-height: 250px;
+   // border: 1px solid black;
+    background: url("/images/contact_index_gray.jpg") no-repeat;
+    background-size: contain;
+    //padding-bottom: 200px;
+    position: relative;
+    transition: background-color 5s ease;
+    background-color: transparent;
+}
+
+.mainbox-indc .btn-default {
+    height: 45px;
+    width: 100%;
+ 
+    line-height: 1em;
+    font-size: 16px;
+    
+    border: 0px;
+    border-radius: 0;
+    border-bottom: 1px solid #83C503;
+    
+    text-transform: uppercase;
+ 
+    color: #808080;
+    background: #e6e6e6;
+    text-align: left;
+    
+    transition: all 1s ease;    
+}
+
+.mainbox-indc:hover .btn-default {
+    background-color: #83C503;
+    color: white;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.mainbox-indc:hover {
+    background: url("/images/contact_index_green.jpg") no-repeat;
+    background-size: contain;
+}
+/* OTHER CLIENTS */
+
+.mainbox-ocm {
+    //min-width: 100%;
+    min-height: 250px;
+    
+    max-height: 250px;
+   // border: 1px solid black;
+    background: url("/images/oclient_gray.jpg") no-repeat;
+    background-size: contain;
+    //padding-bottom: 200px;
+    position: relative;
+    transition: background-color 5s ease;
+    background-color: transparent;
+}
+
+.mainbox-ocm .btn-default {
+    height: 45px;
+    width: 100%;
+ 
+    line-height: 1em;
+    font-size: 16px;
+    
+    border: 0px;
+    border-radius: 0;
+    border-bottom: 1px solid #83C503;
+    
+    text-transform: uppercase;
+ 
+    color: #808080;
+    background: #e6e6e6;
+    text-align: left;
+    
+    transition: all 1s ease;    
+}
+
+.mainbox-ocm:hover .btn-default {
+    background-color: #83C503;
+    color: white;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.mainbox-ocm:hover {
+    background: url("/images/oclient_green.jpg") no-repeat;
+    background-size: contain;
+}
+
+/* OTHER CLIENT INDEX */
+
+.mainbox-oind {
+    //min-width: 100%;
+    min-height: 250px;
+    
+    max-height: 250px;
+   // border: 1px solid black;
+    background: url("/images/oclient_index_gray.jpg") no-repeat;
+    background-size: contain;
+    //padding-bottom: 200px;
+    position: relative;
+    transition: background-color 5s ease;
+    background-color: transparent;
+}
+
+.mainbox-oind .btn-default {
+    height: 45px;
+    width: 100%;
+ 
+    line-height: 1em;
+    font-size: 16px;
+    
+    border: 0px;
+    border-radius: 0;
+    border-bottom: 1px solid #83C503;
+    
+    text-transform: uppercase;
+ 
+    color: #808080;
+    background: #e6e6e6;
+    text-align: left;
+    
+    transition: all 1s ease;    
+}
+
+.mainbox-oind:hover .btn-default {
+    background-color: #83C503;
+    color: white;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.mainbox-oind:hover {
+    background: url("/images/oclient_index_green.jpg") no-repeat;
+    background-size: contain;
+}
+    
+    /* OTHER CONTACTS INDEX */
+
+.mainbox-ocindc {
+    //min-width: 100%;
+    min-height: 250px;
+    
+    max-height: 250px;
+   // border: 1px solid black;
+    background: url("/images/ocontact_index_gray.jpg") no-repeat;
+    background-size: contain;
+    //padding-bottom: 200px;
+    position: relative;
+    transition: background-color 5s ease;
+    background-color: transparent;
+}
+
+.mainbox-ocindc .btn-default {
+    height: 45px;
+    width: 100%;
+ 
+    line-height: 1em;
+    font-size: 16px;
+    
+    border: 0px;
+    border-radius: 0;
+    border-bottom: 1px solid #83C503;
+    
+    text-transform: uppercase;
+ 
+    color: #808080;
+    background: #e6e6e6;
+    text-align: left;
+    
+    transition: all 1s ease;    
+}
+
+.mainbox-ocindc:hover .btn-default {
+    background-color: #83C503;
+    color: white;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.mainbox-ocindc:hover {
+    background: url("/images/ocontact_index_green.jpg") no-repeat;
+    background-size: contain;
 }
 
 .message ul{
@@ -543,18 +889,19 @@ GO BACK BUTTON
 
 .tma-kontakt-images{
     height: 25px;
-    //padding: 5px;
+    width: 20px;
     //border: 1px solid black;
     float: left;
 }
 
 .tma-kontakt{
-    min-width: 300px;
+    min-width: 230px;
     height: 40px;
     padding: 5px;
     //border: 1px solid black;
     line-height: 0.5em;
     float: left;
+    font-size: 16px;
 }
 
 .border {
@@ -563,7 +910,7 @@ GO BACK BUTTON
 
 .tma-kontakt a{
     text-decoration: none;
-    font-size: 16px;
+    font-size: 15px;
     color: #808080;
     transition: color 1s ease;
     font-weight: 500;
@@ -586,8 +933,7 @@ GO BACK BUTTON
     background-size: contain;
     background-position: left;
     background-repeat: no-repeat;
-    min-width: 30px;
-    margin-left: 5px;
+    min-width: 30px;   
     transition: background-image 2s ease;
 }
 
@@ -597,7 +943,7 @@ GO BACK BUTTON
     background-position: left;
     background-repeat: no-repeat;
     width: 30px;
-    margin-left: 5px;
+    
 }
 
 .login-placeholder{
@@ -629,9 +975,19 @@ GO BACK BUTTON
     
 }
 
+.wrap-action {
+    height: auto;
+    margin: 0 auto -100px;
+    min-height: 100%;
+    padding: 0 0 100px;
+    background-image: url('../images/bg2.jpg');
+    background-repeat: no-repeat;
+    background-position: -15px 50px;
+}
+
 .site-index {
-    margin-top: 25%;
-    margin-bottom: auto;
+    //margin-top: 25%;
+    //margin-bottom: auto;
 }
 
 .footer-menu {
