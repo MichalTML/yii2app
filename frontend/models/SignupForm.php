@@ -22,16 +22,17 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-
+            
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'required'],
+            ['email', 'match', 'pattern' => '/^[a-z]*\.{1}[a-z]*@[a-z-]*\.[plcom]{2,3}$/', 'message' => 'Check if your email is correct, example: name.surname@tma-automation.pl'],
             ['email', 'email'],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
             ['password', 'required'],
             ['passwordRepeat', 'compare', 'compareAttribute' => 'password', 'message' => 'Password doesn`t match'],
-            ['password', 'string', 'min' => 6],
-            ['passwordRepeat', 'safe']
+            ['password', 'match', 'pattern' => '/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-zA-Z])([a-zA-Z0-9]+){7,}$/', 'message' => 'Alphanumeric only allowed. One capital, number and at least 7 chars required.'],
+            ['passwordRepeat', 'safe'],
         ];
     }
 

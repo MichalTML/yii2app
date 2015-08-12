@@ -19,11 +19,9 @@ $this->title = 'Help';
         <div class="row">
             <div class="col-lg-3"></div>
             <div class="col-lg-6">
-                <div class="well well-e">
-                    <h1><?= Html::encode( $this->title ) ?></h1>
-                    <p>
-                        If u have problems, question, you can use this form to contact system administrator.
-                    </p>
+                <div class="well well-e well-login">
+                    
+                    
 
                     <?php $form = ActiveForm::begin( ['id' => 'contact-form' ] ); ?>
 
@@ -33,6 +31,7 @@ $this->title = 'Help';
                     <div class="form-group">
                     <?= Html::submitButton( 'Submit', ['class' => 'btn btn-primary login', 'name' => 'contact-button' ] ) ?>
                     </div>
+                    <p style="font-size: 12px; color: #88CD00;">*Please fill out above form if u have any problems or questions.</p>
                     <?php ActiveForm::end(); ?>
                 </div>
             </div>

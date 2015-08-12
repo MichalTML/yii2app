@@ -188,7 +188,7 @@ NAVBAR
     background-size: contain;
     background-size: 35px 35px;
     height: 35px;
-    width: 110px;
+    width: 140px;
 }
 
 .logout a:hover{
@@ -343,6 +343,7 @@ MAIN BODY
     //min-width: 100%;
     min-height: 250px;
     max-height: 250px;
+    margin-bottom: 50px;
    // border: 1px solid black;
     background: url("/images/project_gray.jpg") no-repeat;
     background-size: contain;
@@ -388,7 +389,7 @@ MAIN BODY
 .mainbox-cm {
     //min-width: 100%;
     min-height: 250px;
-    
+    margin-bottom: 50px;
     max-height: 250px;
    // border: 1px solid black;
     background: url("/images/client_gray.jpg") no-repeat;
@@ -435,7 +436,7 @@ MAIN BODY
 .mainbox-ind {
     //min-width: 100%;
     min-height: 250px;
-    
+    margin-bottom: 50px;
     max-height: 250px;
    // border: 1px solid black;
     background: url("/images/client_index_gray.jpg") no-repeat;
@@ -481,7 +482,7 @@ MAIN BODY
 .mainbox-indc {
     //min-width: 100%;
     min-height: 250px;
-    
+    margin-bottom: 50px;
     max-height: 250px;
    // border: 1px solid black;
     background: url("/images/contact_index_gray.jpg") no-repeat;
@@ -527,7 +528,7 @@ MAIN BODY
 .mainbox-ocm {
     //min-width: 100%;
     min-height: 250px;
-    
+    margin-bottom: 50px;
     max-height: 250px;
    // border: 1px solid black;
     background: url("/images/oclient_gray.jpg") no-repeat;
@@ -574,7 +575,7 @@ MAIN BODY
 .mainbox-oind {
     //min-width: 100%;
     min-height: 250px;
-    
+    margin-bottom: 50px;
     max-height: 250px;
    // border: 1px solid black;
     background: url("/images/oclient_index_gray.jpg") no-repeat;
@@ -621,7 +622,7 @@ MAIN BODY
 .mainbox-ocindc {
     //min-width: 100%;
     min-height: 250px;
-    
+    margin-bottom: 50px;
     max-height: 250px;
    // border: 1px solid black;
     background: url("/images/ocontact_index_gray.jpg") no-repeat;
@@ -886,38 +887,65 @@ GO BACK BUTTON
 
 
 /* FOOTER STYLE */
-
-.tma-kontakt-images{
-    height: 25px;
-    width: 20px;
-    //border: 1px solid black;
-    float: left;
+.tma-kontakt-stopka{
+    float: right;
+    line-height: 1em;
 }
-
-.tma-kontakt{
-    min-width: 230px;
-    height: 40px;
+.tma-kontakt-email{
+    height: 25px;
+    //width: 20px;
+    width: 280px;
+    float: left;
     padding: 5px;
-    //border: 1px solid black;
+    padding-left: 35px;
     line-height: 0.5em;
     float: left;
+    
     font-size: 16px;
+    color: #808080;
+    
+    background-image: url('../images/mail_gray.png');
+    background-size: 25px 20px;
+    background-position: left;
+    background-repeat: no-repeat;
+    
+    transition: color 1s ease;
+}
+
+.tma-kontakt-email:hover{
+     color: #88CD00;
+     background-image: url('../images/mail_green.png');
+}
+
+.tma-kontakt-site{
+    margin-top: 10px;
+    height: 25px;
+    //width: 20px;
+    width: 280px;
+    float: left;
+    padding-top: 5px;
+    padding-left: 35px;
+    line-height: 0.5em;
+    float: left;
+    
+    font-size: 16px;
+    color: #808080;
+    
+    background-image: url('../images/www_gray.png');
+    background-size: 25px 25px;
+    background-position: left;
+    background-repeat: no-repeat;  
+    
+    transition: color 1s ease;
+}
+
+.tma-kontakt-site:hover{
+    color: #88CD00;
+    background-image: url('../images/www_green.png');
 }
 
 .border {
     border: 1px solid black;
-}
-
-.tma-kontakt a{
-    text-decoration: none;
-    font-size: 15px;
-    color: #808080;
-    transition: color 1s ease;
-    font-weight: 500;
-}
-
-.tma-kontakt a:hover{
-    color: #88CD00;
 }
 
 .tma-logo{
@@ -926,24 +954,6 @@ GO BACK BUTTON
     background-image: url('../images/logo_TMA.png');
     background-size: contain;
     background-repeat: no-repeat;
-}
-
-.email{
-    background-image: url('../images/mail_gray.png');
-    background-size: contain;
-    background-position: left;
-    background-repeat: no-repeat;
-    min-width: 30px;   
-    transition: background-image 2s ease;
-}
-
-.site{
-    background-image: url('../images/www_gray.png');
-    background-size: contain;
-    background-position: left;
-    background-repeat: no-repeat;
-    width: 30px;
-    
 }
 
 .login-placeholder{

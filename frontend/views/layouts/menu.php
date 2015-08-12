@@ -94,23 +94,24 @@ FontAwesomeAsset::register($this);
             
               
                 <div class="col-md-12 pull-left" style="margin-top:10px; min-width: 620px"> 
-                    <div class="tma-kontakt-images email"></div>
-                    
-                    <div class="tma-kontakt">
-                        <a href="mailto:info@tma-automation.com">info@tma-automation.com</a>
-                    </div>
+                    <a href="mailto:info@tma-automation.com">
+                    <div class="tma-kontakt-email">
+                        info@tma-automation.com
+                   </div>
+                    </a>
+                  
                 </div>
                 
               <!-- SEcond Line -->
-            
-           
+              
                 <div class="col-md-12 pull-left" style="min-width: 620px">
-                    <div class="tma-kontakt-images site"></div>
-                    <div class="tma-kontakt">
-                        <a href="www.TMA-AUTOMATION.com">www.tma-automation.com</a>
-                    </div>
-
-                    <div class="tma-kontakt" style="float: right;">
+                    <a href="http://www.TMA-AUTOMATION.com">
+                        <div class="tma-kontakt-site">
+                           www.tma-automation.com  
+                        </div>
+                    </a>
+                    
+                    <div class="tma-kontakt-stopka" style="float: right;">
                         <span style="text-align:right;">&copy; <?= date('Y') ?> TMA AUTOMATION Sp. z o.o.</span>
                     </div>
                 </div>  
@@ -118,8 +119,6 @@ FontAwesomeAsset::register($this);
             
                <!-- THIRD LINE -->
             
-
-              
             </div>    
            
         </div>

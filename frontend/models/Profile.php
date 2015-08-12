@@ -41,7 +41,8 @@ class Profile extends \yii\db\ActiveRecord {
         return [
             [[ 'userId', 'firstName', 'lastName'], 'required' ],
             [[ 'userId', 'genderId' ], 'integer' ],
-            [[ 'firstName', 'lastName' ], 'string' ],
+            ['firstName', 'match', 'pattern' => '/^[A-ZŻŹĆĄŚĘŁÓŃ]{1}[a-zżźćńółęąś]*$/', 'message' => 'valid example: John'],
+            ['lastName', 'match', 'pattern' => '/^[A-ZŻŹĆĄŚĘŁÓŃ]{1}[a-zżźćńółęąś]*$/', 'message' => 'valid example: Johnson'],
             [[ 'birthdate', 'created', 'updated' ], 'safe' ],
             [[ 'birthdate' ], 'date', 'format' => 'Y-m-d' ],
             //[['birthdate'], 'date', 'format' => 'php:Y-m-d'];

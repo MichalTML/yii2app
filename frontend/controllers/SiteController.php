@@ -184,7 +184,7 @@ class SiteController extends Controller
 
                 if ( $profile->save() )
                 {
-                    $this->signUpInfo($userId->username, $profile->firstName, $profile->lastName);
+                    $this->signUpInfo($userId->username, $userId->id);
                     Yii::$app->getSession()->setFlash( 'info', 'Your account credentials are being reviewed by admin.' );
                     return $this->redirect(['index']);
                 }
@@ -197,13 +197,17 @@ class SiteController extends Controller
         ] );
     }
     
-    public function signUpInfo($user, $name, $surname)
+    public function signUpInfo($userName, $userId)
     {
+        $user = User::findOne([
+            'id' => $userId,
+        ]);
+        
         $adminEmail = 'michal.kungonda@telemobile.pl';
         Yii::$app->mailer->compose(['html' => 'userRegistration-html' , 'text' => 'userRegistration-txt'], ['user' => $user])
             ->setFrom('yii2app@TMA-AUTOMATION.pl')
             ->setTo($adminEmail)
-            ->setSubject('User: ' . $user . ' just signed up!')
+            ->setSubject('User: ' . $userName . ' just signed up!')
             ->send();
            
     }
@@ -230,6 +234,7 @@ class SiteController extends Controller
     }
 
     public function actionResetPassword( $token ) {
+        $this->layout = "login";
         try {
             $model = new ResetPasswordForm( $token );
         } catch ( InvalidParamException $e ) {

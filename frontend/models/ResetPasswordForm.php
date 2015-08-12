@@ -12,6 +12,7 @@ use Yii;
 class ResetPasswordForm extends Model
 {
     public $password;
+    public $passwordRepeat;
 
     /**
      * @var \common\models\User
@@ -45,7 +46,9 @@ class ResetPasswordForm extends Model
     {
         return [
             ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+            ['passwordRepeat', 'compare', 'compareAttribute' => 'password', 'message' => 'Password doesn`t match'],
+            ['password', 'match', 'pattern' => '/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-zA-Z])([a-zA-Z0-9]+){7,}$/', 'message' => 'Alphanumeric only allowed. One capital, number and at least 7 chars required.'],
+            ['passwordRepeat', 'safe']
         ];
     }
 
