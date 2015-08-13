@@ -4,8 +4,8 @@ namespace common\models;
 
 use yii;
 use common\models\ValueHelpers;
-use common\models\User;
-use yii\web\Controller;
+//use common\models\User;
+//use yii\web\Controller;
 use yii\helpers\Url;
 
 class PermissionHelpers {
@@ -31,7 +31,7 @@ class PermissionHelpers {
     public static function requireMinimumRole( $role_name, $userId = null ) {
 
         if ( ValueHelpers::isRoleNameValid( $role_name ) ) {
-
+          
             if ( $userId == null ) {
 
                 $userRoleValue = ValueHelpers::getUsersRoleValue();

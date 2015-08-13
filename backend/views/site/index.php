@@ -9,9 +9,9 @@ use common\models\PermissionHelpers;
 
 $this->title = "Admin TMA Project Menager";
 
-$is_admin = PermissionHelpers::requireMinimumRole('Admin');
-
-?>
+//$is_admin = PermissionHelpers::requireMinimumRole('Admin');
+//
+//?>
 
 <div class="site-index">
     <div class="jumbotron">
@@ -23,15 +23,15 @@ $is_admin = PermissionHelpers::requireMinimumRole('Admin');
         </p>
         
         <p>
-            <?php
-            
-            if(!Yii::$app->user->isGuest && $is_admin) {
-                
-                echo Html::a('Manage Users', ['user/index'],
-                        ['class' => 'btn btn-lg btn-success']);
-            }
-            
-            ?>
+            //<?php
+//            
+//          if(!Yii::$app->user->isGuest && $is_admin) {
+//                
+//                echo Html::a('Manage Users', ['user/index'],
+//                        ['class' => 'btn btn-lg btn-success']);
+//            }
+//            
+//            ?>
         </p>
         
     </div>
@@ -51,12 +51,12 @@ $is_admin = PermissionHelpers::requireMinimumRole('Admin');
                 
                 <p>
                     
-                    <?php 
-                    if(!Yii::$app->user->isGuest && $is_admin) {
-                        echo Html::a('Manage Users', ['user/index'],
-                                ['class' => 'btn btn-default']);
-                    }
-                    ?>
+                    //<?php 
+//                    if(!Yii::$app->user->isGuest && $is_admin) {
+//                        echo Html::a('Manage Users', ['user/index'],
+//                                ['class' => 'btn btn-default']);
+//                    }
+//                    ?>
                                                           
                 </p>
                 
@@ -74,12 +74,12 @@ $is_admin = PermissionHelpers::requireMinimumRole('Admin');
                 </p>
                 
                 <p>
-                    <?php if(!Yii::$app->user->isGuest && $is_admin) {
-                        
-                        echo Html::a('Manage Roles', ['role/index'],
-                                ['class' => 'btn btn-default']);
-                    }
-                        ?>
+                    <?php // if(!Yii::$app->user->isGuest && $is_admin) {
+//                        
+//                        echo Html::a('Manage Roles', ['role/index'],
+//                                ['class' => 'btn btn-default']);
+//                    }
+//                        ?>
                                        
                 </p>
                 
@@ -96,13 +96,13 @@ $is_admin = PermissionHelpers::requireMinimumRole('Admin');
                 
                 <p>
                     
-                    <?php
-                    if(!Yii::$app->user->isGuest && $is_admin) {
-                        
-                        echo Html::a('Manage Profiles', ['profile/index'],
-                                ['class' => 'btn btn-default']);
-                        }
-                    ?>
+                    //<?php
+//                    if(!Yii::$app->user->isGuest && $is_admin) {
+//                        
+//                        echo Html::a('Manage Profiles', ['profile/index'],
+//                                ['class' => 'btn btn-default']);
+//                        }
+//                    ?>
                 </p>
             </div>
         </div>
@@ -122,14 +122,14 @@ $is_admin = PermissionHelpers::requireMinimumRole('Admin');
                 
             <p>
                 
-                <?php
-                
-                if(!Yii::$app->user->isGuest && $is_admin) {
-                    
-                    echo Html::a('Manage User Types', ['/user-type/index'],
-                            ['class' => 'btn btn-default']);
-                }
-                ?>
+                //<?php
+//                
+//                if(!Yii::$app->user->isGuest && $is_admin) {
+//                    
+//                    echo Html::a('Manage User Types', ['/user-type/index'],
+//                            ['class' => 'btn btn-default']);
+//                }
+//                ?>
                 
                 </p>
             </div>
@@ -147,12 +147,12 @@ $is_admin = PermissionHelpers::requireMinimumRole('Admin');
                 
                 <p>
                     
-                    <?php
-                    if(!Yii::$app->user->isGuest && $is_admin) {
-                        
-                        echo Html::a('Manage Statuses', ['status/index/'],
-                                ['class' => 'btn btn-default']);
-                    }?>             
+                    //<?php
+//                    if(!Yii::$app->user->isGuest && $is_admin) {
+//                        
+//                        echo Html::a('Manage Statuses', ['status/index/'],
+//                                ['class' => 'btn btn-default']);
+//                    }?>             
                                     
                 </p>
                 
@@ -171,13 +171,13 @@ $is_admin = PermissionHelpers::requireMinimumRole('Admin');
                 
                 <p>
                     
-                    <?php 
-                    if(!Yii::$app->user->isGuest && $is_admin) {
-                        
-                        echo Html::a('Manage Profiles', ['profile/index'],
-                                ['class' => 'btn btn-default']);
-                        
-                    }?>
+                    //<?php 
+//                    if(!Yii::$app->user->isGuest && $is_admin) {
+//                        
+//                        echo Html::a('Manage Profiles', ['profile/index'],
+//                                ['class' => 'btn btn-default']);
+//                        
+//                    }?>
                 </p>
             </div>
         </div>

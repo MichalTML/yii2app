@@ -78,6 +78,7 @@ class SiteController extends Controller
     }
 
     public function actionMain() {
+        
         $this->layout = 'menu';
         return $this->render( 'main' );
     }
@@ -255,6 +256,21 @@ class SiteController extends Controller
 
     public function getImageUrl() {
         return Url::to( 'http://www.tma-automation.com/wp-content/themes/TM-Automation/images/logo.jpg' . $this->logo, true );
+    }
+    
+//    public function actionAdministration() {
+//        return $this->redirect(Yii::$app->urlManagerBackend->createUrl('index.php?r=site/index'));  
+//    }
+    
+    public function actionAdministration() {
+        
+        if(PermissionHelpers::requireRole('Admin')){
+            $this->layout = 'menu';
+            return $this->redirect(['user/index']);
+        } else {
+            Yii::$app->getSession()->setFlash( 'error', 'You don`t have administration rights.');
+            return $this->redirect(['site/main']);
+        }
     }
 
 }

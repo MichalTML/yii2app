@@ -47,7 +47,7 @@ to {top:-4px; opacity: 1;}
     margin-top:0;
     width: 50%;
     text-align: center;  
-    z-index: 1000;
+    z-index: 2000;
     border: 1px solid #88CD00;
     animation: flash-in 2s ease-out forwards;
     animation-iteration-count:1;
@@ -67,7 +67,7 @@ to {top:-4px; opacity: 1;}
     margin-top:0;
     width: 50%;
     text-align: center;  
-    z-index: 1000;
+    z-index: 2000;
     border: 1px solid #88CD00;
     animation: flash-in 2s ease-out forwards;
     animation-iteration-count:1;
@@ -88,7 +88,7 @@ to {top:-4px; opacity: 1;}
     margin-top:0;
     width: 50%;
     text-align: center;  
-    z-index: 1000;
+    z-index: 2000;
     border: 1px solid #88CD00;
     animation: flash-in 2s ease-out forwards;
     animation-iteration-count:1;
@@ -664,6 +664,53 @@ MAIN BODY
     background-size: contain;
 }
 
+/* OTHER ADMINISTRATION */
+
+.mainbox-adm {
+    //min-width: 100%;
+    min-height: 250px;
+    margin-bottom: 50px;
+    max-height: 250px;
+   // border: 1px solid black;
+    background: url("/images/adm_gray.jpg") no-repeat;
+    background-size: contain;
+    //padding-bottom: 200px;
+    position: relative;
+    transition: background-color 5s ease;
+    background-color: transparent;
+}
+
+.mainbox-adm .btn-default {
+    height: 45px;
+    width: 100%;
+ 
+    line-height: 1em;
+    font-size: 16px;
+    
+    border: 0px;
+    border-radius: 0;
+    border-bottom: 1px solid #83C503;
+    
+    text-transform: uppercase;
+ 
+    color: #808080;
+    background: #e6e6e6;
+    text-align: left;
+    
+    transition: all 1s ease;    
+}
+
+.mainbox-adm:hover .btn-default {
+    background-color: #83C503;
+    color: white;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.mainbox-adm:hover {
+    background: url("/images/adm_green.jpg") no-repeat;
+    background-size: contain;
+}
+
 .message ul{
     text-align: center;
 }
@@ -813,9 +860,9 @@ GO BACK BUTTON
 
 .wrap-login {
     height: auto;
-    margin: 0 auto -100px;
+    margin: 0 auto -90px;
     min-height: 100%;
-    padding: 0 0 100px;
+    padding: 0 0 90px;
     background-image: url('../images/bg4.jpg');
     background-repeat: no-repeat;
     //background-position-y: 100px;
@@ -825,7 +872,7 @@ GO BACK BUTTON
 .footer-login {
     background-color: white;
     border-top: 1px solid #83c503;
-    height: 100px;
+    height: 90px;
     padding-top: 5px;
     font-size: 18px;
 }
@@ -975,9 +1022,9 @@ GO BACK BUTTON
 
 .wrap-menu {
     height: auto;
-    margin: 0 auto -100px;
+    margin: 0 auto -90px;
     min-height: 100%;
-    padding: 0 0 100px;
+    padding: 0 0 90px;
     background-image: url('../images/bg.jpg');
     background-repeat: no-repeat;
     background-position: -15px 50px;
@@ -987,9 +1034,9 @@ GO BACK BUTTON
 
 .wrap-action {
     height: auto;
-    margin: 0 auto -100px;
+    margin: 0 auto -90px;
     min-height: 100%;
-    padding: 0 0 100px;
+    padding: 0 0 90px;
     background-image: url('../images/bg2.jpg');
     background-repeat: no-repeat;
     background-position: -15px 50px;
@@ -1003,7 +1050,7 @@ GO BACK BUTTON
 .footer-menu {
     background-color: #e6e6e6;
     border-top: 1px solid #83c503;
-    height: 100px;
+    height: 90px;
     padding-top: 5px;
     font-size: 18px;
 }
