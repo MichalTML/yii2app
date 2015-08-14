@@ -252,6 +252,18 @@ class User extends ActiveRecord implements IdentityInterface {
         $droptions = Role::find()->asArray()->all();
         return ArrayHelper::map( $droptions, 'id', 'role_name' );
     }
+    
+    public static function getEditableRoleList() {
+        $droptions = Role::find()->asArray()->all();
+        unset($droptions[1], $droptions[5]);
+        return ArrayHelper::map( $droptions, 'id', 'role_name' );
+    }
+    
+    public static function getSearchRoleList() {
+        $droptions = Role::find()->asArray()->all();
+        unset($droptions[1], $droptions[5]);
+        return ArrayHelper::map( $droptions, 'role_name', 'role_name' );
+    }
 
     /**
      * get status relation

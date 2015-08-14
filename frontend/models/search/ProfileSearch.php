@@ -15,11 +15,13 @@ class ProfileSearch extends Profile
     /**
      * @inheritdoc
      */
+    
+   
     public function rules()
     {
         return [
-            [['id', 'user_id', 'gender_id'], 'integer'],
-            [['first_name', 'last_name', 'birthdate', 'created_at', 'updated_at'], 'safe'],
+            [['id', 'userId', 'genderId'], 'integer'],
+            [['firstName', 'lastName', 'birthdate', 'created', 'updated'], 'safe'],
         ];
     }
 
@@ -42,13 +44,15 @@ class ProfileSearch extends Profile
     public function search($params)
     {
         $query = Profile::find();
-
+      
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
         $this->load($params);
-
+        
+      
+        
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
@@ -57,15 +61,15 @@ class ProfileSearch extends Profile
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            'userId' => $this->userId,
             'birthdate' => $this->birthdate,
-            'gender_id' => $this->gender_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'genderId' => $this->genderId,
+            'created' => $this->created,
+            'updated' => $this->updated,
         ]);
 
-        $query->andFilterWhere(['like', 'first_name', $this->first_name])
-            ->andFilterWhere(['like', 'last_name', $this->last_name]);
+        $query->andFilterWhere(['like', 'firstName', $this->firstName])
+            ->andFilterWhere(['like', 'lastName', $this->lastName]);
 
         return $dataProvider;
     }

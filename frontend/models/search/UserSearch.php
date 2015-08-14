@@ -15,11 +15,14 @@ class UserSearch extends User
     /**
      * @inheritdoc
      */
+     public function attributes() {
+        return array_merge(parent::attributes(), ['status.status_name', 'role.role_name']);
+    }
+    
     public function rules()
     {
         return [
-            [['id', 'status_id', 'role_id', 'user_type_id'], 'integer'],
-            [['username', 'auth_key', 'password_hash', 'password_reset_token', 'email', 'created_at', 'updated_at'], 'safe'],
+   [['username', 'auth_key', 'password_hash', 'password_reset_token', 'email', 'created_at', 'updated_at','status.status_name', 'role.role_name'], 'safe'],
         ];
     }
 
@@ -44,11 +47,25 @@ class UserSearch extends User
         $query = User::find()->where( 
             'role_id != :id and role_id != :id2', ['id'=>1, 'id2'=>5]
             );
-
+          $query->joinWith(['status']);
+          $query->joinWith(['role']);
+          
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        
+          $dataProvider->sort->attributes['role_id'] =
+                [
+                    'asc' => ['role.role_name' => SORT_ASC],
+                    'desc' => ['role.role_name' => SORT_DESC],
+                ];
+        
+        $dataProvider->sort->attributes['status_id'] =
+                [
+                    'asc' => ['status.status_name' => SORT_ASC],
+                    'desc' => ['status.status_name' => SORT_DESC],
+                ];
+        
         $this->load($params);
 
         if (!$this->validate()) {
@@ -70,7 +87,9 @@ class UserSearch extends User
             ->andFilterWhere(['like', 'auth_key', $this->auth_key])
             ->andFilterWhere(['like', 'password_hash', $this->password_hash])
             ->andFilterWhere(['like', 'password_reset_token', $this->password_reset_token])
-            ->andFilterWhere(['like', 'email', $this->email]);
+            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['=', 'role.role_name', $this->getAttribute( 'role.role_name')])
+            ->andFilterWhere(['=', 'status.status_name', $this->getAttribute( 'status.status_name')]);
 
         return $dataProvider;
     }

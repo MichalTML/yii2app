@@ -1,67 +1,70 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
-use frontend\models\ProjectData;
+use kartik\grid\GridView;
 use yii\helpers\Url;
+use frontend\models\search\ProjectSearch;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\search\ProjectSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+
 $this->title = 'Projects list';
 $this->params[ 'breadcrumbs' ][] = $this->title;
 ?>
+
 <div class="project-data-index">
 
-    <!--    <h1> Html::encode($this->title) </h1>-->
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
-        <?= Html::a( 'Create new project', ['create' ], ['class' => 'btn btn-default login' ] ) ?>
+        <?= Html::a( 'New project', ['create' ], ['class' => 'btn btn-default login' ] ) ?>
     </p>
 
     <?=
     GridView::widget( [
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'export' => FALSE,
+        'bootstrap' => true,
+        'condensed' => true,
+        'responsive' => true,
+        'hover' => true,
         'rowOptions' => function($model)
         {
             return ['class' => 'tablew' ];
         },
                 'columns' => [
-                    ['class' => 'yii\grid\SerialColumn',
-                        'contentOptions' => ['style' => 'color: black;' ],
-                    ],
                     'sygnature',
-                    //'projectName',
                     [
                         'attribute' => 'projectName',
                         'value' => 'projectName',
                         'contentOptions' => ['style' => 'white-space: nowrap;' ]
                     ],
-                    [
-                        'attribute' => 'Constructors',
-                        'value' => 'ProjectPermissionsUsers',
-                        'contentOptions' => ['style' => 'word-wrap: break-word;' ]
-                    ],
+                     [
+                'class' => 'kartik\grid\ExpandRowColumn',
+                'value' => function ($model, $key, $index, $column)
+                {
+                    return GridView::ROW_COLLAPSED;
+                },
+                'detail' => function ($model, $key, $index, $column)
+                {
+                    $searchModel = new ProjectSearch();
+                    $searchModel->id = $model->id;
+                    $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
+                    
+                    return Yii::$app->controller->renderPartial( '_detailView', [
+                                'searchModel' => $searchModel,
+                                'dataProvider' => $dataProvider,
+                                'model' => $model,
+                    ] );
+                },
+                        'headerOptions' => ['class' => 'kartik-sheet-style' ],
+                        'expandOneOnly' => true,
+            ],
                     'deadline',
                     'projectStatus0.statusName',
                     'client.name',
-//          [
-//                'attribute' => 'projectPermissions.userId',
-//                'value' => function ($data) {
-//                 $str = '';
-//                 foreach($data->projectPermissions as $permission) {
-//                 $str .= $permission->userId.',';
-//                 }
-//                 return $str;
-//                },
-//            ],
-                    //'projectPermissionsUsers',
                     'creUser.username',
                     'creTime',
-                    //'updUserName',
-                    //'updTime',
                     ['class' => 'yii\grid\ActionColumn',
                         'header' => 'Action',
                         'headerOptions' => ['style' => 'min-width: 70px;text-align: center;' ],
@@ -70,36 +73,38 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                             'delete' => function($url, $model)
                             {
                                 if ( $model->projectStatus == 2 )
-                                {   
+                                {
                                     return '<span class="glyphicon glyphicon-trash"></span>';
-                                } else {
+                                } else
+                                {
                                     return Html::a( '<span class="glyphicon glyphicon-trash"></span>', $url, [ 'data-method' => 'post',
                                                 'title' => Yii::t( 'app', 'delete' ),
                                                 'data' => [
-                                                    'confirm' => 'You are about to delete: ' . $model->projectName . ' ,are you sure you want to proceed?',
+                                                'confirm' => 'You are about to delete: ' . $model->projectName . ' ,are you sure you want to                                                proceed?',
                                                     'method' => 'post',
                                                 ],
-                                    ] );
+                                            ] );
                                 }
                             },
-                            'edit' => function($url, $model)
+                                    'edit' => function($url, $model)
                             {
                                 if ( $model->projectStatus == 2 )
                                 {
                                     return '<span class="glyphicon glyphicon-pencil"></span>';
-                                } else {
+                                } else
+                                {
                                     return Html::a( '<span class="glyphicon glyphicon-pencil"></span>', $url, [ 'data-method' => 'post',
-                                        'title' => Yii::t( 'app', 'edit')]);
+                                                'title' => Yii::t( 'app', 'edit' ) ] );
                                 }
-                             },
-                            'view' => function($url, $model)
+                            },
+                                    'view' => function($url, $model)
                             {
                                 return Html::a( '<span class="glyphicon glyphicon-eye-open"></span>', $url, [
                                             'data-method' => 'post',
                                             'title' => Yii::t( 'app', 'view' ),
-                                ] );
+                                        ] );
                             }
-                             ],
+                                ],
                                 'urlCreator' => function ($action, $model, $key, $index)
                         {
                             if ( $action === 'delete' )
@@ -107,23 +112,19 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                 $url = Url::toRoute( ['project/delete', 'id' => $model->id ] );
                                 return $url;
                             }
-                            if ( $action === 'edit')
+                            if ( $action === 'edit' )
                             {
                                 $url = Url::toRoute( ['project/update', 'id' => $model->id ] );
                                 return $url;
                             }
-                                if ( $action === 'view')
+                            if ( $action === 'view' )
                             {
                                 $url = Url::toRoute( ['project/view', 'id' => $model->id ] );
                                 return $url;
                             }
-                            
                         }
                             ],
                         ],
                     ] );
                     ?>
-
-
-
 </div>

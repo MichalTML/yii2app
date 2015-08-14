@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
@@ -26,8 +26,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'export' => FALSE,  
+        'bootstrap' => true,
+        'condensed' => true,
+            'responsive' => true,
+    'hover' => true,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
             [
                 'attribute' => 'status.statusName',
                 'value' => 'status.statusName',

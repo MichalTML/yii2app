@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use common\models\PermissionHelpers;
 use yii\helpers\ArrayHelper;
 use frontend\models\ClientContacts;
@@ -29,17 +29,20 @@ $this->params['breadcrumbs'][] = $this->title;
    echo GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+       'export' => FALSE,  
+    'bootstrap' => true,
+    'condensed' => true,
+    'responsive' => true,
+    'hover' => true,
         
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'client.name',
             'firstName',
             'lastName',
             [
                 'attribute' => 'gender.genderName',
                 'value' => 'gender.genderName',
-                'filter' => Html::activeDropDownList($searchModel, 'gender.genderName', ArrayHelper::map(\frontend\models\Gender::find()->asArray()->all(), 'genderName','genderName'),['class'=>'form-control', 'prompt' => ' ']),
+                'filter' => Html::activeDropDownList($searchModel, 'gender.genderName', ArrayHelper::map(\frontend\models\Gender::find()->asArray()->all(), 'genderName','genderName'),['class'=>'form-control', 'prompt' => ' ', 'style' => 'width: 100px;']),
 ],
             'phone',
             // 'fax',

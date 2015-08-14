@@ -1080,3 +1080,9 @@ background: -ms-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1
 background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 12%, rgba(255,255,255,1) 24%, rgba(255,255,255,0) 35%, rgba(255,255,255,0) 76%, rgba(255,255,255,0) 78%);
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff', GradientType=1 );
 }
+
+.table > thead > tr > td.info, .table > tbody > tr > td.info, .table > tfoot > tr > td.info, .table > thead > tr > th.info, .table > tbody > tr > th.info, .table > tfoot > tr > th.info, .table > thead > tr.info > td, .table > tbody > tr.info > td, .table > tfoot > tr.info > td, .table > thead > tr.info > th, .table > tbody > tr.info > th, .table > tfoot > tr.info > th {
+    background-color: #e6e6e6;
+}
+
+

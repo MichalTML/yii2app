@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use common\models\PermissionHelpers;
 
 /* @var $this yii\web\View */
@@ -26,11 +26,14 @@ $this->params['breadcrumbs'][] = $this->title;
     echo  GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'export' => FALSE,  
+    'bootstrap' => true,
+    'condensed' => true,
+    'responsive' => true,
+    'hover' => true,
         
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            //'id',
+                      //'id',
             'clientNumber',
             'name',
             //'adress',

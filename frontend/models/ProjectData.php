@@ -15,7 +15,6 @@ use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\AttributeBehavior;
 
-
 /**
  * This is the model class for table "project_data".
  *
@@ -37,7 +36,8 @@ use yii\behaviors\AttributeBehavior;
  * @property User $updUser
  * @property ProjectPermissions[] $projectPermissions
  */
-class ProjectData extends \yii\db\ActiveRecord {
+class ProjectData extends \yii\db\ActiveRecord
+{
 
     /**
      * @inheritdoc
@@ -53,11 +53,10 @@ class ProjectData extends \yii\db\ActiveRecord {
         return [
             [[ 'projectName', 'clientId', 'deadline', 'projectStatus', 'sygnature' ], 'required' ],
             [[ 'id', 'clientId' ], 'integer' ],
-            [[ 'id', 'sygnature'], 'unique' ],
+            [[ 'id', 'sygnature' ], 'unique' ],
             [ 'projectName', 'match', 'pattern' => '/^[a-zA-Z]*$/', 'message' => 'Project name can only contain letters.' ],
-            [ 'sygnature', 'string', 'length' => [3, 3]],
-            [ 'sygnature', 'integer'],
-           
+            [ 'sygnature', 'string', 'length' => [3, 3 ] ],
+            [ 'sygnature', 'integer' ],
         ];
     }
 
@@ -99,37 +98,41 @@ class ProjectData extends \yii\db\ActiveRecord {
             'createstamp' => [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['creUserId' ],                    
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['creUserId' ],
                 ],
-                'value' => function ($event) {
+                'value' => function ($event)
+        {
             return Yii::$app->user->identity->id;
         }
             ],
             'updatestamp' => [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['updUserId'],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updUserId'],
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['updUserId' ],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updUserId' ],
                 ],
-                'value' => function ($event) {
+                'value' => function ($event)
+        {
             return Yii::$app->user->identity->id;
         }
             ],
         ];
     }
+
     /**
      * set project name
      */
-    public function setProjectName($sygnature, $projectName) {
-        $projectName = 'P'.$sygnature.'_'.$projectName;
+    public function setProjectName( $sygnature, $projectName ) {
+        $projectName = 'P' . $sygnature . '_' . $projectName;
         $this->projectName = $projectName;
-        if($this->save()){
+        if ( $this->save() )
+        {
             return true;
         }
-        
+
         return false;
     }
-    
+
     public function getStatusList() {
 
         $droptions = ProjectStatus::find()->asArray()->all();
@@ -139,26 +142,36 @@ class ProjectData extends \yii\db\ActiveRecord {
     /**
      * get constructor first and last name
      * from the profile
-     *@return array array that containst 'firstname lastname'
+     * @return array array that containst 'firstname lastname'
      */
     public function getConstructorList() {
-        
-       $userIdList = User::find()->where( ['role_id' => 1])->all();
-       $constructorList = [ ];
-        
-       foreach($userIdList as $users => $user){
-       
-       $userProfile = Profile::find()->where(['userId' => $user['id']])->one();
-//       var_dump($userProfile->firstName);
-//       die();
-       $userFirstName = $userProfile->firstName;
-       $userLastName = $userProfile->lastName;
-       $userCombine = $userFirstName.' '.$userLastName;
-       $constructorList[$user['id']] = $userCombine;
-       
+
+        if ( $userIdList = User::find()->where( ['role_id' => 2 ] )->all() )
+        {
+            $constructorList = [ ];
+
+            foreach ( $userIdList as $users => $user ) {
+
+                $userProfile = Profile::find()->where( ['userId' => $user[ 'id' ] ] )->one();
+
+                if ( isset( $userProfile->firstName ) && isset( $userProfile->lastName ) )
+                {
+                    $userFirstName = $userProfile->firstName;
+                    $userLastName = $userProfile->lastName;
+                    $userCombine = $userFirstName . ' ' . $userLastName;
+                    $constructorList[ $user[ 'id' ] ] = $userCombine;
+                } else
+                {
+                    $constructorList[ $user[ 'id' ] ] = $user[ 'username' ];
+                }
+            }
+        } else
+        {
+            $constructorList = [ ];
         }
-        
-        return $constructorList;     
+
+
+        return $constructorList;
     }
 
     /**
@@ -167,48 +180,45 @@ class ProjectData extends \yii\db\ActiveRecord {
      * 
      * !!!!!!!! TODO LINK Z PROFILEM I WYWALEINIE IMIENIA I NAZWISKA
      */
-    public function getCreUser()
-    {
-        return $this->hasOne(User::className(), ['id' => 'creUserId']);
+    public function getCreUser() {
+        return $this->hasOne( User::className(), ['id' => 'creUserId' ] );
     }
-  
-    public function getUpdUser()
-    {
-        return $this->hasOne(User::className(), ['id' => 'updUserId']);
+
+    public function getUpdUser() {
+        return $this->hasOne( User::className(), ['id' => 'updUserId' ] );
     }
-    
-     /**
+
+    /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProjectPermissions()
-    {
-        return $this->hasMany(ProjectPermissions::className(), ['projectId' => 'id']);
+    public function getProjectPermissions() {
+        return $this->hasMany( ProjectPermissions::className(), ['projectId' => 'id' ] );
     }
-    
-    public function getProjectPermissionsUsers()
-    {
-        foreach($this->projectPermissions as $key){
-        $username = Profile::find()->where(['userId' => $key->userId])->one();
-        $userNames[] = $username->firstName . '.' . $username->lastName;
-        }
+
+    public function getProjectPermissionsUsers() {
+            $i = 1;
+        foreach ( $this->projectPermissions as $key ) {
+            $username = Profile::find()->where( ['userId' => $key->userId ] )->one();
+            $count = ArrayHelper::map($username, 'firstName', 'lastName');
+            
+            $userNames[] = $i . '. ' . $username->firstName . ' ' . $username->lastName;
+            $i ++;
+            }
         
-       return $userNames = implode(' ', $userNames );
-        
+      
+        return $userNames = implode( ' ', $userNames );
     }
-    
-    
+
     /**
      * @return \yii\db\ActiveQuery
      * 
      * All client_data table related methods
      * 
      */
-    public function getClient()
-    {
-        return $this->hasOne(ClientData::className(), ['id' => 'clientId']);
+    public function getClient() {
+        return $this->hasOne( ClientData::className(), ['id' => 'clientId' ] );
     }
-    
-    
+
     public function getClientList() {
         $droptions = ClientData::find()->asArray()->all();
         return ArrayHelper::map( $droptions, 'id', 'name' );
@@ -227,9 +237,8 @@ class ProjectData extends \yii\db\ActiveRecord {
 //       return $this->projectStatus0->statusName;
 //   }
 //
-    public function getProjectStatus0()
-    {
-        return $this->hasOne(ProjectStatus::className(), ['id' => 'projectStatus']);
+    public function getProjectStatus0() {
+        return $this->hasOne( ProjectStatus::className(), ['id' => 'projectStatus' ] );
     }
-    
+
 }

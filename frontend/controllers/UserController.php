@@ -45,12 +45,11 @@ class UserController extends Controller
     
     // validate if there is a editable input saved via AJAX
     if (Yii::$app->request->post('hasEditable')) {
-     //var_dump(Yii::$app->request->post());
-     //die();
+     
         // instantiate your book model for saving
         $statusId = Yii::$app->request->post('editableKey');
         $model = User::findOne($statusId);
- 
+       
         // store a default json response as desired by editable
         $out = Json::encode(['output'=>'', 'message'=>'']);
  
@@ -71,21 +70,29 @@ class UserController extends Controller
             // custom output to return to be displayed as the editable grid cell
             // data. Normally this is empty - whereby whatever value is edited by 
             // in the input by user is updated automatically.
-            //$output = '';
+//           
+//           $roleList = User::getRoleList();
+//           if(isset()) var_dump(User::getStatusList());
+         // $output = Yii::$app->request->post('hasEditable');
  
             // specific use case where you need to validate a specific
             // editable column posted when you have more than one 
             // EditableColumn in the grid view. We evaluate here a 
             // check to see if buy_amount was posted for the Book model
-//            if (isset($posted['buy_amount'])) {
-//               $output =  Yii::$app->formatter->asDecimal($model->buy_amount, 2);
-//            } 
- 
+            if (isset($posted['status_id'])) {
+               $statusList = User::getStatusList();
+               $output =  $statusList[$posted['status_id']];
+            } 
+            if (isset($posted['role_id'])) {
+               $statusList = User::getRoleList();
+               $output =  $statusList[$posted['role_id']];
+            } 
+            
             // similarly you can check if the name attribute was posted as well
             // if (isset($posted['name'])) {
             //   $output =  ''; // process as you need
             // } 
-            //$out = Json::encode(['output'=>$output, 'message'=>'']);
+            $out = Json::encode(['output'=>$output, 'message'=>'']);
         } 
         // return ajax json encoded response and exit
         echo $out;
@@ -106,8 +113,10 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
