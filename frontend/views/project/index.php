@@ -39,7 +39,13 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'value' => 'projectName',
                         'contentOptions' => ['style' => 'white-space: nowrap;' ]
                     ],
-                     [
+                  
+                    'deadline',
+                    'projectStatus0.statusName',
+                    'client.name',
+                    'creUser.username',
+                    'creTime',
+                       [
                 'class' => 'kartik\grid\ExpandRowColumn',
                 'value' => function ($model, $key, $index, $column)
                 {
@@ -60,14 +66,10 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'headerOptions' => ['class' => 'kartik-sheet-style' ],
                         'expandOneOnly' => true,
             ],
-                    'deadline',
-                    'projectStatus0.statusName',
-                    'client.name',
-                    'creUser.username',
-                    'creTime',
                     ['class' => 'yii\grid\ActionColumn',
                         'header' => 'Action',
                         'headerOptions' => ['style' => 'min-width: 70px;text-align: center;' ],
+                        'contentOptions' => ['style' => 'text-align:center; line-height: 3em;'],
                         'template' => '{view} {edit} {delete}',
                         'buttons' => [
                             'delete' => function($url, $model)

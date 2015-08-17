@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create New Client', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('New Client', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?php
     if(PermissionHelpers::requireMinimumPower(Yii::$app->user->identity->id) > 30){

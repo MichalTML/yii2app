@@ -78,7 +78,7 @@ use kartik\form\ActiveForm;
         <br />
     <?= Html::submitButton( $model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary' ] ).' ' ?>
 <?php if( $model->isNewRecord == true ){
-echo Html::submitButton( 'Add contact' , ['class' => 'btn btn-info', 'name' => 'add']); 
+echo Html::submitButton( 'Add another' , ['class' => 'btn btn-info', 'name' => 'add']); 
 }?>
 
 </div>

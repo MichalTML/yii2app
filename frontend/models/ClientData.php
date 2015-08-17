@@ -55,15 +55,23 @@ class ClientData extends \yii\db\ActiveRecord
     public function rules() {
         return [
             [[ 'name', 'adress', 'city', 'postal', 'phone', 'email', 'nip', 'krs', 'regon', 'www', 'clientNumber' ], 'required' ],
-            [[ 'phone', 'fax', 'krs', 'regon', 'creUserId', 'updUserId' ], 'integer' ],
-            ['email', 'email'],
             [[ 'creTime', 'updTime' ], 'safe' ],
-            [[ 'clientNumber', 'name', 'regon', 'nip', 'krs',  ], 'unique'],
-            [[ 'name', 'city', 'postal' ], 'string', 'max' => 45 ],
-            [[ 'abr' ], 'string', 'max' => 10 ],
-            [[ 'adress', 'www', 'description' ], 'string', 'max' => 255 ],
-            [[ 'email' ], 'string', 'max' => 60 ],
-            [[ 'nip' ], 'string', 'max' => 12 ]];
+            [[ 'clientNumber', 'name', 'regon', 'nip', 'krs','regon'  ], 'unique'],
+        
+           /// VALIDATION
+            [ 'clientNumber', 'match', 'pattern' => '/^[0-9]{4}$/', 'message' => '( min. 4 digits ) Only numbers allowed' ],
+            [ 'name', 'match', 'pattern' => '/^[a-zA-Z\s]*$/', 'message' => 'Name can only contain letters' ],
+            [ 'abr', 'match', 'pattern' => '/^[a-zA-Z\s.-]*$/', 'message' => 'Abrevation can only contain letters and . -' ],
+            [ 'city', 'match', 'pattern' => '/^[a-zA-Z0-9\s.-\\\/]*$/', 'message' => 'City can only contain aplhanumeric signs and . - \ /' ],
+            [ 'postal', 'match', 'pattern' => '/^[a-zA-Z09-]{1,10}$/', 'message' => '(max 10 signs) Postal code can only contain aplhanumeric and -' ],
+            [ 'phone', 'match', 'pattern' => '/^[0-9-+\(\)]*$/', 'message' => 'Phone number can only contain numbers and + ( ) -' ],
+            [ 'fax', 'match', 'pattern' => '/^[0-9-+\(\)]*$/', 'message' => 'Fax number can only contain numbers and + ( ) -' ],
+            ['email', 'email' , 'message' => 'Has to be valid email address'],
+            [ 'nip', 'match', 'pattern' => '/^[A-Z0-9]{7,14}$/', 'message' => 'NIP can only contain numbers' ],
+            [ 'krs', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => '( min. 10 digits ) KRS can only contain numbers' ],
+            [ 'regon', 'match', 'pattern' => '/^[0-9]{7,14}$/', 'message' => '( min. 7, max. 14 ) REGON can only contain numbers' ],
+            [ 'www', 'match', 'pattern' => '/@^(http\:\/\/|https\:\/\/)?([a-z0-9][a-z0-9\-]*\.)+[a-z0-9][a-z0-9\-]*$@i/', 'message' => 'Has to be valid www address' ],
+            ];
     }
 
     /**
@@ -84,7 +92,7 @@ class ClientData extends \yii\db\ActiveRecord
             'nip' => 'Nip',
             'krs' => 'Krs',
             'regon' => 'Regon',
-            'www' => 'www site',
+            'www' => 'Website',
             'description' => 'Description',
             'creTime' => 'Created at',
             'creUser.username' => 'Created by',

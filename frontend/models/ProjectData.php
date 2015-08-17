@@ -240,5 +240,12 @@ class ProjectData extends \yii\db\ActiveRecord
     public function getProjectStatus0() {
         return $this->hasOne( ProjectStatus::className(), ['id' => 'projectStatus' ] );
     }
+    
+    public static function callClientData($data){
+        $clientData = new ClientData;
+        $client = $clientData->find()->where(['id' => $data])->one();
+        return '<b>Name:</b> ' . $client->name . ' <b>Phone:</b> ' . $client->phone . 
+                '<b>Email:</b> ' . '<a href="mailto:'.$client->email. '">' . $client->email. ' </a><b>Website:</b> ' . '<a href="' .$client->www . '">' . $client->www . ' </a>';
+    }
 
 }

@@ -69,7 +69,7 @@ $this->title = 'Sign up';
             ?>
             <div class="row">
              <div class="col-sm-12">
-                <?= Html::submitButton( 'Sign up', ['class' => 'btn btn-default login login-btn signup-btn', 'name' => 'signup-button'] ); ?>
+                <?= Html::submitButton( 'Sign up', ['class' => 'btn btn-default login login-btn signup-btn', 'name' => 'signup'] ); ?>
              </div>
                 </div>
             

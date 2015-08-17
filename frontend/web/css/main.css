@@ -188,7 +188,8 @@ NAVBAR
     background-size: contain;
     background-size: 35px 35px;
     height: 35px;
-    width: 140px;
+    min-width: 140px;
+    max-width: 140px;
 }
 
 .logout a:hover{
@@ -331,6 +332,8 @@ MAIN BODY
     //width: 100%;
     bottom: 0;
     position: absolute;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .mainbox_info span{
@@ -351,6 +354,8 @@ MAIN BODY
     position: relative;
     transition: background-color 5s ease;
     background-color: transparent;
+    border-radius: 10px;
+    border-radius: 10px;
 }
 
 .mainbox-pm .btn-default {
@@ -362,6 +367,9 @@ MAIN BODY
     
     border: 0px;
     border-radius: 0;
+    border-top: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
     border-bottom: 1px solid #83C503;
     
     text-transform: uppercase;
@@ -371,17 +379,25 @@ MAIN BODY
     text-align: left;
     
     transition: all 1s ease;    
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .mainbox-pm:hover .btn-default {
     background-color: #83C503;
     color: white;
     border-bottom: 1px solid #e6e6e6;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+-moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
 }
 
 .mainbox-pm:hover {
     background: url("/images/project_green.jpg") no-repeat;
     background-size: contain;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+-moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
 }
 
 /* CLIENT MANAGER */
@@ -398,7 +414,10 @@ MAIN BODY
     position: relative;
     transition: background-color 5s ease;
     background-color: transparent;
+    border-radius: 10px;
+    border-radius: 10px;
 }
+
 
 .mainbox-cm .btn-default {
     height: 45px;
@@ -409,6 +428,9 @@ MAIN BODY
     
     border: 0px;
     border-radius: 0;
+    border-top: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
     border-bottom: 1px solid #83C503;
     
     text-transform: uppercase;
@@ -418,6 +440,8 @@ MAIN BODY
     text-align: left;
     
     transition: all 1s ease;    
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .mainbox-cm:hover .btn-default {
@@ -429,6 +453,9 @@ MAIN BODY
 .mainbox-cm:hover {
     background: url("/images/client_green.jpg") no-repeat;
     background-size: contain;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+    -moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+    box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
 }
 
 /* CLIENT INDEX*/
@@ -445,6 +472,8 @@ MAIN BODY
     position: relative;
     transition: background-color 5s ease;
     background-color: transparent;
+    border-radius: 10px;
+    border-radius: 10px;
 }
 
 .mainbox-ind .btn-default {
@@ -455,6 +484,10 @@ MAIN BODY
     font-size: 16px;
     
     border: 0px;
+    border-top: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+    border-bottom: 1px solid #83C503;
     border-radius: 0;
     border-bottom: 1px solid #83C503;
     
@@ -464,7 +497,9 @@ MAIN BODY
     background: #e6e6e6;
     text-align: left;
     
-    transition: all 1s ease;    
+    transition: all 1s ease;  
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .mainbox-ind:hover .btn-default {
@@ -476,6 +511,9 @@ MAIN BODY
 .mainbox-ind:hover {
     background: url("/images/client_index_green.jpg") no-repeat;
     background-size: contain;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+-moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
 }
 /* CONTACT INDEX*/
 
@@ -491,10 +529,12 @@ MAIN BODY
     position: relative;
     transition: background-color 5s ease;
     background-color: transparent;
+    border-radius: 10px;
+    border-radius: 10px;
 }
 
 .mainbox-indc .btn-default {
-    height: 45px;
+     height: 45px;
     width: 100%;
  
     line-height: 1em;
@@ -502,6 +542,9 @@ MAIN BODY
     
     border: 0px;
     border-radius: 0;
+    border-top: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
     border-bottom: 1px solid #83C503;
     
     text-transform: uppercase;
@@ -511,6 +554,8 @@ MAIN BODY
     text-align: left;
     
     transition: all 1s ease;    
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .mainbox-indc:hover .btn-default {
@@ -522,6 +567,9 @@ MAIN BODY
 .mainbox-indc:hover {
     background: url("/images/contact_index_green.jpg") no-repeat;
     background-size: contain;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+-moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
 }
 /* OTHER CLIENTS */
 
@@ -537,10 +585,12 @@ MAIN BODY
     position: relative;
     transition: background-color 5s ease;
     background-color: transparent;
+    border-radius: 10px;
+    border-radius: 10px;
 }
 
 .mainbox-ocm .btn-default {
-    height: 45px;
+     height: 45px;
     width: 100%;
  
     line-height: 1em;
@@ -548,6 +598,9 @@ MAIN BODY
     
     border: 0px;
     border-radius: 0;
+    border-top: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
     border-bottom: 1px solid #83C503;
     
     text-transform: uppercase;
@@ -557,6 +610,8 @@ MAIN BODY
     text-align: left;
     
     transition: all 1s ease;    
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px; 
 }
 
 .mainbox-ocm:hover .btn-default {
@@ -568,6 +623,9 @@ MAIN BODY
 .mainbox-ocm:hover {
     background: url("/images/oclient_green.jpg") no-repeat;
     background-size: contain;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+-moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
 }
 
 /* OTHER CLIENT INDEX */
@@ -584,6 +642,8 @@ MAIN BODY
     position: relative;
     transition: background-color 5s ease;
     background-color: transparent;
+    border-radius: 10px;
+    border-radius: 10px;
 }
 
 .mainbox-oind .btn-default {
@@ -595,6 +655,9 @@ MAIN BODY
     
     border: 0px;
     border-radius: 0;
+    border-top: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
     border-bottom: 1px solid #83C503;
     
     text-transform: uppercase;
@@ -604,6 +667,8 @@ MAIN BODY
     text-align: left;
     
     transition: all 1s ease;    
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .mainbox-oind:hover .btn-default {
@@ -615,6 +680,9 @@ MAIN BODY
 .mainbox-oind:hover {
     background: url("/images/oclient_index_green.jpg") no-repeat;
     background-size: contain;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+-moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
 }
     
     /* OTHER CONTACTS INDEX */
@@ -631,10 +699,12 @@ MAIN BODY
     position: relative;
     transition: background-color 5s ease;
     background-color: transparent;
+    border-radius: 10px;
+    border-radius: 10px;
 }
 
 .mainbox-ocindc .btn-default {
-    height: 45px;
+     height: 45px;
     width: 100%;
  
     line-height: 1em;
@@ -642,6 +712,9 @@ MAIN BODY
     
     border: 0px;
     border-radius: 0;
+    border-top: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
     border-bottom: 1px solid #83C503;
     
     text-transform: uppercase;
@@ -651,6 +724,8 @@ MAIN BODY
     text-align: left;
     
     transition: all 1s ease;    
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px; 
 }
 
 .mainbox-ocindc:hover .btn-default {
@@ -662,15 +737,18 @@ MAIN BODY
 .mainbox-ocindc:hover {
     background: url("/images/ocontact_index_green.jpg") no-repeat;
     background-size: contain;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+-moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
 }
 
 /* OTHER ADMINISTRATION */
 
 .mainbox-adm {
-    //min-width: 100%;
+     //min-width: 100%;
     min-height: 250px;
-    margin-bottom: 50px;
     max-height: 250px;
+    margin-bottom: 50px;
    // border: 1px solid black;
     background: url("/images/adm_gray.jpg") no-repeat;
     background-size: contain;
@@ -678,6 +756,8 @@ MAIN BODY
     position: relative;
     transition: background-color 5s ease;
     background-color: transparent;
+    border-radius: 10px;
+    border-radius: 10px;
 }
 
 .mainbox-adm .btn-default {
@@ -686,18 +766,19 @@ MAIN BODY
  
     line-height: 1em;
     font-size: 16px;
-    
-    border: 0px;
-    border-radius: 0;
+    border-top: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+    border-radius: 0px;
     border-bottom: 1px solid #83C503;
     
     text-transform: uppercase;
- 
     color: #808080;
     background: #e6e6e6;
     text-align: left;
-    
-    transition: all 1s ease;    
+    transition: all 1s ease; 
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .mainbox-adm:hover .btn-default {
@@ -709,6 +790,9 @@ MAIN BODY
 .mainbox-adm:hover {
     background: url("/images/adm_green.jpg") no-repeat;
     background-size: contain;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+-moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
 }
 
 .message ul{

@@ -7,6 +7,7 @@
 use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
 use common\models\PermissionHelpers;
+use common\models\User;
 
 /* @var $this yii\web\View */
 $this->title = 'TMA Project Manager';
@@ -51,15 +52,24 @@ if(Yii::$app->user->isGuest){
     <div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">    
  <?php
                     if(PermissionHelpers::requireMinimumPower(Yii::$app->user->identity->id) > 10) {
+                        if(User::countNewUsers()){
                         echo Html::a('<div class="mainbox-adm">'
-                                . '<div class="btn btn-default">User Administration</div>'
+                                . '<div class="btn btn-default">User Administration'
+                                . '<div class="user-info">' . User::countNewUsers() . '</div></div>'
                                 . '<div class="mainbox_info"><span>User Administration</span>
-                                    - Lorem ipsum dolor sit amet, consectetur adipiscing
-                                    elit. Sed molestie mi velit, et tincidunt neque mollis et. 
-                                  </div>'
+                                    - there are currently <b>'. User::infoCountNewUsers() .  
+                                  '</b> new users waiting for review and acceptaion.</div>'
+                                . '</div>', ['site/administration']);
+                    } else {
+                        echo Html::a('<div class="mainbox-adm">'
+                                . '<div class="btn btn-default">User Administration'
+                                . '</div>'
+                                . '<div class="mainbox_info"><span>User Administration</span>
+                                    - there are currently <b>'. User::infoCountNewUsers() .  
+                                  '</b> new users waiting for review and acceptaion.</div>'
                                 . '</div>', ['site/administration']);
                     }
-                    
+                    }
                     ?>
     
     </div>             

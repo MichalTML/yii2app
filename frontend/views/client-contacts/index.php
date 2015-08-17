@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         
-        <?= Html::a('Create Client Contacts', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('New Contact', ['create'], ['class' => 'btn btn-success']) ?>
     </p> 
    <?php
    $ClientContacts = new ClientContacts;

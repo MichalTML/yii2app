@@ -68,10 +68,10 @@ class User extends ActiveRecord implements IdentityInterface {
     public function rules() {
         return [
 
-            ['status_id', 'default', 'value' => 2],
+            ['status_id', 'default', 'value' => 0],
             [[ 'status_id' ], 'in', 'range' => array_keys( $this->getStatusList() ) ],
             
-            ['role_id', 'default', 'value' => 8 ],
+            ['role_id', 'default', 'value' => 0 ],
             [[ 'role_id' ], 'in', 'range' => array_keys( $this->getRoleList() ) ],
             
             ['user_type_id', 'default', 'value' => 1 ],
@@ -359,6 +359,22 @@ class User extends ActiveRecord implements IdentityInterface {
         return $this->hasMany(ProjectData::className(), ['creUserId' => 'id' ] );
     }
     
+    public static function countNewUsers() {
+        $newUsers = User::find()->where(
+                'role_id != :id and role_id != :id2 and status_id = :id3', ['id'=>1, 'id2'=>5, 'id3' => 0]
+                )->asArray()->all();
+        if(  count( $newUsers ) > 0) {
+        return count($newUsers);
+        } 
+        return false;
+    }
+    
+    public static function infoCountNewUsers() {
+        if(!user::countNewUsers()){
+            return 'NO';
+        }
+        return user::countNewUsers();
+    }
     
     
 

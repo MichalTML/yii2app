@@ -53,10 +53,17 @@ class ClientContacts extends \yii\db\ActiveRecord
             [[ 'clientId', 'creUserId', 'updUserId' ], 'integer' ],
             [[ 'creTime', 'updTime' ], 'safe' ],
             ['email', 'email'],
-            [[ 'firstName', 'lastName', 'department', 'position' ], 'string', 'max' => 45 ],
-            [[ 'email' ], 'string', 'max' => 100 ],
-            [[ 'description' ], 'string', 'max' => 255 ]
-        ];
+            [[ 'description' ], 'string', 'max' => 255 ],
+            
+            ///VALIDATION
+            ['firstName', 'match', 'pattern' => '/^[A-ZŻŹĆĄŚĘŁÓŃ]{1}[a-zżźćńółęąś]*$/', 'message' => 'valid example: John'],
+            ['lastName', 'match', 'pattern' => '/^[A-ZŻŹĆĄŚĘŁÓŃ]{1}[a-zżźćńółęąś]*$/', 'message' => 'valid example: Johnson'],
+            [ 'phone', 'match', 'pattern' => '/^[0-9-+\(\)]*$/', 'message' => 'Phone number can only contain numbers and + ( ) -' ],
+            [ 'fax', 'match', 'pattern' => '/^[0-9-+\(\)]*$/', 'message' => 'Fax number can only contain numbers and + ( ) -' ],
+            ['email', 'email' , 'message' => 'Has to be valid email address'],
+            [ 'department', 'match', 'pattern' => '/^[A-Za-z\s]*$/', 'message' => 'Only letters allowed' ],
+            [ 'position', 'match', 'pattern' => '/^[A-Za-z\s]*$/', 'message' => 'Only letters allowed' ],
+            ];            
     }
 
     /**

@@ -75,7 +75,7 @@ $this->layout = 'action';
         if(isset($lastId->sygnature)){
         $freeId = $lastId->sygnature + 1;
         } else {
-            $freeid = 1;
+            $freeId = 1;
         }
         
         

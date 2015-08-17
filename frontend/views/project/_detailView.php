@@ -26,9 +26,8 @@ use kartik\grid\GridView;
             [
                 'label' => 'Client Data',
                 'attribute' => 'clientId',
-                'value' => function ($model) {
-                 return 'ąsdasdsą';
-    },
+                'format' => 'raw',
+                'value' => $model::callClientData($model->clientId),
             ]
         ],
     ]) ?>
