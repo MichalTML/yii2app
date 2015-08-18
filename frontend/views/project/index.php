@@ -67,8 +67,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'expandOneOnly' => true,
             ],
                     ['class' => 'yii\grid\ActionColumn',
-                        'header' => 'Action',
-                        'headerOptions' => ['style' => 'min-width: 70px;text-align: center;' ],
+                        'header' => '',
+                        'headerOptions' => ['style' => 'min-width: 70px;text-align: center; border-bottom-color: transparent;' ],
                         'contentOptions' => ['style' => 'text-align:center; line-height: 3em;'],
                         'template' => '{view} {edit} {delete}',
                         'buttons' => [

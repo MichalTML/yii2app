@@ -188,8 +188,7 @@ NAVBAR
     background-size: contain;
     background-size: 35px 35px;
     height: 35px;
-    min-width: 140px;
-    max-width: 140px;
+    width: auto;
 }
 
 .logout a:hover{
@@ -271,9 +270,15 @@ NAVBAR
     padding-right: 0;
 }
 
+.navbar-inverse .navbar-nav .logout > a {
+    padding-left: 40px;
+} 
+
 .navbar-inverse .navbar-nav > li > a:hover {
     color: #88CD00;
 }
+
+
 
 /*.navbar-brand {
     transition: color 1s ease;    
@@ -458,6 +463,121 @@ box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
     box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
 }
 
+/* OPTION MANAGER */
+
+.mainbox-opt {
+    //min-width: 100%;
+    min-height: 250px;
+    margin-bottom: 50px;
+    max-height: 250px;
+   // border: 1px solid black;
+    background: url("/images/opt_gray.jpg") no-repeat;
+    background-size: contain;
+    //padding-bottom: 200px;
+    position: relative;
+    transition: background-color 5s ease;
+    background-color: transparent;
+    border-radius: 10px;
+    border-radius: 10px;
+}
+
+
+.mainbox-opt .btn-default {
+    height: 45px;
+    width: 100%;
+ 
+    line-height: 1em;
+    font-size: 16px;
+    
+    border: 0px;
+    border-radius: 0;
+    border-top: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+    border-bottom: 1px solid #83C503;
+    
+    text-transform: uppercase;
+ 
+    color: #808080;
+    background: #e6e6e6;
+    text-align: left;
+    
+    transition: all 1s ease;    
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.mainbox-opt:hover .btn-default {
+    background-color: #83C503;
+    color: white;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.mainbox-opt:hover {
+    background: url("/images/opt_green.jpg") no-repeat;
+    background-size: contain;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+    -moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+    box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
+}
+
+/* ATTENDANCE MANAGER */
+
+.mainbox-att {
+    //min-width: 100%;
+    min-height: 250px;
+    margin-bottom: 50px;
+    max-height: 250px;
+   // border: 1px solid black;
+    background: url("/images/att_gray.jpg") no-repeat;
+    background-size: contain;
+    //padding-bottom: 200px;
+    position: relative;
+    transition: background-color 5s ease;
+    background-color: transparent;
+    border-radius: 10px;
+    border-radius: 10px;
+}
+
+
+.mainbox-att .btn-default {
+    height: 45px;
+    width: 100%;
+ 
+    line-height: 1em;
+    font-size: 16px;
+    
+    border: 0px;
+    border-radius: 0;
+    border-top: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+    border-bottom: 1px solid #83C503;
+    
+    text-transform: uppercase;
+ 
+    color: #808080;
+    background: #e6e6e6;
+    text-align: left;
+    
+    transition: all 1s ease;    
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.mainbox-att:hover .btn-default {
+    background-color: #83C503;
+    color: white;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.mainbox-att:hover {
+    background: url("/images/att_green.jpg") no-repeat;
+    background-size: contain;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+    -moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+    box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
+}
 /* CLIENT INDEX*/
 
 .mainbox-ind {
@@ -1169,4 +1289,14 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     background-color: #e6e6e6;
 }
 
+/*
+*Callendar addon
+*/
+
+.day-box{
+    height: 120px;
+    min-height: 120px;
+    min-width: 210px;
+    border: 1px solid yellow;
+}
 

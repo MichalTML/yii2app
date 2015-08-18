@@ -64,7 +64,8 @@ class Profile extends \yii\db\ActiveRecord {
             'updated' => 'Updated At',
             'genderName' => Yii::t( 'app', 'Gender' ),
             'userLink' => Yii::t( 'app', 'User' ),
-            'profileLink' => Yii::t( 'app', 'Profile' )
+            'profileLink' => Yii::t( 'app', 'Profile' ),
+            'user.last_log' => 'Saw At',
         ];
     }
 
@@ -118,7 +119,12 @@ class Profile extends \yii\db\ActiveRecord {
     
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'userId']);
+        return $this->hasOne(User::className(), ['id' => 'userId'])->from(User::tableName() . ' us');
+    }
+    
+    public function getRole()
+    {
+        return $this->hasOne(Role::className(), ['id' => 'role_id'])->viaTable('user', ['id' => 'userId']);
     }
     
     /**
@@ -192,5 +198,6 @@ class Profile extends \yii\db\ActiveRecord {
 
         return null;
     }
+    
     
 }

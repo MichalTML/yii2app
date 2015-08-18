@@ -8,7 +8,7 @@ use kartik\grid\GridView;
 /* @var $model common\models\User */
 
 ?>
-<div class="datail-view" style="background: silver">
+<div class="datail-view">
 
   
 
@@ -24,8 +24,8 @@ use kartik\grid\GridView;
            
             ],
             [
-                'label' => 'Client Data',
-                'attribute' => 'clientId',
+                'label' => $model::getClientName($model->clientId),
+                'attribute' => 'client.clientName' . 'Data',
                 'format' => 'raw',
                 'value' => $model::callClientData($model->clientId),
             ]

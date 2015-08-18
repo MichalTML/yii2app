@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\web\NotFoundHttpException;
 use common\models\PermissionHelpers;
-use common\models\ValueHelpers;
+use frontend\models\UserAttendance;
 
 /**
  * Login form
@@ -62,7 +62,15 @@ class LoginForm extends Model {
      */
     public function login() {
         if ( $this->validate() ) {
-            return Yii::$app->user->login( $this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0 );
+            $user = $this->getUser();
+            $user->last_log = date('d.m.Y');
+            $UserAtt = new UserAttendance;
+            $UserAtt->stampAttendance($user->id);
+            if($user->save()){
+            return Yii::$app->user->login( $this->getUser(), $this->rememberMe ? 3600 : 0 );
+            } else {
+                return false;
+            }
         } else {
             return false;
         }

@@ -21,11 +21,11 @@ return [
             'class' => 'yii\web\urlManager',
             'baseUrl' => 'http://backend.yii2app.com/',
             'enablePrettyUrl' => true,
-            'showScriptName' => false,
+            'showScriptName' => true,
         ],
         'user' => [
             'identityClass' => 'common\models\User',
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => false,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use common\models\PermissionHelpers;
+use frontend\models\Gender;
 use yii\helpers\ArrayHelper;
 use frontend\models\ClientContacts;
 
@@ -42,22 +43,25 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'gender.genderName',
                 'value' => 'gender.genderName',
-                'filter' => Html::activeDropDownList($searchModel, 'gender.genderName', ArrayHelper::map(\frontend\models\Gender::find()->asArray()->all(), 'genderName','genderName'),['class'=>'form-control', 'prompt' => ' ', 'style' => 'width: 100px;']),
-],
+                'filter' => Html::activeDropDownList($searchModel, 'gender.genderName', ArrayHelper::map(Gender::find()->asArray()->all(),
+                'genderName','genderName'),['class'=>'form-control', 'prompt' => ' ', 'style' => 'width: 100px;']),
+            ],
             'phone',
             // 'fax',
              'email:email',
             'department',
             'position',
             'creUser.username',
-            'creTime',
             //'creUserId',
             // 'updTime',
             // 'updUserId',
             // 'description',
 
             ['class' => 'yii\grid\ActionColumn',
-                'template' => '{view}{update}{delete}',],
+                'template' => '{view} {update} {delete}',
+                'header' => '',
+                'headerOptions' => ['style' => 'text-align: center; border-bottom-color: transparent;' ],
+                ],
         ],
     ]);
    
@@ -75,8 +79,9 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'gender.genderName',
                 'value' => 'gender.genderName',
-                'filter' => Html::activeDropDownList($searchModel, 'gender.genderName', ArrayHelper::map(\frontend\models\Gender::find()->asArray()->all(), 'genderName','genderName'),['class'=>'form-control', 'prompt' => ' ']),
-],
+                'filter' => Html::activeDropDownList($searchModel, 'gender.genderName', ArrayHelper::map(Gender::find()->asArray()->all(),
+                'genderName','genderName'),['class'=>'form-control', 'prompt' => ' ']),
+            ],
             'phone',
             // 'fax',
              'email:email',
@@ -90,7 +95,10 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'description',
 
             ['class' => 'yii\grid\ActionColumn',
-                'template' => '{view}',],
+                'template' => '{view}',
+                'header' => '',
+                'headerOptions' => ['style' => 'text-align: center; border-bottom-color: transparent;' ],
+                ],
         ],
     ]);
    }

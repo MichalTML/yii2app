@@ -272,5 +272,10 @@ class SiteController extends Controller
             return $this->redirect(['site/main']);
         }
     }
+    
+    public function actionOptions() {
+        $this->layout = 'menu';
+        return $this->render('options');
+    }
 
 }

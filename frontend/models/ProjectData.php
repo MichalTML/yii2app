@@ -244,8 +244,16 @@ class ProjectData extends \yii\db\ActiveRecord
     public static function callClientData($data){
         $clientData = new ClientData;
         $client = $clientData->find()->where(['id' => $data])->one();
-        return '<b>Name:</b> ' . $client->name . ' <b>Phone:</b> ' . $client->phone . 
-                '<b>Email:</b> ' . '<a href="mailto:'.$client->email. '">' . $client->email. ' </a><b>Website:</b> ' . '<a href="' .$client->www . '">' . $client->www . ' </a>';
+        return '<b>Phone:</b><span  style="padding-right: 20px;">' . $client->phone . 
+                '</span><b>Email:</b> ' . '<a href="mailto:'.$client->email. '"><span  style="padding-right: 20px;">' . $client->email. ' </span></a><b>Website:</b> ' . '<a href="' .$client->www . '"><span  style="padding-right: 20px;">' . $client->www . ' </span></a>';
     }
+    
+     public static function getClientName($data) {
+        $clientData = new ClientData;
+        $clientName = $clientData->find()->where(['id' => $data])->one();
+        return $clientName->name . ' <span style="font-weight: normal;">Contact Data</span>';
+    }
+    
+    
 
 }

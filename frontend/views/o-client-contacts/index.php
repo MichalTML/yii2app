@@ -49,7 +49,11 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'updUserId',
             // 'description',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {update} {delete}',
+                'header' => '',
+                'headerOptions' => ['style' => 'text-align: center; border-bottom-color: transparent;' ],
+                ],
         ],
     ]); ?>
 

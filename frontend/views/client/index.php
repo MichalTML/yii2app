@@ -51,9 +51,9 @@ $this->params['breadcrumbs'][] = $this->title;
             //'updUserName',
             // 'contactId',
             ['class' => 'yii\grid\ActionColumn',
-                'template' => '{view}{update}{delete}',
-                
-            
+                'template' => '{view} {update} {delete}',
+                'header' => '',
+                'headerOptions' => ['style' => 'text-align: center; border-bottom-color: transparent;' ],
             ],
             ],
     ]);  
@@ -85,7 +85,9 @@ $this->params['breadcrumbs'][] = $this->title;
             //'updUserName',
             // 'contactId',
            ['class' => 'yii\grid\ActionColumn',
-               'template' => '{view}',                         
+               'template' => '{view}',
+               'header' => '',
+               'headerOptions' => ['style' => 'text-align: center; border-bottom-color: transparent;' ],
            ],
             ],
     ]);

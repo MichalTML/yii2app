@@ -39,6 +39,7 @@ use frontend\models\ClientData;
  * @property datetime $birthdate 
  * @property string $projectStatus 
  * @property int $genderId  
+ * @property date $last_log 
  */
 class User extends ActiveRecord implements IdentityInterface {
         
@@ -376,6 +377,7 @@ class User extends ActiveRecord implements IdentityInterface {
         return user::countNewUsers();
     }
     
+   
     
 
 

@@ -44,6 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'gender.genderName',
             'created',
             'updated',
+            'user.last_log',
             //'user_id',
         ],
     ]) ?>

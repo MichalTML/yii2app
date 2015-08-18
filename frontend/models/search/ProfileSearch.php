@@ -15,13 +15,14 @@ class ProfileSearch extends Profile
     /**
      * @inheritdoc
      */
-    
+     public function attributes() {
+        return array_merge(parent::attributes(), ['user.email', 'role.role_name']);
+    }
    
     public function rules()
     {
         return [
-            [['id', 'userId', 'genderId'], 'integer'],
-            [['firstName', 'lastName', 'birthdate', 'created', 'updated'], 'safe'],
+            [['firstName', 'lastName', 'birthdate', 'created', 'updated', 'user.email', 'role.role_name'], 'safe'],
         ];
     }
 
@@ -44,11 +45,25 @@ class ProfileSearch extends Profile
     public function search($params)
     {
         $query = Profile::find();
-      
+        $query->joinWith(['user']);
+        $query->joinWith(['role']);
+        
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        
+        $dataProvider->sort->attributes['user.email'] =
+                [
+                    'asc' => ['user.email' => SORT_ASC],
+                    'desc' => ['user.email' => SORT_DESC],
+                ];
+        
+        $dataProvider->sort->attributes['role.role_name'] =
+                [
+                    'asc' => ['role.role_name' => SORT_ASC],
+                    'desc' => ['role.role_name' => SORT_DESC],
+                ];
+        
         $this->load($params);
         
       
@@ -69,7 +84,9 @@ class ProfileSearch extends Profile
         ]);
 
         $query->andFilterWhere(['like', 'firstName', $this->firstName])
-            ->andFilterWhere(['like', 'lastName', $this->lastName]);
+            ->andFilterWhere(['like', 'lastName', $this->lastName])
+            ->andFilterWhere(['like', 'user.email', $this->getAttribute('user.email')])
+            ->andFilterWhere(['=', 'role.role_name', $this->getAttribute( 'role.role_name')]);
 
         return $dataProvider;
     }
