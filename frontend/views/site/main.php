@@ -84,7 +84,7 @@ $this->title = 'TMA Project Manager';
                     <?php
                     echo Html::a( '<div class="mainbox-opt">'
                             . '<div class="btn btn-default">Other Tools</div>'
-                            . '<div class="mainbox_info"><span>COther Tools</span> 
+                            . '<div class="mainbox_info"><span>Other Tools</span> 
                                     - Lorem ipsum dolor sit amet, consectetur adipiscing
                                     elit. Sed molestie mi velit, et tincidunt neque mollis et.  
                                   </div>'

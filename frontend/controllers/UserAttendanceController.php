@@ -4,11 +4,12 @@ namespace frontend\controllers;
 
 use Yii;
 use frontend\models\UserAttendance;
-use frontend\models\search\UserAttendanceSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use frontend\models\Profile;
+use frontend\models\PdfGenerator;
 
 /**
  * UserAttendanceController implements the CRUD actions for UserAttendance model.
@@ -138,15 +139,38 @@ class UserAttendanceController extends Controller
     
      public function actionAttendances($id)
     {
-        $dataProvider = UserAttendance::find()
-                        ->andFilterWhere(['userId' => $id])
-                        ->andFilterWhere(['like', 'date', date('m')])
-                        ->all();
-        $dataProvider = ArrayHelper::map($dataProvider, 'date', 'userId');
-        
         $this->layout = 'action';
+        
+        $model = new PdfGenerator;
+        
+        $userData = Profile::find()->where(['userId' => $id])->one();
+        
+        $dataProvider = UserAttendance::find()->Where(['userId' => $id])->all();
+        $dataProvider = ArrayHelper::map($dataProvider, 'date', 'userId');
+
+        $events = [];
+        
+        
+        foreach($dataProvider as $key => $value){
+            $Event = new \yii2fullcalendar\models\Event();
+            $Event->id = $key . ' => ' . $value;
+            $Event->start = $key;
+            $Event->allDay = true;
+            $Event->className = 'calendar-day';
+            $events[] = $Event;   
+        }
+        
+        if ($model->load(Yii::$app->request->post())) {        
+        return $this->redirect(['pdf-generator/create', 'userId' => $id, 'month' => $model->month, 'year' => $model->year ]);
+        }
+        
         return $this->render('attendance', [
-            'dataProvider' => $dataProvider,
+            'events' => $events,
+            'user' => $userData,
+            'model' => $model,
         ]);
         }
+        
+
+
 }

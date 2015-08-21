@@ -196,17 +196,24 @@ class ProjectData extends \yii\db\ActiveRecord
     }
 
     public function getProjectPermissionsUsers() {
-            $i = 1;
-        foreach ( $this->projectPermissions as $key ) {
-            $username = Profile::find()->where( ['userId' => $key->userId ] )->one();
-            $count = ArrayHelper::map($username, 'firstName', 'lastName');
-            
-            $userNames[] = $i . '. ' . $username->firstName . ' ' . $username->lastName;
-            $i ++;
+        $i = 1;
+        if(!empty($this->projectPermissions)){        
+            foreach ( $this->projectPermissions as $key ) {
+                $username = Profile::find()->where( ['userId' => $key->userId ] )->one();
+                if (count($username) == 1)
+                {
+                    $count = ArrayHelper::map( $username, 'firstName', 'lastName' );
+
+                    $userNames[] = $i . '. ' . $username->firstName . ' ' . $username->lastName;
+                    $i ++;
+                }
             }
+
+            return $userNames = implode( ' ', $userNames );
+
+        }
+            return $userNames = '-----------------------------';
         
-      
-        return $userNames = implode( ' ', $userNames );
     }
 
     /**
@@ -240,20 +247,20 @@ class ProjectData extends \yii\db\ActiveRecord
     public function getProjectStatus0() {
         return $this->hasOne( ProjectStatus::className(), ['id' => 'projectStatus' ] );
     }
-    
-    public static function callClientData($data){
+
+    public static function callClientData( $data ) {
         $clientData = new ClientData;
-        $client = $clientData->find()->where(['id' => $data])->one();
-        return '<b>Phone:</b><span  style="padding-right: 20px;">' . $client->phone . 
-                '</span><b>Email:</b> ' . '<a href="mailto:'.$client->email. '"><span  style="padding-right: 20px;">' . $client->email. ' </span></a><b>Website:</b> ' . '<a href="' .$client->www . '"><span  style="padding-right: 20px;">' . $client->www . ' </span></a>';
+        $client = $clientData->find()->where( ['id' => $data ] )->one();
+        return '<b>Phone:</b><span  style="padding-right: 20px;">' . $client->phone .
+                '</span><b>Email:</b> ' . '<a href="mailto:' . $client->email . '"><span  style="padding-right: 20px;">' . $client->email . ' </span></a><b>Website:</b> ' . '<a href="' . $client->www . '"><span  style="padding-right: 20px;">' . $client->www . ' </span></a>';
+        
     }
-    
-     public static function getClientName($data) {
+
+    public static function getClientName( $data ) {
         $clientData = new ClientData;
-        $clientName = $clientData->find()->where(['id' => $data])->one();
+        $clientName = $clientData->find()->where( ['id' => $data ] )->one();
         return $clientName->name . ' <span style="font-weight: normal;">Contact Data</span>';
+
     }
-    
-    
 
 }

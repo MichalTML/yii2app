@@ -863,7 +863,21 @@ box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
 }
 
 /* OTHER ADMINISTRATION */
-
+.user-info {
+    border: 1px solid black;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    top: 20px;
+    left: 270px;
+    border-radius: 10px;
+    border-color: #87cd00;
+    transition: all 1s ease; 
+    padding-left: 10px;
+    line-height: 2em;
+    background-color: #e6e6e6;
+    
+}
 .mainbox-adm {
      //min-width: 100%;
     min-height: 250px;
@@ -907,7 +921,14 @@ box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
     border-bottom: 1px solid #e6e6e6;
 }
 
-.mainbox-adm:hover {
+.mainbox-adm:hover .user-info {
+    background-color: #83C503;
+    border-color: white;
+    color: white;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.mainbox-adm:hover  {
     background: url("/images/adm_green.jpg") no-repeat;
     background-size: contain;
     -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
@@ -1293,10 +1314,124 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 *Callendar addon
 */
 
-.day-box{
-    height: 120px;
-    min-height: 120px;
-    min-width: 210px;
-    border: 1px solid yellow;
+.pdf-button {
+    width: 60px;
+    height: 50px;
+    background-image: url('../images/pdf_gray.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.calendar-day {
+    background-image: url('../images/check-mark.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    background-color: transparent;
+    border: 0px;
+    height: 50px;
+}
+/*
+* RAPORT STYLE
+*/
+
+.tma-raport {
+    background-image: url('../images/raport-tma.jpg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 100px;
+}
+
+.CSSTableGenerator {
+	margin:0px;padding:0px;
+	width:100%;
+	box-shadow: 10px 10px 5px #888888;
+	border:1px solid #808080;
+        
+	
+	-moz-border-radius-bottomleft:21px;
+	-webkit-border-bottom-left-radius:21px;
+	
+	
+	-moz-border-radius-bottomright:21px;
+	-webkit-border-bottom-right-radius:21px;
+	
+	
+	-moz-border-radius-topright:21px;
+	-webkit-border-top-right-radius:21px;
+	border-top-right-radius:21px;
+	
+	-moz-border-radius-topleft:21px;
+	-webkit-border-top-left-radius:21px;
+	border-top-left-radius:21px;
+        background: white;
+        
+}.CSSTableGenerator table{
+    border-collapse: collapse;
+        border-spacing: 0;
+	width:100%;
+	height:100%;
+	margin:0px;padding:0px;
+        
+       
+}
+.CSSTableGenerator table td{
+   text-align: center;
+        
+       
+}
+
+.CSSTableGenerator tr:last-child td:last-child {
+	-moz-border-radius-bottomright:21px;
+	-webkit-border-bottom-right-radius:21px;
+	border-bottom-right-radius:21px;
+}
+.CSSTableGenerator table tr:first-child td:first-child {
+	-moz-border-radius-topleft:21px;
+	-webkit-border-top-left-radius:21px;
+	border-top-left-radius:21px;
+        background: white;
+}
+.CSSTableGenerator table tr:first-child td:last-child {
+	-moz-border-radius-topright:21px;
+	-webkit-border-top-right-radius:21px;
+	border-top-right-radius:21px;
+}.CSSTableGenerator tr:last-child td:first-child{
+	-moz-border-radius-bottomleft:21px;
+	-webkit-border-bottom-left-radius:21px;
+	border-bottom-left-radius:21px;
+}
+.CSSTableGenerator .weekend{ background-color:#cccccc; }.CSSTableGenerator td{
+	vertical-align:middle;
+	border:1px solid #808080;
+	border-width:0px 1px 1px 0px;
+	text-align:left;
+	padding:7px;
+	font-size:15px;
+	font-family:Arial;
+	font-weight:normal;
+	color:#000000;
+        
+}.CSSTableGenerator tr:last-child td{
+	border-width:0px 1px 0px 0px;
+}.CSSTableGenerator tr td:last-child{
+	border-width:0px 0px 1px 0px;
+}.CSSTableGenerator tr:last-child td:last-child{
+	border-width:0px 0px 0px 0px;
+}
+.CSSTableGenerator tr:first-child td{
+        background-color: white;
+	border: 1px solid #808080;
+        //border-radius: 50px;
+	text-align:center;
+	font-size:18px;
+	font-family:Arial;
+	font-weight:bold;
+}
+.CSSTableGenerator tr:first-child td:first-child{
+	border-width:0px 0px 1px 0px;
+}
+.CSSTableGenerator tr:first-child td:last-child{
+	border-width:0px 0px 1px 1px;
 }
 

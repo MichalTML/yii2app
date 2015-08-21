@@ -10,13 +10,10 @@ use kartik\grid\GridView;
 ?>
 <div class="datail-view">
 
-  
-
     <?= DetailView::widget([
         'model' => $model,
         'template' => "<tr><th style='width:200px; text-align: center;'>{label}</th><td>{value}</td></tr>",
         'attributes' => [
-            
             [
                 'label' => '<span style="max-width:100px!important;">Constructors List</span>',
                 'attribute' => 'ProjectPermissionsUsers',
