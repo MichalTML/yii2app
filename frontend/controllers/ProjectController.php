@@ -6,12 +6,10 @@ use Yii;
 use frontend\models\ProjectData;
 use frontend\models\search\ProjectSearch;
 use frontend\models\ProjectPermissions;
-//use frontend\models\search\ProjectPermissionsSearch;
-//use common\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-//use yii\helpers\ArrayHelper;
+
 
 /**
  * ProjectController implements the CRUD actions for ProjectData model.
@@ -37,12 +35,11 @@ class ProjectController extends Controller {
         $this->layout = 'action';
         $searchModel = new ProjectSearch();
         $dataProvider = $searchModel->search( Yii::$app->request->queryParams );      
-        
 
 
         return $this->render( 'index', [
                     'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,                    
+                    'dataProvider' => $dataProvider,     
                 ] );
         
         
@@ -180,6 +177,13 @@ $this->layout = 'action';
             throw new NotFoundHttpException( 'The requested page does not exist.' );
         }
     }
+    
+   public function actionNotes($id) {
+    $project = User::findOne($id);
+    return $this->render('__detailView', [
+         'project' => $project,
+     ]);
+}
 
     /**
      * Update User function with ProjectStatus

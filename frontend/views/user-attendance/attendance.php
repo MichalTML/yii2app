@@ -52,7 +52,7 @@ Modal::begin([
         'tabindex' => false, // important for Select2 to work properly
     ],
     'header' => '<h4 style="margin:0;">Raport options</h4>',
-    'toggleButton' => ['label' => '', 'class' => 'btn btn-lg btn-primary pdf-button'],
+    'toggleButton' => ['label' => '', 'class' => 'pdf-button'],
     'closeButton' => false,
 ]);
 ?>

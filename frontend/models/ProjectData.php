@@ -8,12 +8,14 @@ use common\models\User;
 use frontend\models\Profile;
 use frontend\models\ClientData;
 use frontend\models\ProjectStatus;
+use frontend\models\ProjectNotes;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\AttributeBehavior;
+
 
 /**
  * This is the model class for table "project_data".
@@ -230,6 +232,10 @@ class ProjectData extends \yii\db\ActiveRecord
         $droptions = ClientData::find()->asArray()->all();
         return ArrayHelper::map( $droptions, 'id', 'name' );
     }
+    
+    public function getNote() {
+        return $this->hasMany( ProjectNotes::className(), ['projectId' => 'id']);   
+    }
 
 //     /**
 //     * @return \yii\db\ActiveQuery
@@ -262,5 +268,7 @@ class ProjectData extends \yii\db\ActiveRecord
         return $clientName->name . ' <span style="font-weight: normal;">Contact Data</span>';
 
     }
+    
+   
 
 }
