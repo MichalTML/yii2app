@@ -9,6 +9,7 @@ use frontend\models\ProjectPermissions;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use frontend\models\ProjectFileData;
 
 
 /**
@@ -184,6 +185,12 @@ $this->layout = 'action';
          'project' => $project,
      ]);
 }
+    public function actionParts($sygnature){
+    $model = ProjectFileData::findOne($sygnature);
+    return $this->renderPartial('files', [
+         'model' => $model,
+     ]);  
+    }
 
     /**
      * Update User function with ProjectStatus

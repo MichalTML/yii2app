@@ -32,7 +32,18 @@ if(Yii::$app->user->isGuest){
                                   </div>'
                                 . '</div>', ['user-attendance/index']);
                     ?>
-                    </div>               
+                    </div>
+                    <div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">
+                    <?php
+                        echo Html::a('<div class="mainbox-fakt">'
+                                . '<div class="btn btn-default">VAT invoices</div>'
+                                . '<div class="mainbox_info"><span>VAT invoice</span>
+                                    - Lorem ipsum dolor sit amet, consectetur adipiscing
+                                    elit. Sed molestie mi velit, et tincidunt neque mollis et. 
+                                  </div>'
+                                . '</div>', ['invoices/index']);
+                    ?>
+                    </div>   
 
     
                                      

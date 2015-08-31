@@ -196,7 +196,11 @@ class ProjectData extends \yii\db\ActiveRecord
     public function getProjectPermissions() {
         return $this->hasMany( ProjectPermissions::className(), ['projectId' => 'id' ] );
     }
-
+    
+    public function getConstructor() {
+        return $this->hasMany( Profile::className(), ['userId' => 'userId'])->viaTable('project_permissions', ['projectId' => 'id']);
+    }
+        
     public function getProjectPermissionsUsers() {
         $i = 1;
         if(!empty($this->projectPermissions)){        
@@ -265,7 +269,7 @@ class ProjectData extends \yii\db\ActiveRecord
     public static function getClientName( $data ) {
         $clientData = new ClientData;
         $clientName = $clientData->find()->where( ['id' => $data ] )->one();
-        return $clientName->name . ' <span style="font-weight: normal;">Contact Data</span>';
+        return $clientName->name;
 
     }
     

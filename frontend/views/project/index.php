@@ -46,7 +46,17 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     ],
                     'deadline',
                     'projectStatus0.statusName',
-                    'client.name',
+                    [
+             'attribute' => 'client.name',
+             'label'=>'Client',
+             'format' => 'raw',
+             'value'=> function ($data){
+            return Html::button( '<a href="">'.$data->getClientName($data->clientId).'</a>', 
+            ['value' => Url::toRoute( ['client/detail', 'id' => $data->clientId ] ), 'class' => 'client-button', 'id' => 'clientButton'] );
+                      },
+             ],
+                    
+
                     'creUser.username',
                     'creTime',
                     [
@@ -144,6 +154,11 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                         $url = Url::toRoute( ['project-notes/note', 'id' => $model->id ] );
                                         return $url;
                                     }
+                                    if ( $action === 'parts' )
+                                    {
+                                        $url = Url::toRoute( ['project/parts', 'sygnature' => $model->sygnature ] );
+                                        return $url;
+                                    }
                                 }
                                     ],
                                 ],
@@ -156,7 +171,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
 <?php Modal::begin([
     'id' => 'modal',
    // 'size' => 'SIZE_SMALL',
-    'header' => '<h4 class="modal-title">Note</h4>',
+    'header' => '<h4 class="modal-title">New Note</h4>',
     //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
 
 ]);
@@ -167,7 +182,18 @@ Modal::end(); ?>
     <?php Modal::begin([
     'id' => 'parts-modal',
     'size' => 'modal-lg',
-    'header' => '<h4 class="modal-title">Note</h4>',
+    'header' => '<h4 class="modal-title"></h4>',
+    //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
+
+]);
+    echo "<div id='modalContent'></div>";
+    
+Modal::end(); ?>
+    
+    <?php Modal::begin([
+    'id' => 'client-modal',
+    'size' => 'modal-lg',
+    'header' => '<h4 class="modal-title">Client Detail View</h4>',
     //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
 
 ]);
