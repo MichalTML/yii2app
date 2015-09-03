@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use common\models\User;
 
 /**
  * This is the model class for table "invoices".
@@ -33,10 +34,9 @@ class Invoices extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'name', 'ext', 'path', 'creTime'], 'required'],
-            [['id', 'supplierId', 'isAccepted', 'acceptedBy'], 'integer'],
+            [['id', 'isAccepted', 'acceptedBy'], 'integer'],
             [['creTime'], 'safe'],
-            [['name', 'connection', 'path'], 'string', 'max' => 255],
+            [['name', 'connection', 'path', 'supplierId'], 'string', 'max' => 255],
             [['ext'], 'string', 'max' => 5]
         ];
     }
@@ -57,5 +57,10 @@ class Invoices extends \yii\db\ActiveRecord
             'acceptedBy' => 'Accepted By',
             'creTime' => 'Cre Time',
         ];
+    }
+    
+    public function getUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'acceptedBy']);
     }
 }

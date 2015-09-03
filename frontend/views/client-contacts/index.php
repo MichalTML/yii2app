@@ -37,26 +37,81 @@ $this->params['breadcrumbs'][] = $this->title;
     'hover' => true,
         
         'columns' => [
-            'client.name',
-            'firstName',
-            'lastName',
             [
+                'label' => 'Client Name',
+                'headerOptions' => ['style' => 'text-align: center;'],
+                'attribute' => 'client.name',
+                'value' => 'client.name',
+                'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;'],
+                
+            ],
+            [
+                'label' => 'First Name',
+                'headerOptions' => ['style' => 'text-align: center;'],
+                'attribute' => 'firstName',
+                'value' => 'firstName',
+                'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;'],
+                
+            ],
+             [
+                'label' => 'Last Name',
+                'headerOptions' => ['style' => 'text-align: center;'],
+                'attribute' => 'lastName',
+                'value' => 'lastName',
+                'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;'],
+                
+            ],
+            
+            [
+                'label' => 'Gender',
+                'headerOptions' => ['style' => 'text-align: center;'],
                 'attribute' => 'gender.genderName',
                 'value' => 'gender.genderName',
+                'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;'],
                 'filter' => Html::activeDropDownList($searchModel, 'gender.genderName', ArrayHelper::map(Gender::find()->asArray()->all(),
                 'genderName','genderName'),['class'=>'form-control', 'prompt' => ' ', 'style' => 'width: 100px;']),
             ],
-            'phone',
-            // 'fax',
-             'email:email',
-            'department',
-            'position',
-            'creUser.username',
-            //'creUserId',
-            // 'updTime',
-            // 'updUserId',
-            // 'description',
-
+            [
+                'label' => 'Phone',
+                'headerOptions' => ['style' => 'text-align: center;'],
+                'attribute' => 'phone',
+                'value' => 'phone',
+                'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;'],
+                
+            ],
+            [
+                'label' => 'Email',
+                'headerOptions' => ['style' => 'text-align: center;'],
+                'attribute' => 'email',
+                'format' => 'email',
+                'value' => 'email',
+                'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;'],
+                
+            ],
+             [
+                'label' => 'Department',
+                'headerOptions' => ['style' => 'text-align: center;'],
+                'attribute' => 'department',
+                'value' => 'department',
+                'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;'],
+                
+            ],
+            [
+                'label' => 'Position',
+                'headerOptions' => ['style' => 'text-align: center;'],
+                'attribute' => 'position',
+                'value' => 'position',
+                'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;'],
+                
+            ],
+            [
+                'label' => 'Created By',
+                'headerOptions' => ['style' => 'text-align: center;'],
+                'attribute' => 'creUser.username',
+                'value' => 'creUser.username',
+                'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;'],
+                
+            ],
             ['class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {update} {delete}',
                 'header' => '',

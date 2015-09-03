@@ -118,7 +118,7 @@ to {top:53px; opacity: 1;}
     margin-top: 0px;
     padding: 0px;
     position: fixed;
-    animation: mymove 1s ease-out forwards;
+    animation: mymove 0.5s ease-out forwards;
     animation-iteration-count:1;
     /* Safari and Chrome */
     -webkit-animation:mymove 1s ease-out forwards;
@@ -1551,3 +1551,84 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 .client-button:hover a {
     color: #87cd00;
 }
+
+
+.pdff-button{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.text-blue{
+    color: #337ab7;
+    text-decoration: none;
+    border-bottom: 1px solid #87cd00;
+    padding: 0;
+}
+
+.header th {
+    color: white;
+}
+
+.error-accept{
+    animation: 2s ease-out 0s normal forwards 1 running flash-in;
+    background-color: #eaeaea;
+    border: 1px solid #88cd00;
+    color: red;
+    left: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    width: 50%;
+    z-index: 2000;
+}
+
+.postImage{
+    position:relative;
+    margin: auto;
+    float: left;
+    
+    //height: 25px;
+    //float: left;
+    //padding-left: 50px;
+/*    width: 10px;
+    height: 10px;*/
+    margin-left: 0px;
+    //border: 1px solid black;
+}
+.postImage span {
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.postImage>a{
+    //position:absolute; top:0; left:0; z-index:0;
+}
+.postImage img{
+    width: 100px;
+}
+.postImage .title{
+    display:none; 
+    position:absolute; 
+    top:-88px; 
+    //border: 1px solid black;
+    padding: 0;
+    margin: 0;
+    left:-100px;
+    z-index:1;
+}
+.postImage:hover img{
+    opacity:0.5;
+}
+.postImage:hover .title{
+    display:block;
+}
+

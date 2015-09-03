@@ -73,7 +73,7 @@ class ProjectData extends \yii\db\ActiveRecord
             'clientId' => 'Client Name',
             'projectName' => 'Project Name',
             'ClientName' => 'Client',
-            'creTime' => 'Createt at',
+            'creTime' => 'Created at',
             'deadline' => 'Deadline',
             'endTime' => 'End Time',
             'creUser.username' => 'Created by',

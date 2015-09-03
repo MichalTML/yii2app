@@ -38,27 +38,59 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
             return ['class' => 'tablew' ];
         },
                 'columns' => [
-                    'sygnature',
                     [
-                        'attribute' => 'projectName',
-                        'value' => 'projectName',
-                        'contentOptions' => ['style' => 'white-space: nowrap;' ]
+                        'label' => 'Sygnature',
+                        'headerOptions' => ['style' => 'text-align: center;' ],
+                        'attribute' => 'sygnature',
+                        'value' => 'sygnature',
+                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
                     ],
-                    'deadline',
-                    'projectStatus0.statusName',
                     [
-             'attribute' => 'client.name',
-             'label'=>'Client',
-             'format' => 'raw',
-             'value'=> function ($data){
-            return Html::button( '<a href="">'.$data->getClientName($data->clientId).'</a>', 
-            ['value' => Url::toRoute( ['client/detail', 'id' => $data->clientId ] ), 'class' => 'client-button', 'id' => 'clientButton'] );
-                      },
-             ],
-                    
-
-                    'creUser.username',
-                    'creTime',
+                        'label' => 'Project Name',
+                        'attribute' => 'projectName',
+                        'headerOptions' => ['style' => 'text-align: center;' ],
+                        'value' => 'projectName',
+                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em; white-space: nowrap;' ]
+                    ],
+                    [
+                        'label' => 'Deadline',
+                        'headerOptions' => ['style' => 'text-align: center;' ],
+                        'attribute' => 'deadline',
+                        'value' => 'deadline',
+                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
+                    ],
+                    [
+                        'label' => 'Status',
+                        'headerOptions' => ['style' => 'text-align: center;' ],
+                        'attribute' => 'projectStatus0.statusName',
+                        'value' => 'projectStatus0.statusName',
+                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
+                    ],
+                    [
+                        'attribute' => 'client.name',
+                        'label' => 'Client',
+                        'headerOptions' => ['style' => 'text-align: center;' ],
+                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
+                        'format' => 'raw',
+                        'value' => function ($data)
+                {
+                    return Html::button( '<a href="">' . $data->getClientName( $data->clientId ) . '</a>', ['value' => Url::toRoute( ['client/detail', 'id' => $data->clientId ] ), 'class' => 'client-button', 'id' => 'clientButton' ] );
+                },
+                    ],
+                    [
+                        'label' => 'Created By',
+                        'headerOptions' => ['style' => 'text-align: center;' ],
+                        'attribute' => 'creUser.username',
+                        'value' => 'creUser.username',
+                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
+                    ],
+                    [
+                        'label' => 'Created At',
+                        'headerOptions' => ['style' => 'text-align: center;' ],
+                        'attribute' => 'creTime',
+                        'value' => 'creTime',
+                        'contentOptions' => ['style' => 'text-align: center; line-height: 1.5em;' ],
+                    ],
                     [
                         'class' => 'kartik\grid\ExpandRowColumn',
                         'value' => function ($model, $key, $index, $column)
@@ -71,7 +103,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                             $searchModel->id = $model->id;
                             $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
                             $projectNotes = new ProjectNotes;
-                            
+
                             return Yii::$app->controller->renderPartial( '_detailView', [
                                         'searchModel' => $searchModel,
                                         'dataProvider' => $dataProvider,
@@ -90,11 +122,11 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                 'buttons' => [
                                     'parts' => function ($url, $model)
                                     {
-                                        return Html::button( '<a href=""><i class="fa fa-th-list"></i></a>', ['value' => $url, 'class' => 'parts-button', 'id' => 'partsButton'] );
+                                        return Html::button( '<a href=""><i class="fa fa-th-list"></i></a>', ['value' => $url, 'class' => 'parts-button', 'id' => 'partsButton', 'title' => 'show parts' ] );
                                     },
-                                    'note' => function ($url, $model)
+                                            'note' => function ($url, $model)
                                     {
-                                        return Html::button( '<a href=""><i class="fa fa-file-text-o"></i></a>', ['value' => $url, 'class' => 'note-button', 'id' => 'modalButton'] );
+                                        return Html::button( '<a href=""><i class="fa fa-file-text-o"></i></a>', ['value' => $url, 'class' => 'note-button', 'id' => 'modalButton', 'title' => 'new note' ] );
                                     },
                                             'delete' => function($url, $model)
                                     {
@@ -103,7 +135,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                             return '<span class="glyphicon glyphicon-trash"></span>';
                                         } else
                                         {
-                                            return Html::a( '<span class="glyphicon glyphicon-trash"></span>', $url, [ 
+                                            return Html::a( '<span class="glyphicon glyphicon-trash"></span>', $url, [
                                                         'data-method' => 'post',
                                                         'title' => Yii::t( 'app', 'delete' ),
                                                         'data' => [
@@ -168,38 +200,41 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                             <?php Pjax::end(); ?>
 
 
-<?php Modal::begin([
-    'id' => 'modal',
-   // 'size' => 'SIZE_SMALL',
-    'header' => '<h4 class="modal-title">New Note</h4>',
-    //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
+                        <?php
+                        Modal::begin( [
+                            'id' => 'modal',
+                            // 'size' => 'SIZE_SMALL',
+                            'header' => '<h4 class="modal-title">New Note</h4>',
+                                //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
+                        ] );
+                        echo "<div id='modalContent'></div>";
 
-]);
-    echo "<div id='modalContent'></div>";
-    
-Modal::end(); ?>
-    
-    <?php Modal::begin([
-    'id' => 'parts-modal',
-    'size' => 'modal-lg',
-    'header' => '<h4 class="modal-title"></h4>',
-    //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
+                        Modal::end();
+                        ?>
 
-]);
-    echo "<div id='modalContent'></div>";
-    
-Modal::end(); ?>
-    
-    <?php Modal::begin([
-    'id' => 'client-modal',
-    'size' => 'modal-lg',
-    'header' => '<h4 class="modal-title">Client Detail View</h4>',
-    //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
+                            <?php
+                            Modal::begin( [
+                                'id' => 'parts-modal',
+                                'size' => 'modal-lg',
+                                'header' => '<h4 class="modal-title"></h4>',
+                                    //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
+                            ] );
+                            echo "<div id='modalContent'></div>";
 
-]);
-    echo "<div id='modalContent'></div>";
-    
-Modal::end(); ?>
-    
-    
+                            Modal::end();
+                            ?>
+
+                            <?php
+                            Modal::begin( [
+                                'id' => 'client-modal',
+                                'size' => 'modal-lg',
+                                'header' => '<h4 class="modal-title">Client Detail View</h4>',
+                                    //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
+                            ] );
+                            echo "<div id='modalContent'></div>";
+
+                            Modal::end();
+                            ?>
+
+
 </div>

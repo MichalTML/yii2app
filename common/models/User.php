@@ -18,6 +18,7 @@ use backend\models\UserType;
 use frontend\models\Profile;
 use frontend\models\ProjectData;
 use frontend\models\ClientData;
+use frontend\models\Invoices;
 
 /**
  * User model
@@ -376,6 +377,8 @@ class User extends ActiveRecord implements IdentityInterface {
         }
         return user::countNewUsers();
     }
+    
+   
     
    
     

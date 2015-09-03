@@ -8,6 +8,7 @@ use common\models\User;
 use frontend\models\Status;
 use frontend\models\search\UserSearch;
 use yii\helpers\Url;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\search\UserSearch */
@@ -18,6 +19,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
 ?>
 <div class="user-index">
 
+    <?php    Pjax::begin() ?>
     <?=
     GridView::widget( [
         'dataProvider' => $dataProvider,
@@ -37,52 +39,52 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         'columns' => [
             [
                 'label' => 'User Name',
+                'headerOptions' => ['style' => 'text-align: center;'],
                 'attribute' => 'username',
                 'value' => 'username',
-                'width' => '100px',
+                'contentOptions' => ['style' => 'text-align: center; white-space: nowrap; line-height: 2em;'],
                 'hAlign' => 'left'
             ],
             [
                 'label' => 'Email',
+                'headerOptions' => ['style' => 'text-align: center;'],
                 'attribute' => 'email',
                 'format' => 'email',
                 'value' => 'email',
-                'width' => '120px',
-                'hAlign' => 'left'
+                'contentOptions' => ['style' => 'text-align: center; white-space: nowrap; line-height: 2em;'],
             ],
             [
                 'class' => 'kartik\grid\EditableColumn',
                 'attribute' => 'status_id',
+                'label' => 'Status',
+                'headerOptions' => ['style' => 'text-align: center;'],
                 'filter' => Html::activeDropDownList( $searchModel, 'status.status_name', ArrayHelper::map( Status::find()->asArray()->all(), 'status_name', 'status_name' ), ['class' => 'form-control', 'prompt' => ' ' ] ),
                 'format' => 'raw',
                 'value' => 'status.status_name',
+                'contentOptions' => ['style' => 'text-align: center; white-space: nowrap; line-height: 2em;'],
                 'editableOptions' => [
                     'header' => '.',
                     'inputType' => Editable::INPUT_DROPDOWN_LIST,
                     'data' => User::getStatusList(),
                     'options' => ['class' => 'form-control' ],
-                    'editableValueOptions' => ['class' => 'text-success' ],
+                    'editableValueOptions' => ['class' => 'text-blue' ],
                 ],
-                'hAlign' => 'right',
-                'vAlign' => 'middle',
-                'width' => '120px',
             ],
             [
                 'class' => 'kartik\grid\EditableColumn',
                 'attribute' => 'role_id',
+                'label' => 'Role',
+                'headerOptions' => ['style' => 'text-align: center;'],
                 'filter' => Html::activeDropDownList( $searchModel, 'role.role_name', User::getSearchRoleList(), ['class' => 'form-control', 'prompt' => ' ' ] ),
                 'value' => 'role.role_name',
+                'contentOptions' => ['style' => 'text-align: center; white-space: nowrap; line-height: 2em;'],
                 'editableOptions' => [
                     'header' => '.',
                     'inputType' => Editable::INPUT_DROPDOWN_LIST,
                     'data' => User::getEditableRoleList(),
                     'options' => ['class' => 'form-control' ],
-                    'editableValueOptions' => ['class' => 'text-info' ]
+                    'editableValueOptions' => ['class' => 'text-blue' ],
                 ],
-                'hAlign' => 'right',
-                'vAlign' => 'middle',
-                'width' => '120px',
-                'pageSummary' => false
             ],
             [
                 'class' => 'kartik\grid\ExpandRowColumn',
@@ -105,6 +107,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'headerOptions' => ['class' => 'kartik-sheet-style' ],
                         'expandOneOnly' => true,
                 ],
+                        
                      ['class' => 'yii\grid\ActionColumn',
                         'header' => 'Action',
                         'headerOptions' => ['style' => 'width: 70px;text-align: center;'],
@@ -169,4 +172,5 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
             ] );
             ?>
 
+    <?php Pjax::end(); ?>
 </div>

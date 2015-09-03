@@ -42,13 +42,13 @@ class UserController extends Controller
         
     $this->layout = 'action';
     $dataProvider->pagination->pageSize = 10;
-    
+   
     // validate if there is a editable input saved via AJAX
     if (Yii::$app->request->post('hasEditable')) {
-     
+      
         // instantiate your book model for saving
-        $statusId = Yii::$app->request->post('editableKey');
-        $model = User::findOne($statusId);
+        $status = Yii::$app->request->post('editableKey');
+        $model = User::findOne($status);
        
         // store a default json response as desired by editable
         $out = Json::encode(['output'=>'', 'message'=>'']);
@@ -98,7 +98,7 @@ class UserController extends Controller
         echo $out;
         return;
     }
- 
+    
     // non-ajax - render the grid by default
     return $this->render('index', [
         'dataProvider' => $dataProvider,

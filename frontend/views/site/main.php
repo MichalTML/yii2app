@@ -25,10 +25,11 @@ $this->title = 'TMA Project Manager';
                     throw new NotFoundHttpException( 'Please login to view this page.' );
                 }
                 ?>
-                <div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">
+                
                     <?php
                     if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 10 )
                     {
+                        echo '<div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">';
                         echo Html::a( '<div class="mainbox-pm">'
                                 . '<div class="btn btn-default">Project manager</div>'
                                 . '<div class="mainbox_info"><span>Project Manager</span>
@@ -36,12 +37,16 @@ $this->title = 'TMA Project Manager';
                                     elit. Sed molestie mi velit, et tincidunt neque mollis et. 
                                   </div>'
                                 . '</div>', ['project/index' ] );
+                    echo '</div>';
                     }
                     ?>
-                </div>
-                <div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">               
+               
+                           
 
                     <?php
+                    if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 0 )
+                    {
+                    echo '<div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">';
                     echo Html::a( '<div class="mainbox-cm">'
                             . '<div class="btn btn-default">Client Manager</div>'
                             . '<div class="mainbox_info"><span>Client Manager</span> 
@@ -49,12 +54,15 @@ $this->title = 'TMA Project Manager';
                                     elit. Sed molestie mi velit, et tincidunt neque mollis et.  
                                   </div>'
                             . '</div>', ['site/clients' ] );
+                    echo '</div>';
+                    }
                     ?>
-                </div>
-                <div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">    
+                
+                
                     <?php
-                    if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 10 )
+                    if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) >= 50 )
                     {
+                        echo '<div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">';
                         if ( User::countNewUsers() )
                         {
                             echo Html::a( '<div class="mainbox-adm">'
@@ -74,14 +82,34 @@ $this->title = 'TMA Project Manager';
                                     '</b> new users waiting for review and acceptaion.</div>'
                                     . '</div>', ['site/administration' ] );
                         }
+                        echo '</div>';
                     }
                     ?>
 
-                </div>             
-
-               <div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">               
-
+                   
+                
                     <?php
+                    if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) >= 50 
+                            || PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) === 10  ) {
+                        echo '<div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">';
+                        echo Html::a('<div class="mainbox-fakt">'
+                                . '<div class="btn btn-default">VAT invoices</div>'
+                                . '<div class="mainbox_info"><span>VAT invoice</span>
+                                    - Lorem ipsum dolor sit amet, consectetur adipiscing
+                                    elit. Sed molestie mi velit, et tincidunt neque mollis et. 
+                                  </div>'
+                                . '</div>', ['invoices/index']);
+                   echo '</div>'; 
+                            }
+                    ?>
+                      
+
+                          
+                   
+                    <?php
+                     if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) >= 50 
+                            || PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) === 10  ) {
+                    echo '<div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">';
                     echo Html::a( '<div class="mainbox-opt">'
                             . '<div class="btn btn-default">Other Tools</div>'
                             . '<div class="mainbox_info"><span>Other Tools</span> 
@@ -89,9 +117,9 @@ $this->title = 'TMA Project Manager';
                                     elit. Sed molestie mi velit, et tincidunt neque mollis et.  
                                   </div>'
                             . '</div>', ['site/options' ] );
+                    echo '</div>';
+                    }
                     ?>
-                </div>
-
             </div>
         </div>
     </div>       

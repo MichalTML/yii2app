@@ -32,3 +32,16 @@ $(function(){
 });
 
 
+
+$(function() {
+  $(".pdff-button").click(function() {
+    var productLink = $(this).find("a");
+
+    productLink.attr("target", "_blank");
+    window.open(productLink.attr('value'));
+ 
+    return false;
+  });
+});
+
+

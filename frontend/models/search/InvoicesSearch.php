@@ -15,11 +15,13 @@ class InvoicesSearch extends Invoices
     /**
      * @inheritdoc
      */
+    public function attributes() {
+        return array_merge(parent::attributes(), ['user.username']);
+    }
     public function rules()
     {
         return [
-            [['id', 'supplierId', 'isAccepted', 'acceptedBy'], 'integer'],
-            [['name', 'connection', 'ext', 'path', 'creTime'], 'safe'],
+            [['name', 'connection', 'ext', 'path', 'creTime', 'acceptedAt', 'user.username', 'supplierId', 'signedBy'], 'safe'],
         ];
     }
 
@@ -41,12 +43,21 @@ class InvoicesSearch extends Invoices
      */
     public function search($params)
     {
-        $query = Invoices::find();
-
+        $query = Invoices::find()->where( 
+            'isAccepted != :id', ['id'=>1]
+            );
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        
+        $query->joinWith(['user']);
+        
+        $dataProvider->sort->attributes['user.username'] =
+                [
+                    'asc' => ['user.username' => SORT_ASC],
+                    'desc' => ['user.username' => SORT_DESC],
+                ];
+        
         $this->load($params);
 
         if (!$this->validate()) {
@@ -55,18 +66,53 @@ class InvoicesSearch extends Invoices
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'supplierId' => $this->supplierId,
-            'isAccepted' => $this->isAccepted,
-            'acceptedBy' => $this->acceptedBy,
-            'creTime' => $this->creTime,
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'connection', $this->connection])
+            ->andFilterWhere(['like', 'ext', $this->ext])
+            ->andFilterWhere(['like', 'path', $this->path])
+            ->andFilterWhere(['like', 'acceptedAt', $this->acceptedAt])
+            ->andFilterWhere(['like', 'creTime', $this->creTime])
+            ->andFilterWhere(['like', 'supplierId', $this->supplierId])
+             ->andFilterWhere(['like', 'signedBy', $this->signedBy])
+            ->andFilterWhere(['like', 'user.username', $this->getAttribute('user.username')]);
+
+        return $dataProvider;
+    }
+    
+     public function searchAccepted($params)
+    {
+        $query = Invoices::find()->where( 
+            'isAccepted != :id', ['id'=>0]
+            );
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
         ]);
+        
+        $query->joinWith(['user']);
+        
+        $dataProvider->sort->attributes['user.username'] =
+                [
+                    'asc' => ['user.username' => SORT_ASC],
+                    'desc' => ['user.username' => SORT_DESC],
+                ];
+        
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'connection', $this->connection])
             ->andFilterWhere(['like', 'ext', $this->ext])
-            ->andFilterWhere(['like', 'path', $this->path]);
+            ->andFilterWhere(['like', 'path', $this->path])
+            ->andFilterWhere(['like', 'acceptedAt', $this->acceptedAt])
+            ->andFilterWhere(['like', 'creTime', $this->creTime])
+            ->andFilterWhere(['like', 'supplierId', $this->supplierId])
+            ->andFilterWhere(['like', 'signedBy', $this->signedBy])
+            ->andFilterWhere(['like', 'user.username', $this->getAttribute('user.username')]);
 
         return $dataProvider;
     }
