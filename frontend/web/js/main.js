@@ -15,15 +15,6 @@ $(function(){
 
 $(function(){
     // get the click event of the Note button
-    $('.parts-button').click(function(){
-        $('#parts-modal').modal('show')
-                .find('#modalContent')
-                .load($(this).attr('value'));
-    });
-});
-
-$(function(){
-    // get the click event of the Note button
     $('.client-button').click(function(){
         $('#client-modal').modal('show')
                 .find('#modalContent')

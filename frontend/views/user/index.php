@@ -104,6 +104,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                 'model' => $model,
                             ] );
                 },
+                        
                         'headerOptions' => ['class' => 'kartik-sheet-style' ],
                         'expandOneOnly' => true,
                 ],

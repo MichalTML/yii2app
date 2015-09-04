@@ -1,53 +1,100 @@
 <?php
 
-use yii\helpers\Html;
 use kartik\grid\GridView;
-use yii\data\ActiveDataProvider;
-use kartik\detail\DetailView;
-use yii\helpers\Url;
+use kartik\grid\ExpandRowColumn;
+use frontend\models\ProjectMainFiles;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
 
+$this->title = 'P'.$project->sygnature.'_'.$project->projectName.' Technical Documentation';
+$this->params['breadcrumbs'][] = ['label' => 'Project list', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="datail-view">
-<?php    //var_dump($projectFilesData);die(); ?>
-<?php
-$attributes = [
-    [
-        'group'=>true,
-        'label'=>'SECTION 1: Identification Information',
-        'rowOptions'=>['class'=>'info']
-    ],
-    'column' => [
-        'attribute' => 'projectId',
-        'label' => 'Project Id',
-    ]
-                        ]
- ?>
+<br />
+
  <?php
-    echo DetailView::widget([
-    'model' => $model,
-    'attributes' => $attributes,
-    'mode' => 'view',
-//    'bordered' => $bordered,
-//    'striped' => $striped,
-//    'condensed' => $condensed,
-//    'responsive' => $responsive,
-//    'hover' => $hover,
-//    'hAlign'=>$hAlign,
-//    'vAlign'=>$vAlign,
-//    'fadeDelay'=>$fadeDelay,
-    'deleteOptions'=>[ // your ajax delete parameters
-        'params' => ['id' => 1000, 'kvdelete'=>true],
-    ],
-    'container' => ['id'=>'kv-demo'],
-    'formOptions' => ['action' => Url::current(['#' => 'kv-demo'])] // your action to delete
-]);
- ?>
-
-  
- 
+echo GridView::widget([
+    'dataProvider' => $dataProvider,
+        'export' => FALSE,
+        'bootstrap' => true,
+        'condensed' => true,
+        'responsive' => true,
+        'hover' => true,
+        'summary'=>"",
+        'headerRowOptions' => ['style' => 'display:none'],
+             'columns' => [
+                 [
+                     'format' => 'html',
+                     'contentOptions' => ['style' => 'text-align: center'],
+                     'value' => function ($data) {
+                        return '<b>Project Main Technical Documentation Files</b>';
+                 },
+                 ],
+                 
+                   [
+          'class'=>'kartik\grid\ExpandRowColumn',
+          'enableRowClick'=>true,
+          'width'=>'200px',
+          'value'=>function ($model, $key, $index, $column) {
+              return GridView::ROW_COLLAPSED;
+          },
+          'detail'=>function ($model, $key, $index, $column) {
+              return 'hello world';//Yii::$app->controller->renderPartial('_expand-row-details', ['model'=>$model]);
+          },
+          'detailAnimationDuration'=>100,
+          'expandIcon'=>'<span class="fa fa-angle-right"></span>',
+          'collapseIcon'=>'<span class="fa fa-angle-down"></span>',
+          //'headerOptions'=>['class'=>'kartik-sheet-style']          
+        ],  
+                 ]
+                
     
-
-</div>
+    
+    
+    
+]);
+    
+echo GridView::widget([
+    'dataProvider' => $dataProvider,
+        'export' => FALSE,
+        'bootstrap' => true,
+        'condensed' => true,
+        'responsive' => true,
+        'hover' => true,
+        'summary'=>"",
+        'headerRowOptions' => ['style' => 'display:none'],
+             'columns' => [
+                 [
+                     'format' => 'html',
+                     'contentOptions' => ['style' => 'text-align: center'],
+                     'value' => function ($data) {
+                        return '<b>Project Main Technical Documentation Files</b>';
+                 },
+                 ],
+                 
+                   [
+          'class'=>'kartik\grid\ExpandRowColumn',
+          'enableRowClick'=>true,
+          'width'=>'200px',
+          'value'=>function ($model, $key, $index, $column) {
+              return GridView::ROW_COLLAPSED;
+          },
+          'detail'=>function ($model, $key, $index, $column) {
+              return 'hello world';//Yii::$app->controller->renderPartial('_expand-row-details', ['model'=>$model]);
+          },
+          'detailAnimationDuration'=>100,
+          'expandIcon'=>'<span class="fa fa-angle-right"></span>',
+          'collapseIcon'=>'<span class="fa fa-angle-down"></span>',
+          //'headerOptions'=>['class'=>'kartik-sheet-style']          
+        ],  
+                 ]
+                
+    
+    
+    
+    
+]);
+    
+    
+    

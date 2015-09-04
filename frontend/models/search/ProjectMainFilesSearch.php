@@ -5,19 +5,22 @@ namespace frontend\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use frontend\models\ProjectFileData;
+use frontend\models\ProjectMainFiles;
 
 /**
- * ProjectFileDataSearch represents the model behind the search form about `frontend\models\ProjectFileData`.
+ * ProjectMainFilesSearch represents the model behind the search form about `frontend\models\ProjectMainFiles`.
  */
-class ProjectFileDataSearch extends ProjectFileData
+class ProjectMainFilesSearch extends ProjectMainFiles
 {
     /**
      * @inheritdoc
      */
     public function rules()
     {
-        return [];
+        return [
+            [['id', 'projectId'], 'integer'],
+            [['ext', 'size', 'createdAt', 'updatedAt', 'path', 'name'], 'safe'],
+        ];
     }
 
     /**
@@ -36,13 +39,12 @@ class ProjectFileDataSearch extends ProjectFileData
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $sygnature)
+    public function search($params)
     {
-        $query = ProjectFileData::find()->where( ['projectId' => $sygnature]);
+        $query = ProjectMainFiles::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => false,
         ]);
 
         $this->load($params);
@@ -53,7 +55,17 @@ class ProjectFileDataSearch extends ProjectFileData
             return $dataProvider;
         }
 
-    
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'projectId' => $this->projectId,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+        ]);
+
+        $query->andFilterWhere(['like', 'ext', $this->ext])
+            ->andFilterWhere(['like', 'size', $this->size])
+            ->andFilterWhere(['like', 'path', $this->path])
+            ->andFilterWhere(['like', 'name', $this->name]);
 
         return $dataProvider;
     }

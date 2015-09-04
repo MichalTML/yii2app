@@ -7,6 +7,7 @@ use frontend\models\search\ProjectSearch;
 use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 use frontend\models\ProjectNotes;
+use frontend\models\ProjectFileData;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\search\ProjectSearch */
@@ -111,6 +112,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                         'notes' => $projectNotes,
                                     ] );
                         },
+          'expandIcon'=>'<span class="fa fa-angle-right"></span>',
+          'collapseIcon'=>'<span class="fa fa-angle-down"></span>',
                                 'headerOptions' => ['class' => 'kartik-sheet-style' ],
                                 'expandOneOnly' => true,
                             ],
@@ -122,7 +125,22 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                 'buttons' => [
                                     'parts' => function ($url, $model)
                                     {
-                                        return Html::button( '<a href=""><i class="fa fa-th-list"></i></a>', ['value' => $url, 'class' => 'parts-button', 'id' => 'partsButton', 'title' => 'show parts' ] );
+                                        $filesSearch = ProjectFileData::find()->where(['projectId' => $model->sygnature])->one();
+                                        if(isset($filesSearch->projectId)){
+                                            
+                                        return Html::a( '<span class="fa fa-th-list"></span>', $url, [
+                                                        'data-method' => 'post',
+                                                        'title' => 'Technical Documentation',
+                                                        'data' => [                                                         
+                                                            'method' => 'post',
+                                                        ],
+                                                    ] );
+                                        
+                                        
+                                        } else {
+                                            
+                                            return '<i class="fa fa-th-list"></i>';
+                                        }
                                     },
                                             'note' => function ($url, $model)
                                     {
@@ -188,7 +206,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     }
                                     if ( $action === 'parts' )
                                     {
-                                        $url = Url::toRoute( ['project/parts', 'sygnature' => $model->sygnature ] );
+                                        $url = Url::toRoute( ['project/parts', 'sygnature' => $model->sygnature, 'id' => $model->id ] );
                                         return $url;
                                     }
                                 }
@@ -211,18 +229,6 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
 
                         Modal::end();
                         ?>
-
-                            <?php
-                            Modal::begin( [
-                                'id' => 'parts-modal',
-                                'size' => 'modal-lg',
-                                'header' => '<h4 class="modal-title"></h4>',
-                                    //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
-                            ] );
-                            echo "<div id='modalContent'></div>";
-
-                            Modal::end();
-                            ?>
 
                             <?php
                             Modal::begin( [

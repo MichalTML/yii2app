@@ -9,7 +9,7 @@ use frontend\models\ProjectPermissions;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use frontend\models\ProjectFileData;
+use frontend\models\search\ProjectFileDataSearch;
 
 
 /**
@@ -185,11 +185,18 @@ $this->layout = 'action';
          'project' => $project,
      ]);
 }
-    public function actionParts($sygnature){
-    $model = ProjectFileData::findOne($sygnature);
-    return $this->renderPartial('files', [
-         'model' => $model,
-     ]);  
+    public function actionParts($sygnature, $id){
+        $this->layout = 'action';
+        $searchProject = $this->findModel($id);
+        $searchModel = new ProjectFileDataSearch();
+ 
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature );
+        
+         return $this->render( 'files', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,  
+                    'project' => $searchProject,
+                ] );
     }
 
     /**
