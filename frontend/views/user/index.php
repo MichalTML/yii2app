@@ -107,6 +107,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         
                         'headerOptions' => ['class' => 'kartik-sheet-style' ],
                         'expandOneOnly' => true,
+                        'expandIcon'=>'<span class="fa fa-angle-right"></span>',
+                        'collapseIcon'=>'<span class="fa fa-angle-down"></span>',
                 ],
                         
                      ['class' => 'yii\grid\ActionColumn',

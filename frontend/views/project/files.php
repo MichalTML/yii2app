@@ -1,9 +1,11 @@
 <?php
 
 use kartik\grid\GridView;
-use kartik\grid\ExpandRowColumn;
-use frontend\models\ProjectMainFiles;
-
+use frontend\models\search\ProjectMainFilesSearch;
+use frontend\models\search\ProjectAssembliesMainFilesSearch;
+use frontend\models\search\ProjectAssembliesFilesSearch;
+use yii\bootstrap\Modal;
+use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
 
@@ -14,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <br />
 
  <?php
+
 echo GridView::widget([
     'dataProvider' => $dataProvider,
         'export' => FALSE,
@@ -26,21 +29,28 @@ echo GridView::widget([
              'columns' => [
                  [
                      'format' => 'html',
-                     'contentOptions' => ['style' => 'text-align: center'],
-                     'value' => function ($data) {
-                        return '<b>Project Main Technical Documentation Files</b>';
+                     'contentOptions' => ['style' => 'text-align: left; padding-left: 50px'],
+                     'value' => function ($data, $model){
+                        return '<b>'.$this->title.'</b> | Creation Time: '.$data->createdAt;
                  },
                  ],
                  
                    [
           'class'=>'kartik\grid\ExpandRowColumn',
           'enableRowClick'=>true,
-          'width'=>'200px',
+          'width'=>'400px',
           'value'=>function ($model, $key, $index, $column) {
               return GridView::ROW_COLLAPSED;
           },
-          'detail'=>function ($model, $key, $index, $column) {
-              return 'hello world';//Yii::$app->controller->renderPartial('_expand-row-details', ['model'=>$model]);
+          'detail'=>function ($data) use ($project) {
+              $searchModel = new ProjectMainFilesSearch();
+              $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $data->projectId);
+              $id = $project->id;
+         return $this->render( 'mainFiles', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,  
+                    'id' => $id,
+                ] );
           },
           'detailAnimationDuration'=>100,
           'expandIcon'=>'<span class="fa fa-angle-right"></span>',
@@ -56,7 +66,7 @@ echo GridView::widget([
 ]);
     
 echo GridView::widget([
-    'dataProvider' => $dataProvider,
+    'dataProvider' => $assemblieData,
         'export' => FALSE,
         'bootstrap' => true,
         'condensed' => true,
@@ -67,21 +77,31 @@ echo GridView::widget([
              'columns' => [
                  [
                      'format' => 'html',
-                     'contentOptions' => ['style' => 'text-align: center'],
+                     'contentOptions' => ['style' => 'text-align: left; padding-left: 50px'],
                      'value' => function ($data) {
-                        return '<b>Project Main Technical Documentation Files</b>';
+                        $id = preg_replace('/'.$data->projectId.'/', '', $data->id);
+                        $name = implode(' ', explode('_', $data->name));
+                        return '<b>Mechanism :</b> '.$id.' | ' . $name;
                  },
                  ],
                  
                    [
           'class'=>'kartik\grid\ExpandRowColumn',
           'enableRowClick'=>true,
-          'width'=>'200px',
+          'width'=>'400px',
+          'expandOneOnly'=>true,
           'value'=>function ($model, $key, $index, $column) {
               return GridView::ROW_COLLAPSED;
           },
-          'detail'=>function ($model, $key, $index, $column) {
-              return 'hello world';//Yii::$app->controller->renderPartial('_expand-row-details', ['model'=>$model]);
+          'detail'=>function ($data) use ($project) {
+              $searchModel = new ProjectAssembliesMainFilesSearch();
+              $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $data->id);
+              $id = $project->id;
+         return $this->render( 'assemblyMainFiles', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,  
+                    'id' => $id,
+                ] );
           },
           'detailAnimationDuration'=>100,
           'expandIcon'=>'<span class="fa fa-angle-right"></span>',
@@ -95,6 +115,65 @@ echo GridView::widget([
     
     
 ]);
+
+echo GridView::widget([
+    'dataProvider' => $dataProvider,
+        'export' => FALSE,
+        'bootstrap' => true,
+        'condensed' => true,
+        'responsive' => true,
+        'hover' => true,
+        'summary'=>"",
+        'headerRowOptions' => ['style' => 'display:none'],
+             'columns' => [
+                 [
+                     'format' => 'html',
+                     'contentOptions' => ['style' => 'text-align: left; padding-left: 50px'],
+                     'value' => function ($data, $model) {
+                        return '<b>'.$this->title.'</b> | Files';
+                 },
+                 ],
+                 
+                   [
+          'class'=>'kartik\grid\ExpandRowColumn',
+          'enableRowClick'=>true,
+          'width'=>'400px',
+          'value'=>function ($model, $key, $index, $column) {
+              return GridView::ROW_COLLAPSED;
+          },
+          'detail'=>function ($data) use ($project) {
+              $searchModel = new ProjectAssembliesFilesSearch();
+              $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $data->projectId);
+              $id = $project->id;
+         return $this->render( 'assembliesFiles', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,  
+                    'id' => $id,
+                ] );
+          },
+          'detailAnimationDuration'=>100,
+          'expandIcon'=>'<span class="fa fa-angle-right"></span>',
+          'collapseIcon'=>'<span class="fa fa-angle-down"></span>',
+          //'headerOptions'=>['class'=>'kartik-sheet-style']          
+        ],  
+                 ]
+                
+    
+    
+    
+    
+]); 
+          
+Modal::begin( [
+    'id' => 'file-modal',
+    'closeButton' => false,
+    'headerOptions' => ['style' => 'display:none'],
+] );
+echo "<div id='modalContent'></div>";
+Modal::end();
+
+
+
     
     
     

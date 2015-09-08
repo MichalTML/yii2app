@@ -10,7 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use frontend\models\search\ProjectFileDataSearch;
-
+use frontend\models\search\ProjectAssembliesDataSearch;
 
 /**
  * ProjectController implements the CRUD actions for ProjectData model.
@@ -189,15 +189,22 @@ $this->layout = 'action';
         $this->layout = 'action';
         $searchProject = $this->findModel($id);
         $searchModel = new ProjectFileDataSearch();
- 
-        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature );
         
+        $searchAssemblies = new ProjectAssembliesDataSearch();
+                
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature );
+        $assemliesData = $searchAssemblies->search( Yii::$app->request->queryParams, $sygnature );
+              
          return $this->render( 'files', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,  
                     'project' => $searchProject,
+                    'assemblieData' => $assemliesData,
+                    'id' => $id,
                 ] );
     }
+    
+    
 
     /**
      * Update User function with ProjectStatus

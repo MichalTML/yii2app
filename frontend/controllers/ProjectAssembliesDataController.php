@@ -3,16 +3,16 @@
 namespace frontend\controllers;
 
 use Yii;
-use frontend\models\ProjectMainFiles;
-use frontend\models\search\ProjectMainFilesSearch;
+use frontend\models\ProjectAssembliesData;
+use frontend\models\search\ProjectAssembliesDataSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ProjectMainFilesController implements the CRUD actions for ProjectMainFiles model.
+ * ProjectAssembliesDataController implements the CRUD actions for ProjectAssembliesData model.
  */
-class ProjectMainFilesController extends Controller
+class ProjectAssembliesDataController extends Controller
 {
     public function behaviors()
     {
@@ -27,12 +27,12 @@ class ProjectMainFilesController extends Controller
     }
 
     /**
-     * Lists all ProjectMainFiles models.
+     * Lists all ProjectAssembliesData models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ProjectMainFilesSearch();
+        $searchModel = new ProjectAssembliesDataSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -42,25 +42,25 @@ class ProjectMainFilesController extends Controller
     }
 
     /**
-     * Displays a single ProjectMainFiles model.
+     * Displays a single ProjectAssembliesData model.
      * @param integer $id
      * @return mixed
      */
     public function actionView($id)
     {
-        return $this->renderPartial('view', [
+        return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new ProjectMainFiles model.
+     * Creates a new ProjectAssembliesData model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new ProjectMainFiles();
+        $model = new ProjectAssembliesData();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -72,7 +72,7 @@ class ProjectMainFilesController extends Controller
     }
 
     /**
-     * Updates an existing ProjectMainFiles model.
+     * Updates an existing ProjectAssembliesData model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -91,7 +91,7 @@ class ProjectMainFilesController extends Controller
     }
 
     /**
-     * Deletes an existing ProjectMainFiles model.
+     * Deletes an existing ProjectAssembliesData model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -104,30 +104,18 @@ class ProjectMainFilesController extends Controller
     }
 
     /**
-     * Finds the ProjectMainFiles model based on its primary key value.
+     * Finds the ProjectAssembliesData model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return ProjectMainFiles the loaded model
+     * @return ProjectAssembliesData the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = ProjectMainFiles::findOne($id)) !== null) {
+        if (($model = ProjectAssembliesData::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
-    public function actionDownload($path, $name, $sygnature, $id)
-    {   
-        if(file_exists($path)){
-            //die('adasd');
-        return Yii::$app->response->sendFile($path);
-        }
-        Yii::$app->session->setFlash( 'error', 'File: ' . $name . ' not found.' );
-        return $this->redirect( ['project/parts', 'sygnature' => $sygnature, 'id' => $id]);
-        
-    }
-    
 }

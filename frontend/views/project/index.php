@@ -34,10 +34,18 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         'condensed' => true,
         'responsive' => true,
         'hover' => true,
-        'rowOptions' => function($model)
-        {
-            return ['class' => 'tablew' ];
-        },
+        'rowOptions' => function ($model)
+                                    {
+                                        $filesSearch = ProjectFileData::find()->where(['projectId' => $model->sygnature])->one();
+                                        if(isset($filesSearch->projectId)){
+                                            
+                                        return ["style" => "background-color:#e6e6e6;"];
+                                        
+                                        
+                                        } else {
+                                            
+                                            return ["style" => "border-color:white;"];
+                                    }},
                 'columns' => [
                     [
                         'label' => 'Sygnature',

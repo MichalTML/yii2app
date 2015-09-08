@@ -22,8 +22,6 @@ $(function(){
     });
 });
 
-
-
 $(function() {
   $(".pdff-button").click(function() {
     var productLink = $(this).find("a");
@@ -35,4 +33,20 @@ $(function() {
   });
 });
 
+$(function() {
+  // get the click event of the Note button
+    $('.file-button').click(function(){
+        $('#file-modal').modal('show')
+                .find('#modalContent')
+                .load($(this).attr('value'));
+    });
+});
 
+$(document).on('pjax:complete', function() {
+    // get the click event of the Note button
+    $('.file-button').click(function(){
+        $('#file-modal').modal('show')
+                .find('#modalContent')
+                .load($(this).attr('value'));
+    });
+});

@@ -1533,6 +1533,25 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     margin: 0;
     padding: 0;
 }
+.assemblie-button{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    
+}
+.file-button{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 .client-button{
     border: 0px;
@@ -1631,4 +1650,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 .postImage:hover .title{
     display:block;
 }
+/*.in {
+background: transparent;
+}
 
+.modal-backdrop.fade {
+opacity: 0;
+filter: alpha(opacity=0);
+}
+.modal-backdrop.fade.in {
+opacity: 0.5;
+filter: alpha(opacity=50);
+}*/

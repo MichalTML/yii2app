@@ -5,12 +5,12 @@ namespace frontend\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use frontend\models\ProjectMainFiles;
+use frontend\models\ProjectAssembliesMainFiles;
 
 /**
- * ProjectMainFilesSearch represents the model behind the search form about `frontend\models\ProjectMainFiles`.
+ * ProjectAssembliesMainFilesSearch represents the model behind the search form about `frontend\models\ProjectAssembliesMainFiles`.
  */
-class ProjectMainFilesSearch extends ProjectMainFiles
+class ProjectAssembliesMainFilesSearch extends ProjectAssembliesMainFiles
 {
     /**
      * @inheritdoc
@@ -18,7 +18,8 @@ class ProjectMainFilesSearch extends ProjectMainFiles
     public function rules()
     {
         return [
-            [['ext', 'size', 'createdAt', 'updatedAt', 'path', 'name'], 'safe'],
+            [['id', 'projectId', 'assemblieId'], 'integer'],
+            [['sygnature', 'path', 'size', 'createdAt', 'updatedAt', 'ext', 'name'], 'safe'],
         ];
     }
 
@@ -40,8 +41,8 @@ class ProjectMainFilesSearch extends ProjectMainFiles
      */
     public function search($params, $id)
     {
-        $query = ProjectMainFiles::find()
-                ->andFilterWhere( ['projectId' => $id]);
+        $query = ProjectAssembliesMainFiles::find()
+                ->andFilterWhere( ['assemblieId' => $id]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -55,16 +56,10 @@ class ProjectMainFilesSearch extends ProjectMainFiles
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'projectId' => $this->projectId,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
-        ]);
-
-        $query->andFilterWhere(['like', 'ext', $this->ext])
-            ->andFilterWhere(['like', 'size', $this->size])
+        $query->andFilterWhere(['like', 'sygnature', $this->sygnature])
             ->andFilterWhere(['like', 'path', $this->path])
+            ->andFilterWhere(['like', 'size', $this->size])
+            ->andFilterWhere(['like', 'ext', $this->ext])
             ->andFilterWhere(['like', 'name', $this->name]);
 
         return $dataProvider;

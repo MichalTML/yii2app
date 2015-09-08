@@ -5,12 +5,12 @@ namespace frontend\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use frontend\models\ProjectMainFiles;
+use frontend\models\ProjectAssembliesData;
 
 /**
- * ProjectMainFilesSearch represents the model behind the search form about `frontend\models\ProjectMainFiles`.
+ * ProjectAssembliesDataSearch represents the model behind the search form about `frontend\models\ProjectAssembliesData`.
  */
-class ProjectMainFilesSearch extends ProjectMainFiles
+class ProjectAssembliesDataSearch extends ProjectAssembliesData
 {
     /**
      * @inheritdoc
@@ -18,7 +18,8 @@ class ProjectMainFilesSearch extends ProjectMainFiles
     public function rules()
     {
         return [
-            [['ext', 'size', 'createdAt', 'updatedAt', 'path', 'name'], 'safe'],
+            [['id', 'projectId'], 'integer'],
+            [['name', 'path'], 'safe'],
         ];
     }
 
@@ -38,10 +39,10 @@ class ProjectMainFilesSearch extends ProjectMainFiles
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $id)
+    public function search($params, $sygnature)
     {
-        $query = ProjectMainFiles::find()
-                ->andFilterWhere( ['projectId' => $id]);
+        $query = ProjectAssembliesData::find()
+                ->andFilterWhere( ['projectId' => $sygnature]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -58,14 +59,10 @@ class ProjectMainFilesSearch extends ProjectMainFiles
         $query->andFilterWhere([
             'id' => $this->id,
             'projectId' => $this->projectId,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
         ]);
 
-        $query->andFilterWhere(['like', 'ext', $this->ext])
-            ->andFilterWhere(['like', 'size', $this->size])
-            ->andFilterWhere(['like', 'path', $this->path])
-            ->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'path', $this->path]);
 
         return $dataProvider;
     }

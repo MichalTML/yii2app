@@ -1,14 +1,15 @@
 <?php
 
-use yii\helpers\Html;
 use kartik\detail\DetailView;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\models\ProjectMainFiles */
 ?>
 <div class="project-main-files-view">
-    
-       <?php 
+   
+        <?php 
+        Pjax::begin();
     echo DetailView::widget([
         'model'=>$model,
         'condensed'=>true,
@@ -23,28 +24,29 @@ use kartik\detail\DetailView;
             [
                 'label' => 'File Size',
                 'value' => $model->size,
-                'labelColOptions' => ['style' => 'text-align: left; width: 10%'],
+                'labelColOptions' => ['style' => 'text-align: left; min-width: 20%; whitespace: nowrap'],
                 'valueColOptions'=> ['style'=>'width:65%; text-align: center;']
             ],
             [
                 'label' => 'File Extension',
                 'value' => $model->ext,
-                'labelColOptions' => ['style' => 'text-align: left; width: 10%'],
+                'labelColOptions' => ['style' => 'text-align: left; width: 20%; whitespace: nowrap'],
                 'valueColOptions'=> ['style'=>'width:65%; text-align: center;']
             ],
             [
                 'label' => 'Created At',
                 'value' => $model->createdAt,
-                'labelColOptions' => ['style' => 'text-align: left;; width: 10%'],
+                'labelColOptions' => ['style' => 'text-align: left; width: 20%; whitespace: nowrap'],
                 'valueColOptions'=> ['style'=>'width:65%; text-align: center;']
             ],
             [
                 'label' => 'Updated At',
                 'value' => $model->updatedAt,
-                'labelColOptions' => ['style' => 'text-align: left; width: 10%'],
+                'labelColOptions' => ['style' => 'text-align: left; width: 20%; whitespace: nowrap'],
                 'valueColOptions'=> ['style'=>'width:65%; text-align: center;']
             ]
         ],
     ]);
+    Pjax::end();
 ?>
 </div>
