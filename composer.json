@@ -28,7 +28,9 @@
 		"kartik-v/yii2-widget-select2": "@dev",
 		"philippfrenzel/yii2fullcalendar":"*",
 		"kartik-v/yii2-mpdf": "*",
-		"mpdf/mpdf":"*"
+		"mpdf/mpdf":"*",
+        "arogachev/yii2-excel": "^0.1.0",
+        "kartik-v/yii2-widget-spinner": "@dev"
 		
     },
     "require-dev": {

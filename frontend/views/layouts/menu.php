@@ -6,9 +6,9 @@ use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use frontend\widgets\Alert;
 use frontend\assets\FontAwesomeAsset;
+use common\models\PermissionHelpers;
+use yii\bootstrap\Modal;
 use yii\helpers\Url;
-use yii\grid\GridView;
-use yii\web\UrlManager;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -36,14 +36,14 @@ FontAwesomeAsset::register($this);
         // IF USER IS A GUEST brand--> login else brand --> main page    
         if(Yii::$app->user->isGuest){             
                NavBar::begin([
-                'brandLabel' => '<div class="menu-logo"><img src="http://www.tma-automation.com/wp-content/themes/TM-Automation/images/logo_pm.png"></img></div>',
+                'brandLabel' => "<div class='menu-logo'><img src='".Yii::getAlias('@web')."/images/logo_pm.png'></img></div>",
                 'brandUrl' => ['site/login'],
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top nav-border',
                 ],]);  
         } else {
              NavBar::begin([
-                'brandLabel' => '<div class="menu-logo"><img src="http://www.tma-automation.com/wp-content/themes/TM-Automation/images/logo_pm.png"></img></div>',
+                'brandLabel' => "<div class='menu-logo'><img src='".Yii::getAlias('@web')."/images/logo_pm.png'></img></div>",
                 'brandUrl' => ['site/main'],
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top nav-border',
@@ -53,16 +53,17 @@ FontAwesomeAsset::register($this);
            }         
             
             if (Yii::$app->user->isGuest) {
-                $menuItems[] = ['label' => '', 'url' => ['site/index'], 'options' => ['class' =>'fa fa-user']];
-                $menuItems[] = ['label' => '', 'url' => ['/site/signup']];
-                $menuItems[] = ['label' => '', 'url' => ['site/login']];
+                $menuItems[] = ['label' => '', 'url' => ['site/index'], 'options' => ['class' =>'fa fa-user', 'title' => 'new note'], 'title' => 'adasda'];
+                $menuItems[] = ['label' => '', 'url' => ['/site/signup'], 'options' => ['title' => 'sign up']];
+                $menuItems[] = ['label' => '', 'url' => ['site/login'], 'options' => ['title' => 'sign up']];
             } else {
-                $menuItems[] = ['label' => '', 'url' => ['/site/main'], 'options' => ['class' =>'home']];
-                $menuItems[] = ['label' => '', 'url' => ['/site/contact'], 'options' => ['class' =>'help'],];
-                $menuItems[] = ['label' => '', 'url' =>['profile/view'], 'options' => ['class' =>'profile']];
-                //$menuItems[] = ['label' => 'Administration', 'url' =>[\Yii::$app->urlManagerBackEnd->baseUrl]];
-//                $menuitems[] = ['label' => 'Create Profile', 'url' =>['/profile']]
-                $menuItems[] = ['label' => '(' . Yii::$app->user->identity->username . ')', 'url' => ['/site/logout'], 'options' => ['class' =>'logout'],
+                $menuItems[] = ['label' => '', 'url' => ['/site/main'], 'options' => ['class' =>'home', 'title' => 'home page' ]];
+                $menuItems[] = ['label' => '', 'url' => ['/site/contact'], 'options' => ['class' =>'help', 'title' => 'help form' ],];
+                $menuItems[] = ['label' => '', 'url' =>['profile/view'], 'options' => ['class' =>'profile', 'title' => 'profile settings' ]];
+            if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 50 ){                
+                $menuItems[] =  '<li class="profile">'.Html::button( '', ['value' => Url::toRoute( ['project-scanner/upload']), 'id' => 'upload-button', 'title' => 'Import Project' ] ).'</li>';
+            }
+                $menuItems[] = ['label' => '(' . Yii::$app->user->identity->username . ')', 'url' => ['/site/logout'], 'options' => ['class' =>'logout', 'title' => 'log out' ],
                                 'linkOptions' => ['data-method' => 'post']];
             }
             
@@ -127,4 +128,14 @@ FontAwesomeAsset::register($this);
     <?php $this->endBody() ?>
 </body>
 </html>
-<?php $this->endPage() ?>
+<?php 
+
+Modal::begin( [
+    'id' => 'upload-modal',
+    'closeButton' => false,
+    'headerOptions' => ['style' => 'display:none'],
+] );
+echo "<div id='modalContent'></div>";
+Modal::end();
+
+$this->endPage() ?>

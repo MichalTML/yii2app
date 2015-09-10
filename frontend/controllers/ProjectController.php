@@ -204,7 +204,19 @@ $this->layout = 'action';
                 ] );
     }
     
-    
+
+     public function actionUpload(){
+         $path = '/media/data/app_data/project_data/';
+         $projects = [];
+         $prjectScan = new \FilesystemIterator($path);
+         foreach($prjectScan as $project){
+             $projects[] = $project->getFilename();
+         }
+         $this->layout = 'menu';
+         return $this->render( 'upload', [
+             'project' => $projects,
+         ]);
+     }
 
     /**
      * Update User function with ProjectStatus

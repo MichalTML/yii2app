@@ -225,6 +225,40 @@ NAVBAR
     background-size: contain;
 }
 
+.upload {
+  padding: 5px;  
+}
+
+.upload button{
+    text-align: center;
+    vertical-align: middle;
+    background: url("/images/upload_gray.png") no-repeat;
+    color: transparent;
+    background-size: contain;
+    width: 35px;
+    height: 35px;    
+}
+.upload a:hover{
+    background: url("/images/upload_green.png") no-repeat;
+    background-size: contain;
+}
+
+#upload-button{
+    text-align: center;
+    vertical-align: middle;
+    background: url("/images/upload_gray.png") no-repeat;
+    color: transparent;
+    background-size: contain;
+    width: 35px;
+    height: 35px;
+    border: 0;
+}
+    
+#upload-button:hover{
+    background: url("/images/upload_green.png") no-repeat;
+    background-size: contain;
+}
+    
 .help {
   padding: 5px;  
 }
@@ -349,9 +383,25 @@ MAIN BODY
     border-bottom-right-radius: 10px;
 }
 
+.upload-info{
+    background: #e6e6e6;
+    color: #808080;
+    border-top: 1px solid #83C503;
+    height: 125px;
+    padding: 20px;
+    font-size: 12px;
+    text-align: justify;
+    width: 100%;
+    bottom: 0;
+    position: absolute;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.upload-info span{
+   color: #83C503; 
+}
 .mainbox_info span{
-    color: #83C503;
-    
+    color: #83C503; 
 }
 /* PROJECT MANAGER */
 
@@ -408,6 +458,60 @@ box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
 .mainbox-pm:hover {
     background: url("/images/project_green.jpg") no-repeat;
     background-size: contain;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+-moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
+}
+
+/* UPLOAD PROJECT */
+.mainbox-upload {
+    //min-width: 100%;
+    min-height: 250px;
+    max-height: 250px;
+    width: 100%;
+    height: 100%;
+
+   // border: 1px solid black;
+    background: url("/images/project_gray.jpg") no-repeat;
+    background-size: cover;
+    //padding-bottom: 200px;
+    position: relative;
+    transition: background-color 5s ease;
+    background-color: transparent;
+    border-radius: 10px;
+    border-radius: 10px;
+}
+
+.mainbox-upload .btn-default {
+    height: 30px;
+    margin-top: 10px;
+    float: right;
+    font-size: 12px;
+    
+    border: 0px;
+    border: 1px solid #83C503;
+    
+    text-transform: uppercase;
+ 
+    color: #808080;
+    background: #e6e6e6;
+    
+    transition: all 1s ease;    
+    border-radius: 5px;
+}
+
+.btn-default:hover{
+    background-color: #83C503;
+    color: white;
+    border: 1px solid #e6e6e6;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+    -moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+    box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
+}
+
+.mainbox-upload:hover {
+    background: url("/images/project_green.jpg") no-repeat;
+    background-size: cover;
     -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
 -moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
 box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
@@ -1662,3 +1766,29 @@ filter: alpha(opacity=0);
 opacity: 0.5;
 filter: alpha(opacity=50);
 }*/
+
+.loader {
+	position: fixed;
+	left: 250px;
+	top: 100px;
+        height: 50px;
+        width: 50px;
+	z-index: 9999;
+	background: url('../images/spin.gif') no-repeat;
+        background-size: contain;
+        background-color: transparent;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.8);
+    background: url('../images/spin.gif') no-repeat;
+    background-size: 100px 100px;
+    background-position: center;
+    z-index: 200;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+}

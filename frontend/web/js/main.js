@@ -50,3 +50,13 @@ $(document).on('pjax:complete', function() {
                 .load($(this).attr('value'));
     });
 });
+
+$(document).ready(function(){
+   $('#upload-button').click(function(){
+       $('#upload-modal').modal('show')
+                .find('#modalContent')
+                .load($(this).attr('value'));
+   });
+    
+});
+
