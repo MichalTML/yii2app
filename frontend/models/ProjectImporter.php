@@ -4,12 +4,12 @@ namespace frontend\models;
 class ProjectImporter
 {
 
-    public $projectsRootDirectory = 'e:\tma_projekty\\';
-    public $projectMainTables = ['Dane', 'Projekt', 'Zamowienia' ];
+    public $projectsRootDirectory = 'e:\tma_projekty\\'; // project root path
+    public $projectMainTables = ['data', 'project', 'orders' ];
     public $rootStructure = [
         'project' => ['Projekt', 'projket', 'Project', 'project' ],
-        'files' => ['Dane', 'Dane', 'files', 'Files' ],
-        'orders' => ['orders', 'zamowienia', 'Zamowienia' ]
+        'data' => ['files', 'Files' ],
+        'orders' => ['orders', 'Orders' ]
     ];
     public $projects;
     public $projectsDatas = [ ];
@@ -19,15 +19,24 @@ class ProjectImporter
     public $mainAssemblyFiles;
     public $assembliesFiles;
     public $filesCount = [ ];
+    public $summary = ['error' => ''];
 
     public function __construct($projectName) {
         $this->projects = array_values( array_diff( scandir( $this->projectsRootDirectory ), array( '..', '.' ) ) );
-        var_dump($this->projects);
+        //var_dump($this->projects);
+        // remove this loop to get all projects from root dir
         foreach($this->projects as $id => $name){
             if($name !== $projectName){
                 unset($this->projects[$id]);
-            }
+            }   
         }
+        if(count($this->projects) < 1 ){
+                $error = 'Check if '. $projectName .' data exists and are valid, then try again.';
+                $this->summary['error'] = $error;
+                $info = json_encode($this->summary); 
+                echo $info;
+                exit;
+            }
         $this->getProjectData();
         $this->getAssembliesPaths();
         $this->getFileList();
@@ -35,7 +44,8 @@ class ProjectImporter
         $this->getMainAssemblyFiles();
         $this->getAssemblyFiles();
     }
-
+    
+    // switching coding, unused method
     public function encode_array( $array, $state ) {
 
         if ( $state == 1 )
@@ -71,7 +81,8 @@ class ProjectImporter
             return $array;
         }
     }
-
+    
+    // get excel file LIST 
     function getFileList() {
         foreach ( $this->projectsDatas as $project ) {
             $mainProjectFiles = new \FilesystemIterator( $project[ 'root' ] );
@@ -86,7 +97,8 @@ class ProjectImporter
             }
         }
     }
-
+    
+    // formating file sizes, to display more friendly data info
     function formatSize( $bytes ) {
 
         $kilo = 1024;
@@ -112,7 +124,8 @@ class ProjectImporter
         }
         return round( $bytes / $tera, 2 ) . ' TB';
     }
-
+    
+    // method used for path changing, not used in autoimport process
     public function setNewPath( $path ) {
 
         $this->projectsRootDirectory = $path;
@@ -120,6 +133,7 @@ class ProjectImporter
         echo 'New root path, set to: ' . $this->projectsRootDirectory . '<br />';
     }
 
+    
     public function getProjectData() {
 
 

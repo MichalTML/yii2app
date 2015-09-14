@@ -22,7 +22,7 @@ class ProjectScannerController extends Controller {
      }
     
      public function actionAjax(){
-         return $this->render( 'ajax' );
+         return $this->renderPartial( 'ajax' );
      }
     
     

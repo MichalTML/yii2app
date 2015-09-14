@@ -17,6 +17,7 @@ class ProjectSaver
     public $error = [ ];
     public $filterData = [ ];
     public $filterDatas = [ ];
+    public $fileCount = ['mainFiles' => '', 'mainFilesAdded' => '', 'assemblieFiles' => '', 'assemblieFilesAdded' => '', 'assemblieMainFiles' => '', 'assemblieMainFilesAdded' => '' ];
 
     public function __construct( $db, $filter ) {
 
@@ -124,7 +125,6 @@ class ProjectSaver
 
                 if ( $check->execute() & count( $check->fetchAll() ) > 0 )
                 {
-
                     $result[ $file[ 'name' ] . '.' . $file[ 'ext' ] ] = ['name' => $file[ 'name' ],
                         'path' => $file[ 'path' ], 'ext' => $file[ 'ext' ], 'error' => 'record already in table' ];
                     $this->raport[ $projectId ] = $result;
@@ -161,6 +161,10 @@ class ProjectSaver
             $countFiles = $count[ $projectId ][ 'mainProjectFiles' ];
             $this->log[ $projectId ][ 'mainProjectFiles' ] = $countFiles;
             $this->log[ $projectId ][ 'mainProjectFilesAdded' ] = $fileCount;
+            $this->fileCount['mainFiles'] = $countFiles;
+            $this->fileCount['mainFilesAdded'] = $fileCount;
+            
+            
         }
         $this->checkLogs();
         $this->clearLog();
@@ -224,6 +228,8 @@ class ProjectSaver
             $countFiles = $count[ $projectId ][ 'mainAssemblyFiles' ];
             $this->log[ $projectId ][ 'mainAssemblyFiles' ] = $countFiles;
             $this->log[ $projectId ][ 'mainAssemblyFilesAdded' ] = $fileCount;
+            $this->fileCount['assemblieMainFiles'] = $countFiles;
+            $this->fileCount['assemblieMainFilesAdded'] = $fileCount;
         }
         $this->checkLogs();
         $this->clearLog();
@@ -302,6 +308,9 @@ class ProjectSaver
                 $countFiles = $count[ $projectId ][ 'assemblyFiles' ];
                 $this->log[ $projectId ][ 'assemblyFiles' ] = $countFiles;
                 $this->log[ $projectId ][ 'assemblyFilesAdded' ] = $fileCount;
+                $this->fileCount['assemblieFiles'] = $countFiles;
+                $this->fileCount['assemblieFilesAdded'] = $fileCount;
+                
             }
         }
         $this->checkLogs();
