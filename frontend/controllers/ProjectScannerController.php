@@ -3,21 +3,28 @@
 namespace frontend\controllers;
 
 use yii\web\Controller;
+use frontend\models\ProjectData;
 
 class ProjectScannerController extends Controller {
 
-    public $projectsList = ['1' => 'project51'];
+    public $projectsData = [ ];
     
     public function actionUpload(){
-         //$path = '/media/data/app_data/project_data/';
-        // $prjectScan = new \FilesystemIterator($path);
-        // 
-        //foreach($prjectScan as $project){
-             //$this->projectsList[] = $project->getFilename();
-        // }
+        
+         $model = new ProjectData();
+         
+         $path = 'e:\tma_projekty\\';
+         $prjectScan = new \FilesystemIterator($path);
+         
+        foreach($prjectScan as $project){
+             $sygnatureParts = explode('_', $project->getFilename());
+             $sygnature = preg_replace('/p/i', '', $sygnatureParts[1]);
+             $projectData = $model->find()->where(['sygnature' => $sygnature ])->one();
+             $this->projectsData[] = ['name' => $project->getFilename(), 'id' => $projectData->id, 'sygnature' => $projectData->sygnature];
+             }
          $this->layout = 'menu';
          return $this->renderPartial( 'upload', [
-             'projectList' => $this->projectsList,
+             'projectData' => $this->projectsData,
          ]);
      }
     

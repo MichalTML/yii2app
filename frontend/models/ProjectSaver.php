@@ -18,9 +18,10 @@ class ProjectSaver
     public $filterData = [ ];
     public $filterDatas = [ ];
     public $fileCount = ['mainFiles' => '', 'mainFilesAdded' => '', 'assemblieFiles' => '', 'assemblieFilesAdded' => '', 'assemblieMainFiles' => '', 'assemblieMainFilesAdded' => '' ];
+    public $status = ['status' => ''];
 
-    public function __construct( $db, $filter ) {
-
+    public function __construct( $db, $filter = null ) {
+        
         $this->db = $db;
         $this->filterDatas = $filter;
     }
@@ -96,7 +97,7 @@ class ProjectSaver
                     $stmt->bindparam( ':path', $path );
                     $stmt->bindparam( ':name', $name );
 
-                    if ( $stmt->execute() )
+                    if ( $stmt->execute())
                     {
                         $result[ $id ] = ['name' => $name, 'path' => $path, 'id' => $assemblieId ];
                         $this->log[ $projectId ] = $result;
@@ -355,6 +356,34 @@ class ProjectSaver
     public function clearLog() {
         $this->log = [];
         $this->raport = [];
+    }
+    
+    public function finalize($option, $sygnature = null) {
+     if($option === 'yes'){
+         $this->status['status'] = 'Project Data Saved';     
+     } else {
+         $stmt = $this->db->prepare("DELETE FROM  project_assemblies_data WHERE projectId = :projectId");
+         $stmt->bindparam( ':projectId', $sygnature );
+         $stmt->execute();
+         
+         $stmt = $this->db->prepare("DELETE FROM  project_assemblies_files WHERE projectId = :projectId");
+         $stmt->bindparam( ':projectId', $sygnature );
+         $stmt->execute();
+         
+         $stmt = $this->db->prepare("DELETE FROM  project_assemblies_main_files WHERE projectId = :projectId");
+         $stmt->bindparam( ':projectId', $sygnature );
+         $stmt->execute();
+         
+         $stmt = $this->db->prepare("DELETE FROM  project_file_data WHERE projectId = :projectId");
+         $stmt->bindparam( ':projectId', $sygnature );
+         $stmt->execute();
+         
+         $stmt = $this->db->prepare("DELETE FROM  project_main_files WHERE projectId = :projectId");
+         $stmt->bindparam( ':projectId', $sygnature );
+         $stmt->execute();
+         
+         $this->status['status'] = 'Project Import process has been reverted.';
+     }
     }
 
 }

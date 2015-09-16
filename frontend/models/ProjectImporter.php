@@ -28,6 +28,7 @@ class ProjectImporter
         foreach($this->projects as $id => $name){
             if($name !== $projectName){
                 unset($this->projects[$id]);
+                $this->projects = array_values($this->projects);
             }   
         }
         if(count($this->projects) < 1 ){
@@ -140,9 +141,10 @@ class ProjectImporter
 // Get all projects main folder name into an array
 // Get project path / name / id into and array
         for ( $i = 0; $i < count( $this->projects ); $i++ ) {
-
+            
             //get project id
             $nameFragments = explode( '_', $this->projects[ $i ] );
+            
             $projectId = preg_replace( '/^p/i', '', $nameFragments[ 1 ] );
 
             $this->projectsDatas[ $projectId ][ 'id' ] = $projectId;

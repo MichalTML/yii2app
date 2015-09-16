@@ -15,6 +15,24 @@ $(function(){
 
 $(function(){
     // get the click event of the Note button
+    $('.seenote-button').click(function(){
+        $('#file-notes-modal').modal('show')
+                .find('#modalContent')
+                .load($(this).attr('value'));
+    });
+});
+
+$(function(){
+    // get the click event of the Note button
+    $('.view-button').click(function(){
+        $('#view-modal').modal('show')
+                .find('#modalContent')
+                .load($(this).attr('value'));
+    });
+});
+
+$(function(){
+    // get the click event of the Note button
     $('.client-button').click(function(){
         $('#client-modal').modal('show')
                 .find('#modalContent')

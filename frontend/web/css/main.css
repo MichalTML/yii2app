@@ -463,6 +463,66 @@ box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
 box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
 }
 
+/* PROJECT FILE MANAGER */
+
+.mainbox-fm {
+    //min-width: 100%;
+    min-height: 250px;
+    max-height: 250px;
+    margin-bottom: 50px;
+   // border: 1px solid black;
+    background: url("/images/fm_gray.jpg") no-repeat;
+    background-size: contain;
+    //padding-bottom: 200px;
+    position: relative;
+    transition: background-color 5s ease;
+    background-color: transparent;
+    border-radius: 10px;
+    border-radius: 10px;
+}
+
+.mainbox-fm .btn-default {
+    height: 45px;
+    width: 100%;
+ 
+    line-height: 1em;
+    font-size: 16px;
+    
+    border: 0px;
+    border-radius: 0;
+    border-top: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+    border-bottom: 1px solid #83C503;
+    
+    text-transform: uppercase;
+ 
+    color: #808080;
+    background: #e6e6e6;
+    text-align: left;
+    
+    transition: all 1s ease;    
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.mainbox-fm:hover .btn-default {
+    background-color: #83C503;
+    color: white;
+    border-bottom: 1px solid #e6e6e6;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+-moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
+}
+
+.mainbox-fm:hover {
+    background: url("/images/fm_green.jpg") no-repeat;
+    background-size: contain;
+    -webkit-box-shadow: 0px 0px 19px 0px rgba(131, 197, 3, 1);
+-moz-box-shadow:    0px 0px 19px 0px rgba(131, 197, 3, 1);
+box-shadow:         0px 0px 19px 0px rgba(131, 197, 3, 1);
+}
+
 /* UPLOAD PROJECT */
 
 .upload-status {
@@ -1667,6 +1727,25 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 }
 
 .note-button{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.seenote-button{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+.view-button{
     border: 0px;
     height: auto;
     width: auto;

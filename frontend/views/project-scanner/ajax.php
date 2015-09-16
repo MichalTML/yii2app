@@ -5,11 +5,6 @@ use frontend\models\DB;
 use frontend\models\ExcelImporter;
 use frontend\models\ProjectSaver;
 
-$output = shell_exec('cp -R  /media/data/NAS/TMA/TMA_KONST_TEMP/project /media/data/app_data/project_data');
-echo "<pre>$output</pre>";
-
-
-//$_POST['name'] = 'PROJEKT_P45_kontrola_wizyjna_pokrywek_JOKEY';
 if (isset($_POST['name'])){
    $projectImporter = new ProjectImporter($_POST['name']);
    $excelImporter = new ExcelImporter($projectImporter->fileList);
@@ -28,6 +23,12 @@ if (isset($_POST['name'])){
 }
 
 
+if (isset($_POST['state']) & isset($_POST['sygnature']) ){
+    $state = $_POST['state'];
+    $sygnature = $_POST['sygnature'];
+    $saveProject = new ProjectSaver(DB::getConnection());
+    $saveProject->finalize($state, $sygnature);
+    $json = $saveProject->status;
+    echo json_encode($json);
+}
 
-//$this->log[ $projectId ][ 'mainProjectFiles' ] = $countFiles;
-//            $this->log[ $projectId ][ 'mainProjectFilesAdded' ] = $fileCount;

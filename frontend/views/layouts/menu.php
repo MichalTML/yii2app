@@ -60,7 +60,7 @@ FontAwesomeAsset::register($this);
                 $menuItems[] = ['label' => '', 'url' => ['/site/main'], 'options' => ['class' =>'home', 'title' => 'home page' ]];
                 $menuItems[] = ['label' => '', 'url' => ['/site/contact'], 'options' => ['class' =>'help', 'title' => 'help form' ],];
                 $menuItems[] = ['label' => '', 'url' =>['profile/view'], 'options' => ['class' =>'profile', 'title' => 'profile settings' ]];
-            if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 50 ){                
+            if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) >= 40 ){                
                 $menuItems[] =  '<li class="profile">'.Html::button( '', ['value' => Url::toRoute( ['project-scanner/upload']), 'id' => 'upload-button', 'title' => 'Import Project' ] ).'</li>';
             }
                 $menuItems[] = ['label' => '(' . Yii::$app->user->identity->username . ')', 'url' => ['/site/logout'], 'options' => ['class' =>'logout', 'title' => 'log out' ],

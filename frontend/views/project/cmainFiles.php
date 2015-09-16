@@ -4,6 +4,7 @@ use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
+use frontend\models\search\ProjectMainFilesNotesSearch;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\search\ProjectSearch */
@@ -51,28 +52,29 @@ use yii\widgets\Pjax;
                'headerOptions' => ['style' => 'text-align: center;' ],
                'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
            ],
+            
             ['class' => 'yii\grid\ActionColumn',
                                 'header' => '',
                                 'headerOptions' => ['style' => 'min-width: 110px;text-align: center; border-bottom-color: transparent;' ],
                                 'contentOptions' => ['style' => 'text-align:center; line-height: 1em;' ],
-                                'template' => '{download} {view} {delete}',
-                                'buttons' => [
-                                            'delete' => function($url, $model)
+                                'template' => '{seenote} {note} {download} {view}',
+                                'buttons' => [  
+                                    'seenote' => function ($url, $model)
                                     {
-                                        if ( 2 == 3)
-                                        {
-                                            return '<span class="glyphicon glyphicon-trash"></span>';
-                                        } else
-                                        {
-                                            return Html::a( '<span class="glyphicon glyphicon-trash"></span>', $url, [
-                                                        'data-method' => 'post',
-                                                        'title' => Yii::t( 'app', 'delete' ),
-                                                        'data' => [
-                                                            'confirm' => 'You are about to delete: ' . $model->name . ' ,are you sure you want to                                                proceed?',
-                                                            'method' => 'post',
-                                                        ],
-                                                    ] );
-                                        }
+                                    $searchModel = new ProjectMainFilesNotesSearch();
+                                    $searchModel->fileId = $model->id;
+                                    $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
+                                    if ($dataProvider->totalCount > 0) {
+                                        return Html::button( '<a href=""><i class="fa fa-file-text"></i></a>', ['value' => $url, 'class' => 'seenote-button', 'id' => 'seenote-button', 'title' => 'see notes' ] );
+                                    } else {
+                                        return '<i class="fa fa-file-o"></i>';
+
+                                    }
+                                    },
+                                      
+                                    'note' => function ($url, $model)
+                                    {
+                                        return Html::button( '<a href=""><i class="fa fa-file-text-o"></i></a>', ['value' => $url, 'class' => 'note-button', 'id' => 'modalButton', 'title' => 'new note' ] );
                                     },
                                             'download' => function($url, $model)
                                     {
@@ -102,6 +104,16 @@ use yii\widgets\Pjax;
                                     if ( $action === 'view' )
                                     {
                                         $url = Url::toRoute( ['project-main-files/view', 'id' => $model->id ] );
+                                        return $url;
+                                    }
+                                    if ( $action === 'note' )
+                                    {
+                                        $url = Url::toRoute( ['project-main-files-notes/note', 'id' => $model->id ] );
+                                        return $url;
+                                    }
+                                     if ( $action === 'seenote' )
+                                    {
+                                        $url = Url::toRoute( ['project-main-files-notes/view', 'id' => $model->id ] );
                                         return $url;
                                     }
                                 } 

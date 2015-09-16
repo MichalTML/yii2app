@@ -57,7 +57,13 @@ $this->layout = 'action';
                     'model' => $this->findModel( $id ),
                 ] );
     }
-
+    
+    public function actionCview( $id ) {
+    $this->layout = 'action';
+        return $this->renderPartial( 'cview', [
+                    'model' => $this->findModel( $id ),
+                ] );
+    }
     /**
      * Creates a new ProjectData model.
      * Instert into Project_Permission id and userId and setting default permissions
@@ -204,6 +210,24 @@ $this->layout = 'action';
                 ] );
     }
     
+    public function actionCparts($sygnature, $id){
+        $this->layout = 'action';
+        $searchProject = $this->findModel($id);
+        $searchModel = new ProjectFileDataSearch();
+        
+        $searchAssemblies = new ProjectAssembliesDataSearch();
+                
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature );
+        $assemliesData = $searchAssemblies->search( Yii::$app->request->queryParams, $sygnature );
+              
+         return $this->render( 'cfiles', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,  
+                    'project' => $searchProject,
+                    'assemblieData' => $assemliesData,
+                    'id' => $id,
+                ] );
+    }
 
      public function actionUpload(){
          $path = '/media/data/app_data/project_data/';
@@ -217,7 +241,18 @@ $this->layout = 'action';
              'project' => $projects,
          ]);
      }
+     
+     public function actionFileindex(){
+         $this->layout = 'action';
+        $searchModel = new ProjectSearch();
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams );      
 
+
+        return $this->render( 'fileindex', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,     
+                ] );
+    }
     /**
      * Update User function with ProjectStatus
      * @param string $firstlastName string grabbed from post, name of construsctor

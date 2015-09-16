@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'note')->textarea(['rows' => '6', 'maxlength' => 255, 'style' => 'resize:none']) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Create', ['class' => 'btn btn-primary']) ?>
+        <?= Html::submitButton('Create', ['class' => 'btn btn-primary', 'id' => 'create-note']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -51,6 +51,7 @@ $script = <<< JS
         return false;
         });
         
+         
 JS;
         
 $this->registerJS($script);
