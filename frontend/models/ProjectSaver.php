@@ -244,10 +244,10 @@ class ProjectSaver
             foreach ( $files as $assemblieId => $file ) {
                 $newAssemblieId = $projectId . $assemblieId;
                 foreach ( $file as $record ) {
-                    $filterData = $record[ 'sygnature' ] . ' ' . $record[ 'name' ];
-
-//                    if ( $this->filterFile( $this->filterDatas, $filterData ) )
-//                    {
+                    $filterData = $record[ 'fullName' ];
+                    var_dump($record);
+                    if ( $this->filterFile( $this->filterDatas, $filterData ) )
+                   {
 
                         $typeId = intval( $record[ 'typeId' ] );
                         $check = $this->db->prepare( "SELECT * FROM project_assemblies_files WHERE (path=:path AND projectId=:projectId AND name=:name AND ext=:ext AND assemblieId=:assemblieId AND size=:size)" );
@@ -270,7 +270,7 @@ class ProjectSaver
                         if ( $record[ 'name' ] != 'skip' )
                         {
                             $stmt = $this->db->prepare( "INSERT INTO project_assemblies_files 
-                        (projectId, assemblieId, typeId, name, path, size, createdAt, updatedAt, ext, sygnature) VALUES (:projectId, :assemblieId, :typeId, :name, :path, :size, :createdAt, :updatedAt, :ext, :sygnature)" );
+                        (projectId, assemblieId, typeId, name, path, size, createdAt, updatedAt, ext, sygnature, thickness, material, quanity, flag) VALUES (:projectId, :assemblieId, :typeId, :name, :path, :size, :createdAt, :updatedAt, :ext, :sygnature, :flag, :thickness, :material, :quanity)" );
 
                             $stmt->bindparam( ':projectId', $projectId );
                             $stmt->bindparam( ':assemblieId', $newAssemblieId );
@@ -279,13 +279,13 @@ class ProjectSaver
                             $stmt->bindparam( ':ext', $record[ 'ext' ] );
                             $stmt->bindparam( ':size', $record[ 'size' ] );
                             $stmt->bindparam( ':path', $record[ 'path' ] );
-                            $stmt->bindparam( ':name', $record[ 'name' ] );
+                            $stmt->bindparam( ':name', $record[ 'fullName' ] );
                             $stmt->bindparam( ':createdAt', $record[ 'creation' ] );
                             $stmt->bindparam( ':updatedAt', $record[ 'modify' ] );
-//                            $stmt->bindparam( ':flag', $this->filterData[ 'flag' ] );
-//                            $stmt->bindparam( ':thickness', $this->filterData[ 'thickness' ] );   ADD THIS AFTER FILTER IS READY
-//                            $stmt->bindparam( ':material', $this->filterData[ 'material' ] );
-//                            $stmt->bindparam( ':quanity', $this->filterData[ 'quanity' ] );
+                            $stmt->bindparam( ':flag', $this->filterData[ 'flag' ] );
+                            $stmt->bindparam( ':thickness', $this->filterData[ 'thickness' ] );   //ADD THIS AFTER FILTER IS READY
+                            $stmt->bindparam( ':material', $this->filterData[ 'material' ] );
+                            $stmt->bindparam( ':quanity', $this->filterData[ 'quanity' ] );
 
                             $fileCount++;
                             if ( $stmt->execute() )
@@ -295,7 +295,6 @@ class ProjectSaver
                                     'size' => $record[ 'size' ], 'createdAt' => $record[ 'creation' ], 'updatedAt' => $record[ 'modify' ],
                                     'sygnature' => $record[ 'sygnature' ], 'assemblyId' => $newAssemblieId ];
                                 $this->log[ $projectId ][ $newAssemblieId ] = $result;
-                                $fileCount;
                             } else
                             {
                                 $result[ $record[ 'name' ] . '.' . $record[ 'ext' ] ] = ['name' => $record[ 'name' ],
@@ -304,7 +303,7 @@ class ProjectSaver
                                 return false;
                             }
                         }
-//                    }
+                    }
                 }
                 $countFiles = $count[ $projectId ][ 'assemblyFiles' ];
                 $this->log[ $projectId ][ 'assemblyFiles' ] = $countFiles;
@@ -319,25 +318,33 @@ class ProjectSaver
     }
 
     public function filterFile( $filterFile, $data ) {
-//        foreach ( $filterFile as $filter ) {
-//            if ( $data == $filter[ 'name' ] )
-//            {
-//                if ( !isset( $filter[ 'thickness' ] ) )
-//                {
-//                    $filter[ 'thickness' ] = '';
-//                }
-//                $result = [
-//                    'quanity' => $filter[ 'quanity' ],
-//                    'thickness' => $filter[ 'thickness' ],
-//                    'material' => $filter[ 'material' ],
-//                    'flag' => 1
-//                ];
-//
-//                return $this->filterData = $result;
-//            }
-//        }
-//        return false;
-        return true;
+        $thick = 0;
+        foreach ( $filterFile as $filter ) {
+            
+            if(isset($filter['name'])){
+            //var_dump($data);
+            }
+            
+            if (isset($filter['name']) && $data == $filter[ 'name' ] )
+            {
+                $thick++;
+                if ( !isset( $filter[ 'thickness' ] ) )
+                {
+                    $filter[ 'thickness' ] = '';
+                }
+                $result = [
+                    'quanity' => $filter[ 'quanity' ],
+                    'thickness' => $filter[ 'thickness' ],
+                    'material' => $filter[ 'material' ],
+                    'flag' => 1
+                ];
+
+                return $this->filterData = $result;
+            }
+        }    
+        var_dump($thick);
+        die();
+        return false;
     }
 
     public function checkLogs() {

@@ -35,7 +35,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                         $filesSearch = ProjectFileData::find()->where(['projectId' => $model->sygnature])->one();
                                         if(isset($filesSearch->projectId)){
                                             
-                                        return ["style" => "background-color:#e6e6e6;"];
+                                        return ["style" => "background-color:#e6e6e6; "];
                                         
                                         
                                         } else {
@@ -69,7 +69,13 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'headerOptions' => ['style' => 'text-align: center;' ],
                         'attribute' => 'projectStatus0.statusName',
                         'value' => 'projectStatus0.statusName',
-                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
+                        'contentOptions' => function ($data){
+                                        if($data->projectStatus == 2){
+                                        return ['style' => 'color: #808080; font-weight: bold; text-align: center; line-height: 2.5em;' ];
+                                        } else {
+                                        return ['style' => 'color: #87cd00; font-weight: bold;text-align: center; line-height: 2.5em;' ];
+                                        }
+                        }
                     ],
                     [
                         'attribute' => 'client.name',
@@ -113,10 +119,29 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                             ],
                             ['class' => 'yii\grid\ActionColumn',
                                 'header' => '',
-                                'headerOptions' => ['style' => 'min-width: 50px;text-align: center; border-bottom-color: transparent;' ],
+                                'headerOptions' => ['style' => 'min-width: 80px;text-align: center; border-bottom-color: transparent;' ],
                                 'contentOptions' => ['style' => 'text-align:center; line-height: 3em;' ],
-                                'template' => '{parts} {view}',
+                                'template' => '{treatment} {parts} {view}',
                                 'buttons' => [
+                                    'treatment' => function ($url, $model)
+                                    {
+                                        $filesSearch = ProjectFileData::find()->where(['projectId' => $model->sygnature])->one();
+                                        if(isset($filesSearch->projectId)){
+                                            
+                                        return Html::a( '<span class="fa fa-cogs"></span>', $url, [
+                                                        'data-method' => 'post',
+                                                        'title' => 'Treatment Files',
+                                                        'data' => [                                                         
+                                                            'method' => 'post',
+                                                        ],
+                                                    ] );
+                                        
+                                        
+                                        } else {
+                                            
+                                            return '<i class="fa fa-cogs"></i>';
+                                        }
+                                    },
                                     'parts' => function ($url, $model)
                                     {
                                         $filesSearch = ProjectFileData::find()->where(['projectId' => $model->sygnature])->one();
@@ -152,6 +177,11 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     if ( $action === 'parts' )
                                     {
                                         $url = Url::toRoute( ['project/cparts', 'sygnature' => $model->sygnature, 'id' => $model->id ] );
+                                        return $url;
+                                    }
+                                    if ( $action === 'treatment' )
+                                    {
+                                        $url = Url::toRoute( ['project/ctreatment', 'sygnature' => $model->sygnature, 'id' => $model->id ] );
                                         return $url;
                                     }
                                 }

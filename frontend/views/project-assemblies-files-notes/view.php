@@ -1,6 +1,7 @@
 <?php
 
 use kartik\grid\GridView;
+use yii\data\ActiveDataProvider;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\models\ProjectMainFilesNotes */
@@ -19,7 +20,7 @@ use kartik\grid\GridView;
         'emptyTextOptions' => ['style' => 'text-align:center;'],
         'columns' => [
             [
-                'value' => 'typeId',
+                'value' => 'type.type',
                 'label' => 'typeId',
                 'contentOptions' => ['style' => 'width:50px;']
                 

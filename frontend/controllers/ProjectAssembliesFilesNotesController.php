@@ -3,16 +3,16 @@
 namespace frontend\controllers;
 
 use Yii;
-use frontend\models\ProjectAssembliesFiles;
-use frontend\models\search\ProjectAssembliesFilesSearch;
+use frontend\models\ProjectAssembliesFilesNotes;
+use frontend\models\search\ProjectAssembliesFilesNotesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ProjectAssembliesFilesController implements the CRUD actions for ProjectAssembliesFiles model.
+ * ProjectAssembliesFilesNotesController implements the CRUD actions for ProjectAssembliesFilesNotes model.
  */
-class ProjectAssembliesFilesController extends Controller
+class ProjectAssembliesFilesNotesController extends Controller
 {
     public function behaviors()
     {
@@ -27,12 +27,12 @@ class ProjectAssembliesFilesController extends Controller
     }
 
     /**
-     * Lists all ProjectAssembliesFiles models.
+     * Lists all ProjectAssembliesFilesNotes models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ProjectAssembliesFilesSearch();
+        $searchModel = new ProjectAssembliesFilesNotesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -42,25 +42,29 @@ class ProjectAssembliesFilesController extends Controller
     }
 
     /**
-     * Displays a single ProjectAssembliesFiles model.
+     * Displays a single ProjectAssembliesFilesNotes model.
      * @param integer $id
      * @return mixed
      */
     public function actionView($id)
     {
-        return $this->renderPartial('view', [
-            'model' => $this->findModel($id),
-        ]);
+         $searchModel = new ProjectAssembliesFilesNotesSearch();
+         $searchModel->fileId = $id;
+         $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
+         $dataProvider->pagination->pageSize = 5;
+                            return Yii::$app->controller->renderPartial( 'view', [
+                                        'searchModel' => $searchModel,
+                                        'dataProvider' => $dataProvider,
+                                    ] );
     }
-
     /**
-     * Creates a new ProjectAssembliesFiles model.
+     * Creates a new ProjectAssembliesFilesNotes model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new ProjectAssembliesFiles();
+        $model = new ProjectAssembliesFilesNotes();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -72,7 +76,7 @@ class ProjectAssembliesFilesController extends Controller
     }
 
     /**
-     * Updates an existing ProjectAssembliesFiles model.
+     * Updates an existing ProjectAssembliesFilesNotes model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -91,7 +95,7 @@ class ProjectAssembliesFilesController extends Controller
     }
 
     /**
-     * Deletes an existing ProjectAssembliesFiles model.
+     * Deletes an existing ProjectAssembliesFilesNotes model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -104,52 +108,39 @@ class ProjectAssembliesFilesController extends Controller
     }
 
     /**
-     * Finds the ProjectAssembliesFiles model based on its primary key value.
+     * Finds the ProjectAssembliesFilesNotes model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return ProjectAssembliesFiles the loaded model
+     * @return ProjectAssembliesFilesNotes the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = ProjectAssembliesFiles::findOne($id)) !== null) {
+        if (($model = ProjectAssembliesFilesNotes::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
     
-     public function actionDownload($path, $name, $sygnature, $id)
-    {   
-        if(file_exists($path)){
-            //die('adasd');
-        return Yii::$app->response->sendFile($path);
-        }
-        Yii::$app->session->setFlash( 'error', 'File: ' . $name . ' not found.' );
-        return $this->redirect( ['project/parts', 'sygnature' => $sygnature, 'id' => $id]);
+    public function actionNote($id)
+{
+    $model = new ProjectAssembliesFilesNotes();
+    if ($model->load(Yii::$app->request->post())) {
         
-    }
+        $model->fileId = intval($id);
+        
+     if ( $model->save() )
+            {
+            }
+        } else
+        {
+            
+            return $this->renderAjax( '__note', [
+                        'model' => $model,
+                        'projectId' => $id,
+            ] );
+        }
     
-        public function actionSendtreatment()
-    {
-           if (Yii::$app->request->isAjax) {
-           $data = Yii::$app->request->post();
-           $model = $this->findModel($data['id']);
-           $model->statusId = 1;
-           $model->save();
-           if($model->save()){
-           \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return [
-            'code' => 200,
-        ];
-           } else {
-               \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return [
-            'code' => 100,
-        ];
-           }
-    }
-           
-    }
-
+}
 }

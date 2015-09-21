@@ -48,13 +48,11 @@ class ProjectAssembliesFiles extends \yii\db\ActiveRecord
     {
         return [
             [['projectId', 'assemblieId', 'typeId', 'flag', 'thickness', 'quanity', 'quanityDone'], 'integer'],
-            [['thickness', 'quanity', 'material'], 'required'],
             [['createdAt', 'updatedAt'], 'safe'],
             [['sygnature'], 'string', 'max' => 8],
             [['name', 'path', 'feedback'], 'string', 'max' => 255],
             [['size'], 'string', 'max' => 11],
             [['ext'], 'string', 'max' => 5],
-            [['material', 'statusId'], 'string', 'max' => 45]
         ];
     }
 

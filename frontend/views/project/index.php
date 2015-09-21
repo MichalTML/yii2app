@@ -73,7 +73,13 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'headerOptions' => ['style' => 'text-align: center;' ],
                         'attribute' => 'projectStatus0.statusName',
                         'value' => 'projectStatus0.statusName',
-                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
+                        'contentOptions' => function ($data){
+                                        if($data->projectStatus == 2){
+                                        return ['style' => 'color: #808080; font-weight: bold; text-align: center; line-height: 2.5em;' ];
+                                        } else {
+                                        return ['style' => 'color: #87cd00; font-weight: bold;text-align: center; line-height: 2.5em;' ];
+                                        }
+                        }
                     ],
                     [
                         'attribute' => 'client.name',

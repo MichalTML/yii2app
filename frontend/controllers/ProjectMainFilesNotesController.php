@@ -14,13 +14,13 @@ use yii\filters\VerbFilter;
  */
 class ProjectMainFilesNotesController extends Controller
 {
-    public function behaviors()
-    {
+
+    public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    'delete' => ['post' ],
                 ],
             ],
         ];
@@ -30,15 +30,14 @@ class ProjectMainFilesNotesController extends Controller
      * Lists all ProjectMainFilesNotes models.
      * @return mixed
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         $searchModel = new ProjectMainFilesNotesSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        return $this->render( 'index', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+        ] );
     }
 
     /**
@@ -46,16 +45,15 @@ class ProjectMainFilesNotesController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
-    {
-         $searchModel = new ProjectMainFilesNotesSearch();
-         $searchModel->fileId = $id;
-         $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
-         $dataProvider->pagination->pageSize = 5;
-                            return Yii::$app->controller->renderPartial( 'view', [
-                                        'searchModel' => $searchModel,
-                                        'dataProvider' => $dataProvider,
-                                    ] );
+    public function actionView( $id ) {
+        $searchModel = new ProjectMainFilesNotesSearch();
+        $searchModel->fileId = $id;
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
+        $dataProvider->pagination->pageSize = 5;
+        return Yii::$app->controller->renderPartial( 'view', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                ] );
     }
 
     /**
@@ -63,16 +61,17 @@ class ProjectMainFilesNotesController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
+    public function actionCreate() {
         $model = new ProjectMainFilesNotes();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        if ( $model->load( Yii::$app->request->post() ) && $model->save() )
+        {
+            return $this->redirect( ['view', 'id' => $model->id ] );
+        } else
+        {
+            return $this->render( 'create', [
+                        'model' => $model,
+            ] );
         }
     }
 
@@ -82,16 +81,17 @@ class ProjectMainFilesNotesController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+    public function actionUpdate( $id ) {
+        $model = $this->findModel( $id );
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        if ( $model->load( Yii::$app->request->post() ) && $model->save() )
+        {
+            return $this->redirect( ['view', 'id' => $model->id ] );
+        } else
+        {
+            return $this->render( 'update', [
+                        'model' => $model,
+            ] );
         }
     }
 
@@ -101,11 +101,10 @@ class ProjectMainFilesNotesController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+    public function actionDelete( $id ) {
+        $this->findModel( $id )->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect( ['index' ] );
     }
 
     /**
@@ -115,36 +114,36 @@ class ProjectMainFilesNotesController extends Controller
      * @return ProjectMainFilesNotes the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
-        if (($model = ProjectMainFilesNotes::findOne($id)) !== null) {
+    protected function findModel( $id ) {
+        if ( ($model = ProjectMainFilesNotes::findOne( $id )) !== null )
+        {
             return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+        } else
+        {
+            throw new NotFoundHttpException( 'The requested page does not exist.' );
         }
     }
-    
-    public function actionNote($id)
-{
-    $model = new ProjectMainFilesNotes();
-    if ($model->load(Yii::$app->request->post())) {
-        
-        $model->fileId = intval($id);
-        
-        
-     if ( $model->save() )
+
+    public function actionNote( $id ) {
+        $model = new ProjectMainFilesNotes();
+        if ( $model->load( Yii::$app->request->post() ) )
+        {
+
+            $model->fileId = intval( $id );
+
+
+            if ( $model->save() )
             {
-                 //Yii::$app->end();
+                //Yii::$app->end();
             }
         } else
         {
-            
+
             return $this->renderAjax( '__note', [
                         'model' => $model,
                         'projectId' => $id,
-            ] );
+                    ] );
         }
-    
-}
+    }
 
 }

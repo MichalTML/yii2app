@@ -56,7 +56,7 @@ use yii\helpers\Url;
         data: formatData,
         dataType: "json", 
         error: function(msg){
-            alert(msg);
+            console.log(msg);
         },
         success: function(msg){
            if(msg.error.length > 0){
@@ -125,9 +125,7 @@ use yii\helpers\Url;
         var item = $('<div class="upload-status" id="upload" style="color: #87cd00; font-size: 18px;" ><span id="font">Importing Project...</span></div>').hide().fadeIn(1000);
         function blinker() {
     $('#font').fadeOut(1000).fadeIn(1000);
-}
-
-setInterval(blinker, 1000); //Runs every second
+}setInterval(blinker, 1000); //Runs every second
         $("#infobox").append(item);
         //$("#modalContent").append("<div class='status-info'>asdasdasdas</div>").fadeIn("slow");
         $("body").prepend("<div class=\"overlay\"></div>");

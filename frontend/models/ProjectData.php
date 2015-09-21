@@ -56,9 +56,8 @@ class ProjectData extends \yii\db\ActiveRecord
             [[ 'projectName', 'clientId', 'deadline', 'projectStatus', 'sygnature' ], 'required' ],
             [[ 'id', 'clientId' ], 'integer' ],
             [[ 'id', 'sygnature' ], 'unique' ],
-            [ 'projectName', 'match', 'pattern' => '/^[a-zA-Z]*$/', 'message' => 'Project name can only contain letters.' ],
-            [ 'sygnature', 'string', 'length' => [3, 3 ] ],
-            [ 'sygnature', 'integer' ],
+            [ 'projectName', 'match', 'pattern' => '/^[a-zA-Z0-9\s]*$/', 'message' => 'Project name can only contain letters.' ],
+            [ 'sygnature', 'string', 'length' => [2, 3 ] ],
         ];
     }
 
@@ -256,6 +255,10 @@ class ProjectData extends \yii\db\ActiveRecord
 //
     public function getProjectStatus0() {
         return $this->hasOne( ProjectStatus::className(), ['id' => 'projectStatus' ] );
+    }
+    
+    public function getProjectStatus0Name() {
+        return $this->projectStatus0->statusName;
     }
 
     public static function callClientData( $data ) {

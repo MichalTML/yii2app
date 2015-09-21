@@ -1,9 +1,12 @@
 <?php
 namespace frontend\models;
 
+ini_set( 'html_errors' , 0 ); // xdebug way arround
+
 class ProjectImporter
 {
-
+    
+    public $excelFormat = ['xls' => 1, 'xlsx' => 1, 'ods' => 1];
     public $projectsRootDirectory = 'e:\tma_projekty\\'; // project root path
     public $projectMainTables = ['data', 'project', 'orders' ];
     public $rootStructure = [
@@ -90,7 +93,7 @@ class ProjectImporter
             foreach ( $mainProjectFiles as $fileInfo ) {
                 if ( $fileInfo->isFile() )
                 {
-                    if ( $fileInfo->getExtension() === 'ods' )
+                    if ( isset($this->excelFormat[$fileInfo->getExtension()]))
                     {
                         $this->fileList = $fileInfo->getPathname();
                     }
@@ -175,7 +178,7 @@ class ProjectImporter
             //get project assembplies
             $assembliesList = array_values( array_diff( scandir( $this->projectsDatas[ $projectId ][ 'root' ] ), array( '..', '.' ) ) );
             foreach ( $assembliesList as $name ) {
-                if ( preg_match( '/^[0-9]{2}[a-z\s]*/i', $name ) )
+                if ( preg_match( '/^[0-9]{2}[_]{1}[a-z\s]*/i', $name ) )
                 {
                     $fragments = explode( '_', $name );
                     $assemblieId = $fragments[ 0 ];
@@ -183,9 +186,8 @@ class ProjectImporter
                     $assemblieLabel = trim( implode( '_', $fragments ), '_' );
                     $this->projectsDatas[ $projectId ][ 'assemblies' ][ $assemblieId ] = $assemblieLabel;
                 }
-            }
-                            
 
+            }      
             $projectFiles = new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( $this->projectsDatas[ $projectId ][ 'root' ] ),\RecursiveIteratorIterator::SELF_FIRST );
 
             $projectFileCount = 0;
@@ -195,7 +197,6 @@ class ProjectImporter
                     $projectFileCount++;
                 }
             }
-
             $this->projectsDatas[ $projectId ][ 'files' ] = $projectFileCount;
         }
     }
@@ -243,7 +244,6 @@ class ProjectImporter
         foreach ( $this->assembliesPaths as $projectId => $paths ) {
             $fileCount = 0;
             foreach ( $paths as $id => $path ) {
-              
                 $mainAssemblyFiles = new \FilesystemIterator( $path );
                 foreach ( $mainAssemblyFiles as $fileInfo ) {
                     if ( $fileInfo->isFile() )
@@ -295,7 +295,6 @@ class ProjectImporter
                         $assemblyPartFile = new \FilesystemIterator( $dir );
   
                         foreach ( $assemblyPartFile as $fileInfo ) {
-
                             $nameParts = explode(' ', $fileInfo->getFilename());
                             if(  preg_match( '/[0-9]{2}\-[0-9]{2}\-[0-9]{2}/', $nameParts[0])){
                                 $sygnature = trim($nameParts[0]);
@@ -310,10 +309,11 @@ class ProjectImporter
                                 $typeId = '0';
                                 $sygnature = 'none';
                             }
-                                    
+                            $fullFileNamePart = explode('.', $fileInfo->getFilename());
+                            $fullFileName = $fullFileNamePart[0];
                             $assemblieFiles[ $projectId ][ $id ][] = [
                                 'name' => $fileName,
-                                'fullName' => $sygnature . ' ' . $fileName,
+                                'fullName' => $fullFileName,
                                 'path' => $fileInfo->getPathname(),
                                 'sygnature' => $sygnature,
                                 'projectId' => $projectId,
