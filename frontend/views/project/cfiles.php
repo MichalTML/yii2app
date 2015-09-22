@@ -136,17 +136,18 @@ echo GridView::widget( [
                             {
                                 return GridView::ROW_COLLAPSED;
                             },
-                            'detail' => function ($data) use ($project)
-                            {
-                                $searchModel = new ProjectAssembliesFilesSearch();
-                                $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $data->projectId );
-                                $id = $project->id;
-                                return $this->render( 'assembliesFiles', [
-                                            'searchModel' => $searchModel,
-                                            'dataProvider' => $dataProvider,
-                                            'id' => $id,
-                                        ] );
-                            },
+                            'detail'=>function ($data) use ($project) {
+              $searchModel = new ProjectAssembliesFilesSearch();
+              $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $data->projectId);
+              $id = $project->id;
+              $sygnature = $project->sygnature;
+         return $this->render( 'vassembliesFiles', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,  
+                    'id' => $id,
+                    'sygnature' => $sygnature,
+                ] );
+          },
                                     'detailAnimationDuration' => 100,
                                     'expandIcon' => '<span class="fa fa-angle-right"></span>',
                                     'collapseIcon' => '<span class="fa fa-angle-down"></span>',

@@ -2,7 +2,6 @@
 
 namespace frontend\models\search;
 
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use frontend\models\ProjectAssembliesFiles;
@@ -17,12 +16,12 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
      * @inheritdoc
      */
     public function attributes() {
-        return array_merge( parent::attributes(), ['priority.name', 'type.name', 'assemblie.name', 'status.statusName' ] );
+        return array_merge( parent::attributes(), ['priority.name', 'type.name', 'assemblie.name', 'status.statusName', 'destination.destination'] );
     }
 
     public function rules() {
         return [
-            [[ 'priority.name', 'type.name', 'assemblie.name', 'sygnature', 'name', 'path', 'size', 'ext', 'material', 'feedback', 'createdAt', 'updatedAt', 'status.statusName' ], 'safe' ],
+            [[ 'priority.name', 'type.name', 'assemblie.name', 'sygnature', 'name', 'path', 'size', 'ext', 'material', 'feedback', 'createdAt', 'updatedAt', 'status.statusName','thickness', 'destination.destination' ], 'safe' ],
         ];
     }
 
@@ -66,12 +65,18 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
             
         }
 
-        $query->joinWith( ['priority', 'type', 'assemblie', 'status' ] );
+        $query->joinWith( ['priority', 'type', 'assemblie', 'status', 'destination' ] );
 
         $dataProvider = new ActiveDataProvider( [
             'query' => $query,
         ] );
-
+        
+        
+        $dataProvider->sort->attributes[ 'destination.destination' ] = [
+                    'asc' => ['file_destination.destination' => SORT_ASC ],
+                    'desc' => ['file_destination.destination' => SORT_DESC ],
+        ];
+        
         $dataProvider->sort->attributes[ 'priority.name' ] = [
                     'asc' => ['file_priority.name' => SORT_ASC ],
                     'desc' => ['file_priority.name' => SORT_DESC ],
@@ -108,7 +113,6 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
             'assemblieId' => $this->assemblieId,
             'typeId' => $this->typeId,
             'flag' => $this->flag,
-            'thickness' => $this->thickness,
             'quanity' => $this->quanity,
             'quanityDone' => $this->quanityDone,
             'createdAt' => $this->createdAt,
@@ -120,11 +124,13 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
                 ->andFilterWhere( ['like', 'path', $this->path ] )
                 ->andFilterWhere( ['like', 'size', $this->size ] )
                 ->andFilterWhere( ['like', 'ext', $this->ext ] )
-                ->andFilterWhere( ['like', 'material', $this->material ] )
                 ->andFilterWhere( ['like', 'feedback', $this->feedback ] )
+                ->andFilterWhere( ['like', 'material', $this->material])
                 ->andFilterWhere( ['=', 'project_assemblies_data.name', $this->getAttribute( 'assemblie.name' ) ] )
                 ->andFilterWhere( ['=', 'file_status.statusName', $this->getAttribute( 'status.statusName' ) ] )
                 ->andFilterWhere( ['=', 'file_priority.name', $this->getAttribute( 'priority.name' ) ] )
+                ->andFilterWhere( ['=', 'file_destination.destination', $this->getAttribute( 'destination.destination' ) ] )
+                ->andFilterWhere( ['=', 'thickness', $this->thickness] )
                 ->andFilterWhere( ['=', 'project_assemblies_files_types.name', $this->getAttribute( 'type.name' ) ] );
 
         return $dataProvider;

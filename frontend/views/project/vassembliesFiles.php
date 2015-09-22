@@ -106,25 +106,8 @@ use frontend\models\FilePriority;
                                 'header' => '',
                                 'headerOptions' => ['style' => 'min-width: 110px;text-align: center; border-bottom-color: transparent;' ],
                                 'contentOptions' => ['style' => 'text-align:center; line-height: 1em;' ],
-                                'template' => '{download} {view} {delete}',
+                                'template' => '{download} {view}',
                                 'buttons' => [
-                                            'delete' => function($url, $model)
-                                    {
-                                        if ( 2 == 3)
-                                        {
-                                            return '<span class="glyphicon glyphicon-trash"></span>';
-                                        } else
-                                        {
-                                            return Html::a( '<span class="glyphicon glyphicon-trash"></span>', $url, [
-                                                        'data-method' => 'post',
-                                                        'title' => Yii::t( 'app', 'delete' ),
-                                                        'data' => [
-                                                            'confirm' => 'You are about to delete: ' . $model->name . ' ,are you sure you want to                                                proceed?',
-                                                            'method' => 'post',
-                                                        ],
-                                                    ] );
-                                        }
-                                    },
                                             'download' => function($url, $model)
                                     {
                                         return Html::a( '<span class="fa fa-download"></span>', $url, [
@@ -140,11 +123,6 @@ use frontend\models\FilePriority;
                                         ],
                                         'urlCreator' => function ($action, $model, $key, $index) use ($id) 
                                 {
-                                    if ( $action === 'delete' )
-                                    {
-                                        $url = Url::toRoute( ['project-assemblies-files/delete', 'id' => $model->id ] );
-                                        return $url;
-                                    }
                                     if ( $action === 'download' )
                                     {
                                         $url = Url::toRoute( ['project-assemblies-files/download', 'path' => $model->path, 'name' => $model->name , 'sygnature' => $model->projectId, 'id' => $id ]);

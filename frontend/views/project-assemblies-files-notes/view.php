@@ -22,25 +22,25 @@ use yii\data\ActiveDataProvider;
             [
                 'value' => 'type.type',
                 'label' => 'typeId',
-                'contentOptions' => ['style' => 'width:50px;']
+                'contentOptions' => ['style' => 'width:150px; font-size: 10px; vertical-align: middle; font-weight: bold']
                 
             ],
 [
                 'value' => 'note',
                 'label' => 'Note Content',
-                'contentOptions' => ['style' => 'width:400px']
+                'contentOptions' => ['style' => 'width:400px; font-size: 14px; vertical-align: middle;']
                 
             ],
             [
                 'value' => 'creUser.username',
                 'label' => 'Created by',
-                'contentOptions' => ['style' => 'width:50px']
+                'contentOptions' => ['style' => 'color: #87cd00; width:60px; font-size: 10px; vertical-align: middle;']
                 
             ],
             [
                 'value' => 'creTime',
                 'label' => 'Created at',
-                'contentOptions' => ['style' => 'width:50px; white-space: nowrap;']
+                'contentOptions' => ['style' => 'width:50px; white-space: nowrap; font-size: 10px; vertical-align: middle;']
                 
             ],
            

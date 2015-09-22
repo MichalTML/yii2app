@@ -5,7 +5,7 @@ use frontend\models\DB;
 use frontend\models\ExcelImporter;
 use frontend\models\ProjectSaver;
 
-$_POST['name'] = 'PROJEKT_P54_robot_kuka_frezarka_3D_POLITECHNIKA';
+//$_POST['name'] = 'PROJEKT_P54_robot_kuka_frezarka_3D_POLITECHNIKA';
 if (isset($_POST['name'])){
    $projectImporter = new ProjectImporter($_POST['name']);
    $excelImporter = new ExcelImporter($projectImporter->fileList);

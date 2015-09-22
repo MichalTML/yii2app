@@ -1736,7 +1736,57 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     padding: 0;
 }
 
+.cnote-button{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 .send-button{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.desttma-button{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.destout-button{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.priorup-button{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.priordown-button{
     border: 0px;
     height: auto;
     width: auto;
@@ -1916,8 +1966,8 @@ filter: alpha(opacity=50);
 }
 
 .overlay {
-    background-color: rgba(0, 0, 0, 0.8);
     background: url('../images/spin.gif') no-repeat;
+    background-color: rgba(0, 0, 0, 0.19);
     background-size: 256px 25px;
     background-position: center;
     z-index: 200;
@@ -1931,4 +1981,8 @@ filter: alpha(opacity=50);
     color: white;
     text-align: center;
     vertical-align: middle;
+}
+
+.row-selected {
+    font-weight: bold;
 }

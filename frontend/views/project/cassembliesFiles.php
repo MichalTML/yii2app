@@ -11,6 +11,8 @@ use frontend\models\FileStatus;
 use frontend\models\ProjectAssembliesFilesTypes;
 use frontend\models\FilePriority;
 use frontend\models\search\ProjectAssembliesFilesNotesSearch;
+use frontend\models\ProjectAssembliesFiles;
+use frontend\models\FileDestination;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\search\ProjectSearch */
@@ -28,6 +30,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
     GridView::widget( [
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'options' => ['id' => 'grid'],
         'export' => FALSE,
         'bootstrap' => true,
         'condensed' => true,
@@ -38,12 +41,57 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
             'toolbar' => [
         [
             'content'=>
-                Html::button('<i class="glyphicon glyphicon-plus"></i>', [
+            Html::button('<i class="fa fa-home"></i>', [
+                    'value'=> Url::toRoute( ['project-assemblies-files/mdesttma'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/mdesttma'] ),
                     'type'=>'button', 
-                    'title'=> ' sdsds', 
-                    'class'=>'btn btn-success'
+                    'title'=> 'destination TMA', 
+                    'class'=>'btn btn-success tmadest'
+                ]).' '.
+            Html::button('<i class="fa fa-sign-out"></i>', [
+                    'value'=> Url::toRoute( ['project-assemblies-files/mdestout'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/mdestout'] ),
+                    'type'=>'button', 
+                    'title'=> 'destination outsource', 
+                    'class'=>'btn btn-success outdest'
                 ]),
-            'options' => ['class' => 'btn-group-sm']
+            'options' => ['class' => 'btn-group-sm', 'style' => '']
+        ],
+                [
+            'content'=>
+            Html::button('LOW', [
+                    'value'=> Url::toRoute( ['project-assemblies-files/lowprio'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/lowprio'] ),
+                    'type'=>'button', 
+                    'title'=> 'set priority low', 
+                    'class'=>'btn btn-success lowprio'
+                ]). ' '.
+            Html::button('NORMAL', [
+                    'value'=> Url::toRoute( ['project-assemblies-files/medprio'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/medprio'] ),
+                    'type'=>'button', 
+                    'title'=> 'set priority normal', 
+                    'class'=>'btn btn-success medprio'
+                ]). ' '.
+            Html::button('HIGH', [
+                    'value'=> Url::toRoute( ['project-assemblies-files/highprio'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/highprio'] ),
+                    'type'=>'button', 
+                    'title'=> 'set priority high', 
+                    'class'=>'btn btn-success highprio'
+                ]),
+            'options' => ['class' => 'btn-group-sm', 'style' => '']
+        ],
+                 [
+            'content'=>
+                Html::button('<i class="fa fa-paper-plane"></i>', [
+                    'value'=> Url::toRoute( ['project-assemblies-files/mtreat'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/mtreat'] ),
+                    'type'=>'button', 
+                    'title'=> 'send to treatment', 
+                    'class'=>'btn btn-success mtreat'
+                ]),
+            'options' => ['class' => 'btn-group-sm', 'style' => '']
         ],
     ],
         'panel' => [
@@ -51,22 +99,22 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         ],
         'rowOptions' => function ($model) {
         if($model->statusId == 1){
-            return ['style' => 'background-color: #CCF3FF; font-size:12px'];
+            return ['style' => 'background-color: #CCF3FF; font-size:10px'];
         }elseif ( $model->statusId == 2)
             {
-                return ['style' => 'background-color: #E6FFB2; font-size:12px'];
+                return ['style' => 'background-color: #E6FFB2; font-size:10px'];
             }elseif($model->statusId == 3){
-                return ['style' => 'background-color: #E599A3; font-size:12px'];
+                return ['style' => 'background-color: #E599A3; font-size:10px'];
             
         } else {
-            return ['style' => 'font-size:12px'];
+            return ['style' => 'font-size:10px'];
         }},
-        'headerRowOptions' => ['style' => 'font-size:12px'],
+        'headerRowOptions' => ['style' => 'font-size:10px'],
         'filterRowOptions' => ['style' => 'max-height: 10px'],
         'columns' => [
             [
                 'class' => 'yii\grid\SerialColumn',
-                'contentOptions' => ['style' => 'background-color:white;text-align: center; font-weight: bold; line-height: 1em;'],
+                'contentOptions' => ['style' => 'background-color:white;text-align: center; font-weight: bold; vertical-align: middle;'],
             ],
 //            [
 //               'label' => 'Sygnature',
@@ -79,39 +127,62 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'label' => 'File Name',
                'attribute' => 'name',
                'value' => 'name',
-               'headerOptions' => ['style' => 'text-align: center;' ],
-               'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
+               'headerOptions' => ['style' => 'text-align: center; min-width: 240px;' ],
+               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
            ],
             [
                'label' => 'Assemblie',
                'attribute' => 'assemblie.name',
-               'filter' => Html::activeDropDownList($searchModel, 'assemblie.name', ArrayHelper::map(ProjectAssembliesData::find()->asArray()->all(), 'name','name'),['class'=>'form-control', 'prompt' => ' ']),
+               'filter' => Html::activeDropDownList($searchModel, 'assemblie.name', ArrayHelper::map(ProjectAssembliesData::find()->where( ['projectId' => $sygnature])->asArray()->all(), 'name','name'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'assemblie.name',
-               'headerOptions' => ['style' => 'text-align: center;' ],
-               'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
-           ],
-//           [
-//               'label' => 'File Size',
-//               'attribute' => 'size',
-//               'value' => 'size',
-//               'headerOptions' => ['style' => 'text-align: center;' ],
-//               'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
-//           ],
-           [
-               'label' => 'Status',
-               'attribute' => 'status.statusName',
-               'filter' => Html::activeDropDownList($searchModel, 'status.statusName', ArrayHelper::map(FileStatus::find()->asArray()->all(), 'statusName','statusName'),['class'=>'form-control', 'prompt' => ' ']),
-               'value' => 'status.statusName',
-               'headerOptions' => ['style' => 'text-align: center;' ],
-               'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
+               'headerOptions' => ['style' => 'text-align: center; min-width: 160px;' ],
+               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
            ],
             [
                'label' => 'Type',
                'attribute' => 'type.name',
                'filter' => Html::activeDropDownList($searchModel, 'type.name', ArrayHelper::map(  ProjectAssembliesFilesTypes::find()->asArray()->all(), 'name','name'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'type.name',
-               'headerOptions' => ['style' => 'text-align: center; width: 170px' ],
-               'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
+               'headerOptions' => ['style' => 'text-align: center; min-width: 90px' ],
+               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+           ],
+             [
+               'label' => 'Material',
+               'attribute' => 'material',
+               'filter' => Html::activeDropDownList($searchModel, 'material', ArrayHelper::map(  ProjectAssembliesFiles::find()->where(['projectId' => $sygnature])->asArray()->all(), 'material','material'),['class'=>'form-control', 'prompt' => ' ']),
+               'value' => 'material',
+               'headerOptions' => ['style' => 'text-align: center; width: 140px' ],
+               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+           ],
+            [
+               'label' => 'Thick(mm)',
+               'attribute' => 'thickness',
+               'filter' => Html::activeDropDownList($searchModel, 'thickness', ArrayHelper::map(  ProjectAssembliesFiles::find()->where(['projectId' => $sygnature])->orderBy(['thickness' => SORT_ASC])->asArray()->all(), 'thickness','thickness'),['class'=>'form-control', 'prompt' => ' ']),
+               'value' => 'thickness',
+               'headerOptions' => ['style' => 'text-align: center; min-width: 70px;' ],
+               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+           ],
+            [
+               'label' => 'Status',
+               'attribute' => 'status.statusName',
+               'filter' => Html::activeDropDownList($searchModel, 'status.statusName', ArrayHelper::map(FileStatus::find()->asArray()->all(), 'statusName','statusName'),['class'=>'form-control', 'prompt' => ' ']),
+               'value' => 'status.statusName',
+               'headerOptions' => ['style' => 'text-align: center; min-width: 90px;' ],
+               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+           ],
+            [
+               'label' => 'Dest.',
+               'attribute' => 'destination.destination',
+               'filter' => Html::activeDropDownList($searchModel, 'destination.destination', ArrayHelper::map(FileDestination::find()->asArray()->all(), 'destination','destination'),['class'=>'form-control', 'prompt' => ' ']),
+               'value' => 'destination.destination',
+               'headerOptions' => ['style' => 'text-align: center; min-width: 70px;' ],
+               'contentOptions' => function($model){
+            if($model->destinationId == 0){
+                return ['style' => 'color: red;text-align: center; vertical-align: middle;' ];
+            } else {
+            return ['style' => 'color:#87cd00; text-align: center; vertical-align: middle;' ];
+               }
+               }
            ],
             [
                'label' => 'Priority',
@@ -119,53 +190,79 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'filter' => Html::activeDropDownList($searchModel, 'priority.name', ArrayHelper::map( FilePriority::find()->asArray()->all(), 'name','name'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'priority.name',
                'headerOptions' => ['style' => 'text-align: center; width: 70px' ],
-               'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
+               'contentOptions' => function($model){
+               if($model->priorityId == 1){
+                   return ['style' => 'color: blue;text-align: center; vertical-align: middle;' ];
+               } elseif ($model->priorityId == 0){
+                   return ['style' => 'color: orange;text-align: center; vertical-align: middle;' ];
+               } else {
+                   return ['style' => 'color: red;text-align: center; vertical-align: middle;' ];
+               }
+               
+               }
+   
            ],
            [
                'label' => 'Ext.',
                'attribute' => 'ext',
                'value' => 'ext',
-               'headerOptions' => ['style' => 'text-align: center;width: 70px' ],
-               'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
+               'headerOptions' => ['style' => 'text-align: center;min-width: 55px;' ],
+               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
            ],
             [
-               'label' => 'Quanity',
+               'label' => 'Qua.',
                'attribute' => 'quanity',
                'value' => 'quanity',
                'headerOptions' => ['style' => 'text-align: center;' ],
-               'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
+               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
            ],
            [
-               'label' => 'Finished',
+               'label' => 'Fin.',
                'attribute' => 'quanityDone',
                'value' => 'quanityDone',
                'headerOptions' => ['style' => 'text-align: center;' ],
-               'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
+               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
            ],
-//            [
-//                'class' => '\kartik\grid\CheckboxColumn', 
-//                'rowHighlight' => false,
-//                'hidden' => false,
-//                        'contentOptions' => function($model){
-//                            if ($model->statusId == 0) {
-//                                        return true;
-//                                    } elseif ($model->statusId == 3){
-//                                        return true;
-//                                    }else{
-//                                        return false;
-//                                    }
-//                }
-//                ],
+            ['class' => '\kartik\grid\CheckboxColumn',
+                   'rowSelectedClass' => 'row-selected',
+                ],
             ['class' => 'yii\grid\ActionColumn',
                                 'header' => '',
-                                'headerOptions' => ['style' => 'background-color:white; min-width: 110px;text-align: center; border-bottom-color: transparent;' ],
-                                'contentOptions' => ['style' => 'background-color:white;text-align:center; line-height: 1em;' ],
-                                'template' => '{sendtreatment} {seenote} {note} {download} {view}',
+                                'headerOptions' => ['style' => 'background-color:white; min-width: 70px;text-align: center; border-bottom-color: transparent;' ],
+                                'contentOptions' => ['style' => 'margin-top: 5px; background-color:white;text-align:center;  line-height: 2.0;;' ],
+                                'template' => '{desttma} {destout} | {priorup} {priordown} {seenote} {note} | {sendtreatment} {download}',
                                 'buttons' => [  
+                                    'destout' => function ($url, $model)
+                                    {
+                                    if($model->destinationId == 2){
+                                        return '<i class="fa fa-sign-out"></i>';
+                                    } else {
+                                        return Html::button( '<a href=""><i class="fa fa-sign-out"></i></a>', ['value' => $url, 'class' => 'destout-button', 'id' => 'priorup', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'destination outsource' ] );
+                                    }},
+                                    'desttma' => function ($url, $model)
+                                    {
+                                    if($model->destinationId == 1){
+                                        return '<i class="fa fa-home"></i>';
+                                    } else {
+                                        return Html::button( '<a href=""><i class="fa fa-home"></i></a>', ['value' => $url, 'class' => 'desttma-button', 'id' => 'priorup', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'destination TMA' ] );
+                                    }},
+                                    'priorup' => function ($url, $model)
+                                    {
+                                    if($model->priorityId == 2){
+                                        return '<i class="fa fa-arrow-up"></i>';
+                                    } else {
+                                        return Html::button( '<a href=""><i class="fa fa-arrow-up"></i></a>', ['value' => $url, 'class' => 'priorup-button', 'id' => 'priorup', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'increase priority' ] );
+                                    }},
+                                            'priordown' => function ($url, $model){
+                                    if($model->priorityId == 0){
+                                        return '<i class="fa fa-arrow-down"></i>';
+                                    } else {
+                                        return Html::button( '<a href=""><i class="fa fa-arrow-down"></i></a>', ['value' => $url, 'class' => 'priordown-button', 'id' => 'priordown', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'drecrease priority' ] );
+                                            }},
                                     'sendtreatment' => function ($url, $model)
                                     {
  
-                                   if ($model->statusId == 0) {
+                                   if ($model->statusId == 0 & $model->destinationId != 0) {
                                         return Html::button( '<a href=""><i class="fa fa-paper-plane"></i></a>', ['value' => $url, 'class' => 'send-button', 'id' => 'send', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'treatment send' ] );
                                     } elseif ($model->statusId == 3){
                                         return Html::button( '<a href=""><i class="fa fa-paper-plane"></i></a>', ['value' => $url, 'class' => 'send-button', 'id' => 'send', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'treatment send' ] );
@@ -197,10 +294,10 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                                 ] );
                                     },
                                     
-                                            'view' => function($url, $model)
-                                    {
-                                        return Html::button( '<a href=""><i class="glyphicon glyphicon-eye-open"></i></a>', ['value' => $url, 'class' => 'file-button', 'id' => 'file-button', 'title' => 'file details' ] );
-                                    },
+//                                            'view' => function($url, $model)
+//                                    {
+//                                        return Html::button( '<a href=""><i class="glyphicon glyphicon-eye-open"></i></a>', ['value' => $url, 'class' => 'file-button', 'id' => 'file-button', 'title' => 'file details' ] );
+//                                    },
                                         ],
                                         'urlCreator' => function ($action, $model, $key, $index) use ($id) 
                                 {
@@ -214,11 +311,11 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                         $url = Url::toRoute( ['project-assemblies-files/download', 'path' => $model->path, 'name' => $model->name , 'sygnature' => $model->projectId, 'id' => $id ]);
                                         return $url;
                                     }
-                                    if ( $action === 'view' )
-                                    {
-                                        $url = Url::toRoute( ['project-assemblies-files/view', 'id' => $model->id ] );
-                                        return $url;
-                                    }
+//                                    if ( $action === 'view' )
+//                                    {
+//                                        $url = Url::toRoute( ['project-assemblies-files/view', 'id' => $model->id ] );
+//                                        return $url;
+//                                    }
                                     if ( $action === 'note' )
                                     {
                                         $url = Url::toRoute( ['project-assemblies-files-notes/note', 'id' => $model->id ] );
@@ -232,6 +329,26 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     if ( $action === 'sendtreatment' )
                                     {
                                         $url = Url::toRoute( ['project-assemblies-files/sendtreatment'] );
+                                        return $url;
+                                    }
+                                    if ( $action === 'priorup' )
+                                    {
+                                        $url = Url::toRoute( ['project-assemblies-files/priorup'] );
+                                        return $url;
+                                    }
+                                    if ( $action === 'priordown' )
+                                    {
+                                        $url = Url::toRoute( ['project-assemblies-files/priordown'] );
+                                        return $url;
+                                    }
+                                    if ( $action === 'desttma' )
+                                    {
+                                        $url = Url::toRoute( ['project-assemblies-files/desttma'] );
+                                        return $url;
+                                    }
+                                    if ( $action === 'destout' )
+                                    {
+                                        $url = Url::toRoute( ['project-assemblies-files/destout'] );
                                         return $url;
                                     }
                                 } 
@@ -308,11 +425,151 @@ $this->registerJs(
     
     });
     });
+    $('.priorup-button').click(function(){
+    var data = $(this).data('id'); 
+    var url = $(this).data('url');
+     $.ajax({
+       url: url,
+       type: 'post',
+       data: {id: data},
+       success: function (msg) {
+          $.pjax.reload('#pjax-data');
+       }
+    
+    });
+    });
+    $('.priordown-button').click(function(){
+    var data = $(this).data('id'); 
+    var url = $(this).data('url');
+     $.ajax({
+       url: url,
+       type: 'post',
+       data: {id: data},
+       success: function (msg) {
+          $.pjax.reload('#pjax-data');
+       }
+    
+    });
+    });
+    $('.desttma-button').click(function(){
+    var data = $(this).data('id'); 
+    var url = $(this).data('url');
+     $.ajax({
+       url: url,
+       type: 'post',
+       data: {id: data},
+       success: function (msg) {
+          $.pjax.reload('#pjax-data');
+       }
+    
+    });
+    });
+    $('.destout-button').click(function(){
+    var data = $(this).data('id'); 
+    var url = $(this).data('url');
+     $.ajax({
+       url: url,
+       type: 'post',
+       data: {id: data},
+       success: function (msg) {
+          $.pjax.reload('#pjax-data');
+       }
+    
+    });
+    });
+    
+    $('.tmadest').click(function(){
+       var keys = $('#grid').yiiGridView('getSelectedRows');
+       var data = $(this).data('id'); 
+       var url = $(this).data('url');
+       $.ajax({
+       url: url,
+       type: 'post',
+       data: {id: keys},
+       success: function (msg) {
+          $.pjax.reload('#pjax-data');
+       }
+    });
+    });
+    
+    $('.outdest').click(function(){
+       var keys = $('#grid').yiiGridView('getSelectedRows');
+       var data = $(this).data('id'); 
+       var url = $(this).data('url');
+       $.ajax({
+       url: url,
+       type: 'post',
+       data: {id: keys},
+       success: function (msg) {
+          $.pjax.reload('#pjax-data');
+       }
+    });
+    });
+    
+$('.lowprio').click(function(){
+       var keys = $('#grid').yiiGridView('getSelectedRows');
+       var data = $(this).data('id'); 
+       var url = $(this).data('url');
+       $.ajax({
+       url: url,
+       type: 'post',
+       data: {id: keys},
+       success: function (msg) {
+          $.pjax.reload('#pjax-data');
+       }
+    });
+    });
+    
+$('.medprio').click(function(){
+       var keys = $('#grid').yiiGridView('getSelectedRows');
+       var data = $(this).data('id'); 
+       var url = $(this).data('url');
+       $.ajax({
+       url: url,
+       type: 'post',
+       data: {id: keys},
+       success: function (msg) {
+          $.pjax.reload('#pjax-data');
+       }
+    });
+    });
+    
+$('.highprio').click(function(){
+       var keys = $('#grid').yiiGridView('getSelectedRows');
+       var data = $(this).data('id'); 
+       var url = $(this).data('url');
+       $.ajax({
+       url: url,
+       type: 'post',
+       data: {id: keys},
+       success: function (msg) {
+          $.pjax.reload('#pjax-data');
+       }
+    });
+    });
+    
+$('.mtreat').click(function(){
+       var keys = $('#grid').yiiGridView('getSelectedRows');
+       var data = $(this).data('id'); 
+       var url = $(this).data('url');
+       $.ajax({
+       url: url,
+       type: 'post',
+       data: {id: keys},
+       success: function (msg) {
+          $.pjax.reload('#pjax-data');
+       }
+    });
+    });
+    
 ");
 $this->registerJs('$(document).on("pjax:timeout", function(event) {
   // Prevent default timeout redirection behavior
   event.preventDefault()
 });');
+
+
+
         Pjax::end();
 ?>
 

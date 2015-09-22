@@ -244,11 +244,8 @@ class ProjectSaver
             foreach ( $files as $assemblieId => $file ) {
                 $newAssemblieId = $projectId . $assemblieId;
                 foreach ( $file as $record ) {
-                    $filterData = $record[ 'fullName' ];
-                    var_dump($record);
-                    if ( $this->filterFile( $this->filterDatas, $filterData ) )
+                    if ( $this->filterFile( $this->filterDatas, $record['name'] ) )
                    {
-
                         $typeId = intval( $record[ 'typeId' ] );
                         $check = $this->db->prepare( "SELECT * FROM project_assemblies_files WHERE (path=:path AND projectId=:projectId AND name=:name AND ext=:ext AND assemblieId=:assemblieId AND size=:size)" );
                         $check->bindparam( ':path', $record[ 'path' ] );
@@ -270,7 +267,7 @@ class ProjectSaver
                         if ( $record[ 'name' ] != 'skip' )
                         {
                             $stmt = $this->db->prepare( "INSERT INTO project_assemblies_files 
-                        (projectId, assemblieId, typeId, name, path, size, createdAt, updatedAt, ext, sygnature, thickness, material, quanity, flag) VALUES (:projectId, :assemblieId, :typeId, :name, :path, :size, :createdAt, :updatedAt, :ext, :sygnature, :flag, :thickness, :material, :quanity)" );
+                        (projectId, assemblieId, typeId, name, path, size, createdAt, updatedAt, ext, sygnature, thickness, material, quanity) VALUES (:projectId, :assemblieId, :typeId, :name, :path, :size, :createdAt, :updatedAt, :ext, :sygnature, :thickness, :material, :quanity)" );
 
                             $stmt->bindparam( ':projectId', $projectId );
                             $stmt->bindparam( ':assemblieId', $newAssemblieId );
@@ -279,14 +276,13 @@ class ProjectSaver
                             $stmt->bindparam( ':ext', $record[ 'ext' ] );
                             $stmt->bindparam( ':size', $record[ 'size' ] );
                             $stmt->bindparam( ':path', $record[ 'path' ] );
-                            $stmt->bindparam( ':name', $record[ 'fullName' ] );
+                            $stmt->bindparam( ':name', $record[ 'name' ] );
                             $stmt->bindparam( ':createdAt', $record[ 'creation' ] );
                             $stmt->bindparam( ':updatedAt', $record[ 'modify' ] );
-                            $stmt->bindparam( ':flag', $this->filterData[ 'flag' ] );
                             $stmt->bindparam( ':thickness', $this->filterData[ 'thickness' ] );   //ADD THIS AFTER FILTER IS READY
                             $stmt->bindparam( ':material', $this->filterData[ 'material' ] );
                             $stmt->bindparam( ':quanity', $this->filterData[ 'quanity' ] );
-
+                            
                             $fileCount++;
                             if ( $stmt->execute() )
                             {
@@ -318,32 +314,33 @@ class ProjectSaver
     }
 
     public function filterFile( $filterFile, $data ) {
-        $thick = 0;
         foreach ( $filterFile as $filter ) {
             
             if(isset($filter['name'])){
-            //var_dump($data);
             }
             
             if (isset($filter['name']) && $data == $filter[ 'name' ] )
             {
-                $thick++;
                 if ( !isset( $filter[ 'thickness' ] ) )
                 {
                     $filter[ 'thickness' ] = '';
+                }
+                if ( !isset( $filter[ 'quanity' ] ) )
+                {
+                    $filter[ 'quanity' ] = '1';
+                }
+                if ( !isset( $filter[ 'material' ] ) )
+                {
+                    $filter[ 'material' ] = 'not applicable';
                 }
                 $result = [
                     'quanity' => $filter[ 'quanity' ],
                     'thickness' => $filter[ 'thickness' ],
                     'material' => $filter[ 'material' ],
-                    'flag' => 1
                 ];
-
                 return $this->filterData = $result;
             }
         }    
-        var_dump($thick);
-        die();
         return false;
     }
 

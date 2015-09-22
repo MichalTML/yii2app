@@ -3,7 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+// Hide it initially
+    $("body").prepend("<div class=\"overlay\"></div>");
+    
+    $(".overlay").css({
+    "position": "absolute", 
+    "width": $(document).width(), 
+    "height": "2000px",
+    "z-index": 99999
+    });
+    $(".overlay").hide();
+$(document).ajaxStart(function() {
+        $("body").css("overflow", "hidden");
+        $(".overlay").fadeIn("fast"); 
+     });
+    $(document).ajaxStop(function() {
+        
+        $(".overlay").fadeOut("slow"); 
+        $("body").css("overflow", "scroll");
+    });
+    
 $(function(){
     // get the click event of the Note button
     $('.note-button').click(function(){

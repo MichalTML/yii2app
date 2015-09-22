@@ -66,7 +66,7 @@ class ExcelImporter
                                 
                             } elseif ( isset( $this->label[ $name ] ) && empty( $cell->getFormattedValue() ) ){
                                 
-                                $this->files[ $this->iteration ][ $this->label[ $name ] ] = '';
+                                $this->files[ $this->iteration ][ $this->label[ $name ] ] = 'not applicable';
                                 
                             }
                     }

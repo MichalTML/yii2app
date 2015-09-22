@@ -178,13 +178,14 @@ class ProjectImporter
             //get project assembplies
             $assembliesList = array_values( array_diff( scandir( $this->projectsDatas[ $projectId ][ 'root' ] ), array( '..', '.' ) ) );
             foreach ( $assembliesList as $name ) {
-                if ( preg_match( '/^[0-9]{2}[_]{1}[a-z\s]*/i', $name ) )
+                if ( preg_match( '/^[0-9]{2}[_]{1}[a-z\s]*/i', $name ) ) // UNCOMENT IF U WANT TO GET NAME WITHOUT ID
                 {
                     $fragments = explode( '_', $name );
                     $assemblieId = $fragments[ 0 ];
-                    $fragments[ 0 ] = '';
-                    $assemblieLabel = trim( implode( '_', $fragments ), '_' );
-                    $this->projectsDatas[ $projectId ][ 'assemblies' ][ $assemblieId ] = $assemblieLabel;
+//                    $fragments[ 0 ] = '';
+//                    $assemblieLabel = trim( implode( '_', $fragments ), '_' );
+//                    //$this->projectsDatas[ $projectId ][ 'assemblies' ][ $assemblieId ] = $assemblieLabel;
+                    $this->projectsDatas[ $projectId ][ 'assemblies' ][ $assemblieId ] = $name;
                 }
 
             }      
@@ -205,7 +206,7 @@ class ProjectImporter
         foreach ( $this->projectsDatas as $project ) {
             $pId = $project[ 'id' ];
             foreach ( $project[ 'assemblies' ] as $id => $name ) {
-                $assembliesPaths[ $id ] = $project[ 'root' ] . $id . '_' . $name;
+                $assembliesPaths[ $id ] = $project[ 'root' ].$name;
             }
              $this->assembliesPaths[ $pId ] = $assembliesPaths;
              $assembliesPaths = [];
@@ -300,20 +301,15 @@ class ProjectImporter
                                 $sygnature = trim($nameParts[0]);
                                 $sygnatureParts = explode('-', $nameParts[0]);
                                 $typeId = $sygnatureParts[1];
-                                $nameParts[0] = '';
-                                $nameParts[count($nameParts) - 1] = preg_replace('/\.'.$fileInfo->getExtension().'/', '', $nameParts[count($nameParts) - 1] );
-                                $fileName = trim(implode(' ', $nameParts));
                             } else {
-                                $nameParts[count($nameParts) - 1] = preg_replace('/\.'.$fileInfo->getExtension().'/', '', $nameParts[count($nameParts) - 1] );
-                                $fileName = trim(implode(' ', $nameParts));
                                 $typeId = '0';
                                 $sygnature = 'none';
                             }
+                            
                             $fullFileNamePart = explode('.', $fileInfo->getFilename());
                             $fullFileName = $fullFileNamePart[0];
                             $assemblieFiles[ $projectId ][ $id ][] = [
-                                'name' => $fileName,
-                                'fullName' => $fullFileName,
+                                'name' => $fullFileName,
                                 'path' => $fileInfo->getPathname(),
                                 'sygnature' => $sygnature,
                                 'projectId' => $projectId,

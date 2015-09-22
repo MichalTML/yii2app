@@ -137,4 +137,9 @@ class ProjectAssembliesFiles extends \yii\db\ActiveRecord
     {
         return $this->priority->name;
     }
+    
+    public function getDestination()
+    {
+        return $this->hasOne(FileDestination::className(), ['id' => 'destinationId']);
+    }
 }

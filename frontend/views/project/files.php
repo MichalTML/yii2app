@@ -58,11 +58,6 @@ echo GridView::widget([
           //'headerOptions'=>['class'=>'kartik-sheet-style']          
         ],  
                  ]
-                
-    
-    
-    
-    
 ]);
     
 echo GridView::widget([
@@ -145,10 +140,12 @@ echo GridView::widget([
               $searchModel = new ProjectAssembliesFilesSearch();
               $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $data->projectId);
               $id = $project->id;
+              $sygnature = $project->sygnature;
          return $this->render( 'assembliesFiles', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,  
                     'id' => $id,
+                    'sygnature' => $sygnature,
                 ] );
           },
           'detailAnimationDuration'=>100,

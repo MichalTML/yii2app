@@ -243,6 +243,7 @@ $this->layout = 'action';
                                             'searchModel' => $searchModel,
                                             'dataProvider' => $dataProvider,
                                             'id' => $id,
+                                            'sygnature' => $sygnature,
                                         ] );
     }
 
