@@ -54,10 +54,10 @@ class ProjectAssembliesFilesNotes extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'fileId' => 'File ID',
-            'note' => 'Note',
-            'typeId' => 'Type ID',
-            'creUserId' => 'Cre User ID',
-            'creTime' => 'Cre Time',
+            'note' => 'Note content',
+            'typeId' => 'Destination',
+            'creUserId' => 'Created by',
+            'creTime' => 'Created at',
         ];
     }
     

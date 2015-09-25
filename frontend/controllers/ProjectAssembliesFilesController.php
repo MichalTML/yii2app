@@ -344,5 +344,70 @@ class ProjectAssembliesFilesController extends Controller
             ];
     }
     }
-          
+    
+    public function actionMassaction(){
+        if (Yii::$app->request->isAjax) {
+                $data = Yii::$app->request->post();
+                switch ($data['action']){
+                    case 'destma';
+                        foreach($data['id'] as $id){
+                            $model = $this->findModel($id);
+                            $model->destinationId = 1;
+                            $model->save();
+                        }
+                        break;
+                    case 'destout';
+                        foreach($data['id'] as $id){
+                            $model = $this->findModel($id);
+                            $model->destinationId = 2;
+                            $model->save();
+                        }
+                        break;
+                    case 'lowprio';
+                        foreach($data['id'] as $id){           
+                        $model = $this->findModel($id);
+                        $model->priorityId = 0;
+                        $model->save();
+                        }
+                        break;
+                    case 'normprio';
+                        foreach($data['id'] as $id){           
+                        $model = $this->findModel($id);
+                        $model->priorityId = 1;
+                        $model->save();
+                        }
+                        break;
+                    case 'highprio';
+                        foreach($data['id'] as $id){           
+                        $model = $this->findModel($id);
+                        $model->priorityId = 2;
+                        $model->save();
+                        }
+                        break;
+                    case 'treatfile';
+                        foreach($data['id'] as $id){
+                        $model = $this->findModel($id);
+                        if($model->destinationId != 0){
+                            $model->statusId = 1;
+                            $model->save();
+                        }
+                        }
+                        break;
+                }
+                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return [
+            'code' => 200,
+            ];
+    }
+    }
+    
+    public function actionPagination(){
+        if (Yii::$app->request->isAjax) {
+                $data = Yii::$app->request->post();
+                $this->$data['pagination']
+                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return [
+            'code' => 200,
+            ];
+    }
 }

@@ -53,8 +53,7 @@ class ProjectController extends Controller {
      * @return mixed
      */
     public function actionView( $id ) {
-$this->layout = 'action';
-        return $this->render( 'view', [
+        return $this->renderPartial( 'view', [
                     'model' => $this->findModel( $id ),
                 ] );
     }
@@ -84,10 +83,15 @@ $this->layout = 'action';
         }
         
         
-        if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
-
+        if ( $model->load( Yii::$app->request->post() )) {
+            $weeks = $model->deadline;
+            $days = $weeks * 7;
+            $date = $model->projectStart;
+            $deadline = date("Y-m-d", strtotime("+".$days." days", strtotime($date)));
+            $model->deadline = $deadline;
+            if($model->save()){
             $projectId = $model->id;
-
+                
             if ( $projectPermissions->load( Yii::$app->request->post() ) ) {
 
                 $userIds = $projectPermissions->userId;
@@ -108,6 +112,7 @@ $this->layout = 'action';
             }
             $model->setProjectName( $model->sygnature, $model->projectName );
             return $this->redirect( ['index' ] );
+        }
         } else {
             return $this->render( 'create', [
                         'model' => $model,

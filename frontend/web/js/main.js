@@ -3,57 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-// Hide it initially
+$(document).ajaxStart(function() {
     $("body").prepend("<div class=\"overlay\"></div>");
-    
     $(".overlay").css({
     "position": "absolute", 
     "width": $(document).width(), 
-    "height": "2000px",
-    "z-index": 99999
-    });
-    $(".overlay").hide();
-$(document).ajaxStart(function() {
-        $("body").css("overflow", "hidden");
-        $(".overlay").fadeIn("fast"); 
-     });
-    $(document).ajaxStop(function() {
-        
-        $(".overlay").fadeOut("slow"); 
-        $("body").css("overflow", "scroll");
+    "height": $(document).height(),
+    "z-index": 99999 
+    }).fadeTo(0, 0.8);
     });
     
-$(function(){
-    // get the click event of the Note button
-    $('.note-button').click(function(){
-        $('#modal').modal('show')
-                .find('#modalContent')
-                .load($(this).attr('value'));
+    $(document).ajaxStop(function() {
+        $('.overlay').fadeOut('slow'); 
+        
     });
-});
-
+ 
 $(function(){
     // get the click event of the Note button
     $('.seenote-button').click(function(){
         $('#file-notes-modal').modal('show')
-                .find('#modalContent')
-                .load($(this).attr('value'));
-    });
-});
-
-$(function(){
-    // get the click event of the Note button
-    $('.view-button').click(function(){
-        $('#view-modal').modal('show')
-                .find('#modalContent')
-                .load($(this).attr('value'));
-    });
-});
-
-$(function(){
-    // get the click event of the Note button
-    $('.client-button').click(function(){
-        $('#client-modal').modal('show')
                 .find('#modalContent')
                 .load($(this).attr('value'));
     });

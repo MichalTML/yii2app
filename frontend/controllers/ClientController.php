@@ -8,7 +8,8 @@ use frontend\models\search\ClientSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\data\Pagination;
+use frontend\models\ClientKrsFiles;
+use yii\web\UploadedFile;
 
 /**
  * ClientController implements the CRUD actions for ClientData model.
@@ -53,8 +54,7 @@ class ClientController extends Controller
      */
     public function actionView($id)
     {
-        $this->layout = 'action';
-        return $this->render('view', [
+        return $this->renderPartial('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -78,11 +78,25 @@ class ClientController extends Controller
         
         $newClientNumber = $model->setNewClientNumber();
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            if(isset($_POST['add'])){
-            return $this->redirect(['client-contacts/addn']);     
-            } else {
-                return $this->redirect(['index']);
+        if ($model->load(Yii::$app->request->post())) {
+            $number = $model->phone;
+            $fax = $model->fax;
+            $numberFormatted = explode(' ', trim($number));
+            $faxFormatted = explode(' ', trim($fax));
+            if(count($numberFormatted) > 1){
+            $numberFormatted = trim(implode('', $numberFormatted));
+            } 
+            if(count($faxFormatted) > 1){
+            $faxFormatted = trim(implode('', $faxFormatted));
+            } 
+            $model->phone = $numberFormatted;
+            $model->fax = $faxFormatted;
+            if($model->save()){
+                if(isset($_POST['add'])){
+                    return $this->redirect(['client-contacts/addn']);     
+                } else {
+                    return $this->redirect(['index']);
+                }
             }
         } else {            
             return $this->render('create', [
@@ -151,11 +165,25 @@ class ClientController extends Controller
         
         $newClientNumber = $model->setNewClientNumber();
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $number = $model->phone;
+            $fax = $model->fax;
+            $numberFormatted = explode(' ', trim($number));
+            $faxFormatted = explode(' ', trim($fax));
+            if(count($numberFormatted) > 1){
+            $numberFormatted = trim(implode('', $numberFormatted));
+            } 
+            if(count($faxFormatted) > 1){
+            $faxFormatted = trim(implode('', $faxFormatted));
+            } 
+            $model->phone = $numberFormatted;
+            $model->fax = $faxFormatted;            
+            if($model->save()){
             if(isset($_POST['add'])){
             return $this->redirect(['client-contacts/add']);     
             } else {
                 return $this->redirect(['project/create']);
+            }
             }
         } else {            
             return $this->render('add', [
@@ -163,5 +191,60 @@ class ClientController extends Controller
               'newClientNumber' => $newClientNumber,
            ]);
         }
+    }
+
+    public function actionUploadkrs($id){
+        $model = new ClientKrsFiles;
+        $root = $_SERVER['DOCUMENT_ROOT'];
+        //below code is where you will do your own stuff. This is just a sample code need to do work on saving files
+        if ($model->load(Yii::$app->request->post())){
+            $file = UploadedFile::getInstances($model, 'path');
+             $target = $root.'/krs-pdf/'.$file[0]->name;
+             $imageName = explode('.', $file[0]);
+             $imagePath = $root.'/krs-pdf/'.$imageName[0].'.jpg';
+             
+    
+            if(move_uploaded_file($file[0]->tempName, $target)) {
+                
+//                $imagick = new \Imagick();
+//                $imagick->readImage($target.'[0]');
+//                $imagick->setImageFormat('jpg');
+//                $imagick->setCompressionQuality(97);
+//                
+//                $imagick->writeImage($imagePath);
+                
+                $result = $model->find()->where(['clientId' => $id])->one();
+                if(!empty($result)){
+                $model = $model->find()->where(['id'=>($result->id)])->one();
+                $model->path = $target;
+                } else {
+                $model->clientId = $id;
+                $model->path = $target;
+                $model->name = $file[0]->name;
+                $model->isNewRecord = true;
+                }
+                if($model->save()){
+                   $client = new ClientData;
+                   $clientModel = $client->find()->where(['id'=>$id])->one();
+                   $clientModel->krsFile = 1;
+                   $clientModel->save();
+                   return $this->redirect(['client/index']);  
+        }}
+        }else{
+            return $this->renderAjax('uploadkrs', [
+                'model' => $model,
+            ]);
+    }
+    }
+    
+    public function actionViewkrs( $path, $name) {
+        $fileName = $name . '.pdf';
+        header( 'Content-type: application/pdf' );
+        header( 'Content-Disposition: inline; filename="' . $fileName . '"' );
+        //header('Content-Length: ' . filesize($filename));
+        //header('Content-Transfer-Encoding: binary');
+        //header('Accept-Ranges: bytes');
+        echo '<head><title>Page Title</title></head>';
+        return readfile( $path );
     }
 }

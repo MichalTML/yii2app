@@ -48,8 +48,7 @@ class ClientContactsController extends Controller {
      * @return mixed
      */
     public function actionView( $id ) {
-        $this->layout = 'action';
-        return $this->render( 'view', [
+        return $this->renderPartial( 'view', [
                     'model' => $this->findModel( $id ),
                 ] );
     }
@@ -63,11 +62,25 @@ class ClientContactsController extends Controller {
         $this->layout = 'action';
         $model = new ClientContacts();
 
-        if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
+         if ($model->load(Yii::$app->request->post())) {
+            $number = $model->phone;
+            $fax = $model->fax;
+            $numberFormatted = explode(' ', trim($number));
+            $faxFormatted = explode(' ', trim($fax));
+            if(count($numberFormatted) > 1){
+            $numberFormatted = trim(implode('', $numberFormatted));
+            } 
+            if(count($faxFormatted) > 1){
+            $faxFormatted = trim(implode('', $faxFormatted));
+            } 
+            $model->phone = $numberFormatted;
+            $model->fax = $faxFormatted;
+            if($model->save()){
             if(isset($_POST['add'])){
                 return $this->redirect(['client-contacts/create']);
             } else {
             return $this->redirect(['client-contacts/index']);
+            }
             }
         } else {
             return $this->render( 'create', [
@@ -83,12 +96,22 @@ class ClientContactsController extends Controller {
         $clientData = new ClientData();
 
         if ( $model->load( Yii::$app->request->post() ) ) {
-
             $client = $clientData->find()->select( 'id' )->orderBy( ['id' => SORT_DESC ] )->one();
-
-            $clientid = $client->id;
-            
+            $clientid = $client->id;            
             $model->clientId = $clientid;
+            
+            $number = $model->phone;
+            $fax = $model->fax;
+            $numberFormatted = explode(' ', trim($number));
+            $faxFormatted = explode(' ', trim($fax));
+            if(count($numberFormatted) > 1){
+            $numberFormatted = trim(implode('', $numberFormatted));
+            } 
+            if(count($faxFormatted) > 1){
+            $faxFormatted = trim(implode('', $faxFormatted));
+            } 
+            $model->phone = $numberFormatted;
+            $model->fax = $faxFormatted;
             
             if ( $model->save() ) {
             
@@ -97,11 +120,11 @@ class ClientContactsController extends Controller {
                 }
                 if ( isset( $_POST[ 'add' ] ) ) {
                     return $this->redirect( ['client-contacts/add']);
-                }
             } else {
             return $this->render( 'add', [
                         'model' => $model,
             ] );}
+        }
         } else {
             return $this->render( 'add', [
                         'model' => $model,
@@ -123,6 +146,19 @@ class ClientContactsController extends Controller {
             
             $model->clientId = $clientid;
             
+            $number = $model->phone;
+            $fax = $model->fax;
+            $numberFormatted = explode(' ', trim($number));
+            $faxFormatted = explode(' ', trim($fax));
+            if(count($numberFormatted) > 1){
+            $numberFormatted = trim(implode('', $numberFormatted));
+            } 
+            if(count($faxFormatted) > 1){
+            $faxFormatted = trim(implode('', $faxFormatted));
+            } 
+            $model->phone = $numberFormatted;
+            $model->fax = $faxFormatted;
+            var_dump($faxFormatted);
             if ( $model->save() ) {
             
                 if ( isset( $_POST[ 'create' ] ) ) {
@@ -131,7 +167,7 @@ class ClientContactsController extends Controller {
                 if ( isset( $_POST[ 'add' ] ) ) {
                     return $this->redirect( ['client-contacts/addn']);
                 }
-            } else {
+                } else {
             return $this->render( 'addn', [
                         'model' => $model,
             ] );}

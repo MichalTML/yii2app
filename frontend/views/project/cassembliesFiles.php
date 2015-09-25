@@ -14,9 +14,8 @@ use frontend\models\search\ProjectAssembliesFilesNotesSearch;
 use frontend\models\ProjectAssembliesFiles;
 use frontend\models\FileDestination;
 
-/* @var $this yii\web\View */
-/* @var $searchModel frontend\models\search\ProjectSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+
+
 $this->title = 'P' . $id .  ' Treatment Files Manager';
 $this->params[ 'breadcrumbs' ][] = ['label' => 'Project list', 'url' => ['fileindex' ] ];
 $this->params[ 'breadcrumbs' ][] = $this->title;
@@ -24,10 +23,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
 
 <div class="project-data-index">
 
-
     <?php Pjax::begin(['id' => 'pjax-data']); ?>
-    <?=
-    GridView::widget( [
+    <?= GridView::widget( [
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'options' => ['id' => 'grid'],
@@ -37,62 +34,88 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         'responsive' => true,
         'hover' => true,
         'resizableColumns' => false,
-        
-            'toolbar' => [
-        [
+        'toolbar' => [
+        [            
+            
             'content'=>
             Html::button('<i class="fa fa-home"></i>', [
-                    'value'=> Url::toRoute( ['project-assemblies-files/mdesttma'] ),
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/mdesttma'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'desttma',
                     'type'=>'button', 
                     'title'=> 'destination TMA', 
-                    'class'=>'btn btn-success tmadest'
+                    'class'=>'btn btn-success mass-action'
                 ]).' '.
             Html::button('<i class="fa fa-sign-out"></i>', [
-                    'value'=> Url::toRoute( ['project-assemblies-files/mdestout'] ),
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/mdestout'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'destout',
                     'type'=>'button', 
                     'title'=> 'destination outsource', 
-                    'class'=>'btn btn-success outdest'
+                    'class'=>'btn btn-success mass-action'
                 ]),
             'options' => ['class' => 'btn-group-sm', 'style' => '']
-        ],
+            ],
                 [
             'content'=>
             Html::button('LOW', [
-                    'value'=> Url::toRoute( ['project-assemblies-files/lowprio'] ),
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/lowprio'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'lowprio',
                     'type'=>'button', 
                     'title'=> 'set priority low', 
-                    'class'=>'btn btn-success lowprio'
+                    'class'=>'btn btn-success mass-action'
                 ]). ' '.
             Html::button('NORMAL', [
-                    'value'=> Url::toRoute( ['project-assemblies-files/medprio'] ),
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/medprio'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'normprio',
                     'type'=>'button', 
                     'title'=> 'set priority normal', 
-                    'class'=>'btn btn-success medprio'
+                    'class'=>'btn btn-success mass-action'
                 ]). ' '.
             Html::button('HIGH', [
-                    'value'=> Url::toRoute( ['project-assemblies-files/highprio'] ),
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/highprio'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'highprio',
                     'type'=>'button', 
                     'title'=> 'set priority high', 
-                    'class'=>'btn btn-success highprio'
+                    'class'=>'btn btn-success mass-action'
                 ]),
             'options' => ['class' => 'btn-group-sm', 'style' => '']
-        ],
+            ],
                  [
             'content'=>
                 Html::button('<i class="fa fa-paper-plane"></i>', [
-                    'value'=> Url::toRoute( ['project-assemblies-files/mtreat'] ),
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/mtreat'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'treatfile',
                     'type'=>'button', 
                     'title'=> 'send to treatment', 
-                    'class'=>'btn btn-success mtreat'
+                    'class'=>'btn btn-success mass-action'
                 ]),
-            'options' => ['class' => 'btn-group-sm', 'style' => '']
+            'options' => ['class' => 'btn-group-sm', 'style' => 'margin-right:50px;'],                     
         ],
+            [
+                'content'=>
+                Html::button('10', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination'] ),
+                    'data-pagination'=>'10',
+                    'type'=>'button', 
+                    'title'=> 'send to treat', 
+                    'class'=>'btn btn-success paginations'
+                ]).' '.
+                Html::button('20', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination'] ),
+                    'data-pagination'=>'20',
+                    'type'=>'button', 
+                    'title'=> 'send to treatment', 
+                    'class'=>'btn btn-success paginations'
+                ]).' '.
+                Html::button('30', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination'] ),
+                    'data-pagination'=>'30',
+                    'type'=>'button', 
+                    'title'=> 'send to treatment', 
+                    'class'=>'btn btn-success paginations'
+                ]),
+            'options' => ['class' => 'btn-group-sm']
+            ],
+            
     ],
         'panel' => [
             'type'=>'default',
@@ -478,89 +501,36 @@ $this->registerJs(
     });
     });
     
-    $('.tmadest').click(function(){
+    $('.mass-action').click(function(){
        var keys = $('#grid').yiiGridView('getSelectedRows');
        var data = $(this).data('id'); 
+       var action = $(this).data('action');
        var url = $(this).data('url');
+       if(keys.length > 0){
        $.ajax({
        url: url,
        type: 'post',
-       data: {id: keys},
+       data: {id: keys, action: action},
        success: function (msg) {
           $.pjax.reload('#pjax-data');
        }
-    });
+    });}
     });
     
-    $('.outdest').click(function(){
-       var keys = $('#grid').yiiGridView('getSelectedRows');
-       var data = $(this).data('id'); 
+    $('.paginations).click(function(){ 
+       var pagination = $(this).data('pagination');
        var url = $(this).data('url');
+       if(keys.length > 0){
        $.ajax({
        url: url,
        type: 'post',
-       data: {id: keys},
+       data: {pagination: pagination},
        success: function (msg) {
           $.pjax.reload('#pjax-data');
        }
-    });
+    });}
     });
     
-$('.lowprio').click(function(){
-       var keys = $('#grid').yiiGridView('getSelectedRows');
-       var data = $(this).data('id'); 
-       var url = $(this).data('url');
-       $.ajax({
-       url: url,
-       type: 'post',
-       data: {id: keys},
-       success: function (msg) {
-          $.pjax.reload('#pjax-data');
-       }
-    });
-    });
-    
-$('.medprio').click(function(){
-       var keys = $('#grid').yiiGridView('getSelectedRows');
-       var data = $(this).data('id'); 
-       var url = $(this).data('url');
-       $.ajax({
-       url: url,
-       type: 'post',
-       data: {id: keys},
-       success: function (msg) {
-          $.pjax.reload('#pjax-data');
-       }
-    });
-    });
-    
-$('.highprio').click(function(){
-       var keys = $('#grid').yiiGridView('getSelectedRows');
-       var data = $(this).data('id'); 
-       var url = $(this).data('url');
-       $.ajax({
-       url: url,
-       type: 'post',
-       data: {id: keys},
-       success: function (msg) {
-          $.pjax.reload('#pjax-data');
-       }
-    });
-    });
-    
-$('.mtreat').click(function(){
-       var keys = $('#grid').yiiGridView('getSelectedRows');
-       var data = $(this).data('id'); 
-       var url = $(this).data('url');
-       $.ajax({
-       url: url,
-       type: 'post',
-       data: {id: keys},
-       success: function (msg) {
-          $.pjax.reload('#pjax-data');
-       }
-    });
-    });
     
 ");
 $this->registerJs('$(document).on("pjax:timeout", function(event) {

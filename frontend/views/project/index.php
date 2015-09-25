@@ -34,40 +34,30 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         'condensed' => true,
         'responsive' => true,
         'hover' => true,
+        'headerRowOptions' => ['style' => 'font-size: 12px'],
         'rowOptions' => function ($model)
-                                    {
-                                        $filesSearch = ProjectFileData::find()->where(['projectId' => $model->sygnature])->one();
-                                        if(isset($filesSearch->projectId)){
-                                            
-                                        return ["style" => "background-color:#e6e6e6;"];
-                                        
-                                        
-                                        } else {
-                                            
-                                            return ["style" => "border-color:white;"];
+                        {
+                        $filesSearch = ProjectFileData::find()->where(['projectId' => $model->sygnature])->one();
+                            if(isset($filesSearch->projectId)){                                            
+                                return ["style" => "background-color:#e6e6e6; font-size:12px"];                                
+                            } else {
+                                return ["style" => "border-color:white; font-size:12px"];
                                     }},
                 'columns' => [
                     [
-                        'label' => 'Sygnature',
+                        'label' => 'Project Nr',
                         'headerOptions' => ['style' => 'text-align: center;' ],
                         'attribute' => 'sygnature',
                         'value' => 'sygnature',
-                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
+                        'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
                     ],
                     [
                         'label' => 'Project Name',
                         'attribute' => 'projectName',
                         'headerOptions' => ['style' => 'text-align: center;' ],
                         'value' => 'projectName',
-                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em; white-space: nowrap;' ]
-                    ],
-                    [
-                        'label' => 'Deadline',
-                        'headerOptions' => ['style' => 'text-align: center;' ],
-                        'attribute' => 'deadline',
-                        'value' => 'deadline',
-                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
-                    ],
+                        'contentOptions' => ['style' => 'text-align: center; vertical-align: middle; white-space: nowrap;' ]
+                    ],                    
                     [
                         'label' => 'Status',
                         'headerOptions' => ['style' => 'text-align: center;' ],
@@ -75,9 +65,9 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'value' => 'projectStatus0.statusName',
                         'contentOptions' => function ($data){
                                         if($data->projectStatus == 2){
-                                        return ['style' => 'color: #808080; font-weight: bold; text-align: center; line-height: 2.5em;' ];
+                                       return ['style' => 'color: #808080; font-weight: bold; text-align: center; vertical-align: middle;' ];
                                         } else {
-                                        return ['style' => 'color: #87cd00; font-weight: bold;text-align: center; line-height: 2.5em;' ];
+                                       return ['style' => 'color: #87cd00; font-weight: bold;text-align: center; vertical-align: middle;' ];
                                         }
                         }
                     ],
@@ -85,26 +75,34 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'attribute' => 'client.name',
                         'label' => 'Client',
                         'headerOptions' => ['style' => 'text-align: center;' ],
-                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
+                        'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
                         'format' => 'raw',
                         'value' => function ($data)
                 {
-                    return Html::button( '<a href="">' . $data->getClientName( $data->clientId ) . '</a>', ['value' => Url::toRoute( ['client/detail', 'id' => $data->clientId ] ), 'class' => 'client-button', 'id' => 'clientButton' ] );
+                    return Html::button( '<a href="">' . $data->getClientName( $data->clientId ) . '</a>', 
+             ['value' => Url::toRoute( ['client/detail', 'id' => $data->clientId ] ), 'class' => 'client-button', 'id' => 'clientButton' ] );
                 },
+                    ],
+                         [
+                        'label' => 'projectStart',
+                        'headerOptions' => ['style' => 'text-align: center;' ],
+                        'attribute' => 'projectStart',
+                        'value' => 'projectStart',
+                        'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+                    ],
+                    [
+                        'label' => 'Deadline',
+                        'headerOptions' => ['style' => 'text-align: center;' ],
+                        'attribute' => 'deadline',
+                        'value' => 'deadline',
+                        'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
                     ],
                     [
                         'label' => 'Created By',
                         'headerOptions' => ['style' => 'text-align: center;' ],
                         'attribute' => 'creUser.username',
                         'value' => 'creUser.username',
-                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
-                    ],
-                    [
-                        'label' => 'Created At',
-                        'headerOptions' => ['style' => 'text-align: center;' ],
-                        'attribute' => 'creTime',
-                        'value' => 'creTime',
-                        'contentOptions' => ['style' => 'text-align: center; line-height: 1.5em;' ],
+                        'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
                     ],
                     [
                         'class' => 'kartik\grid\ExpandRowColumn',
@@ -126,15 +124,15 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                         'notes' => $projectNotes,
                                     ] );
                         },
-          'expandIcon'=>'<span class="fa fa-angle-right"></span>',
-          'collapseIcon'=>'<span class="fa fa-angle-down"></span>',
+                    'expandIcon'=>'<span class="fa fa-angle-right"></span>',
+                    'collapseIcon'=>'<span class="fa fa-angle-down"></span>',
                                 'headerOptions' => ['class' => 'kartik-sheet-style' ],
                                 'expandOneOnly' => true,
                             ],
                             ['class' => 'yii\grid\ActionColumn',
                                 'header' => '',
                                 'headerOptions' => ['style' => 'min-width: 110px;text-align: center; border-bottom-color: transparent;' ],
-                                'contentOptions' => ['style' => 'text-align:center; line-height: 3em;' ],
+                                'contentOptions' => ['style' => 'text-align:center; vertical-align: middle;' ],
                                 'template' => '{parts} {note} {view} {edit} {delete}',
                                 'buttons' => [
                                     'parts' => function ($url, $model)
@@ -146,7 +144,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                                         'data-method' => 'post',
                                                         'title' => 'Technical Documentation',
                                                         'data' => [                                                         
-                                                            'method' => 'post',
+                                                        'method' => 'post',
                                                         ],
                                                     ] );
                                         
@@ -158,7 +156,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     },
                                             'note' => function ($url, $model)
                                     {
-                                        return Html::button( '<a href=""><i class="fa fa-file-text-o"></i></a>', ['value' => $url, 'class' => 'note-button', 'id' => 'modalButton', 'title' => 'new note' ] );
+                                        return Html::button( '<a href=""><i class="fa fa-file-text-o"></i></a>',
+                                        ['value' => $url, 'class' => 'note-button', 'id' => 'modalButton', 'title' => 'new note' ] );
                                     },
                                             'delete' => function($url, $model)
                                     {
@@ -171,29 +170,28 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                                         'data-method' => 'post',
                                                         'title' => Yii::t( 'app', 'delete' ),
                                                         'data' => [
-                                                            'confirm' => 'You are about to delete: ' . $model->projectName . ' ,are you sure you want to                                                proceed?',
-                                                            'method' => 'post',
+                                    'confirm' => 'You are about to delete: ' . $model->projectName . ', are you sure you want to proceed?',
+                                                         'method' => 'post',
                                                         ],
                                                     ] );
                                         }
                                     },
-                                            'edit' => function($url, $model)
+                                        'edit' => function($url, $model)
                                     {
                                         if ( $model->projectStatus == 2 )
                                         {
                                             return '<span class="glyphicon glyphicon-pencil"></span>';
                                         } else
                                         {
-                                            return Html::a( '<span class="glyphicon glyphicon-pencil"></span>', $url, [ 'data-method' => 'post',
-                                                        'title' => Yii::t( 'app', 'edit' ) ] );
+                                            return Html::a( '<span class="glyphicon glyphicon-pencil"></span>', $url, 
+                                            [ 'data-method' => 'post', 'title' => Yii::t( 'app', 'edit' ) ] );
                                         }
                                     },
-                                            'view' => function($url, $model)
+                                        'view' => function($url, $model)
                                     {
-                                        return Html::a( '<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-                                                    'data-method' => 'post',
-                                                    'title' => Yii::t( 'app', 'view' ),
-                                                ] );
+                                        return Html::button( '<a href="#"><i class="glyphicon glyphicon-eye-open"></i></a>', 
+                                               ['value' => $url, 'class' => 'view-button', 'id' => 'view-button', 'title' => 'view' ] );
+
                                     }
                                         ],
                                         'urlCreator' => function ($action, $model, $key, $index)
@@ -227,34 +225,57 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     ],
                                 ],
                             ] );
-                            ?>
+                            
+    
+$this->registerJs("  
+$(function(){
+    // get the click event of the Note button
+    $('.note-button').click(function(){
+        $('#modal').modal('show')
+                .find('#modalContent')
+                .load($(this).attr('value'));
+    });
+});
+$(function(){
+    // get the click event of the Note button
+    $('.client-button').click(function(){
+        $('#client-modal').modal('show')
+                .find('#modalContent')
+                .load($(this).attr('value'));
+    });
+});
+$(function(){
+    // get the click event of the Note button
+    $('.view-button').click(function(){
+        $('#view-modal').modal('show')
+                .find('#modalContent')
+                .load($(this).attr('value'));
+    });
+});"
+);
 
-                            <?php Pjax::end(); ?>
+Modal::begin( [
+    'id' => 'modal',
+    'header' => '<h4 class="modal-title">New Note</h4>',
+    ]);
+    echo "<div id='modalContent'></div>";
+Modal::end();
 
+Modal::begin( [
+    'id' => 'client-modal',
+    'header' => '<h4 class="modal-title">Client Detail View</h4>',
+    ]);
+    echo "<div id='modalContent'></div>";
+Modal::end();
 
-                        <?php
-                        Modal::begin( [
-                            'id' => 'modal',
-                            // 'size' => 'SIZE_SMALL',
-                            'header' => '<h4 class="modal-title">New Note</h4>',
-                                //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
-                        ] );
-                        echo "<div id='modalContent'></div>";
-
-                        Modal::end();
-                        ?>
-
-                            <?php
-                            Modal::begin( [
-                                'id' => 'client-modal',
-                                'size' => 'modal-lg',
-                                'header' => '<h4 class="modal-title">Client Detail View</h4>',
-                                    //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
-                            ] );
-                            echo "<div id='modalContent'></div>";
-
-                            Modal::end();
-                            ?>
+Modal::begin( [
+    'id' => 'view-modal',
+    'header' => '<h4 class="modal-title">Project Details</h4>',    
+    ]);
+echo "<div id='modalContent'></div>";
+Modal::end();
+?>
 
 
 </div>
+<?php Pjax::end(); ?>

@@ -1,38 +1,9 @@
 <?php
 
-use yii\helpers\Html;
 use yii\widgets\DetailView;
-use common\models\PermissionHelpers;
 
-/* @var $this yii\web\View */
-/* @var $model frontend\models\ClientData */
-
-$this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Clients Manager', 'url' => ['site/clients']];
-$this->params['breadcrumbs'][] = ['label' => 'Actual Clients List', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="client-data-view">
-
- 
-
-    <p>
-<?php if(PermissionHelpers::requireMinimumPower(Yii::$app->user->identity->id) > 30) {    
-    echo Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) . ' ';
-       echo Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]);
-        
- } else { 
-        echo Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']);
- } ?>
-        
-        
-    </p>
 
     <?= DetailView::widget([
         'model' => $model,
@@ -50,6 +21,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'krs',
             'regon',
             'www',
+            [
+             'attribute' => 'recurring',
+             'format' => 'raw',
+             'value' => '<a target="_blank" href="http://'.$model->www.'">'.$model->www.'</a>',
+                        
+            ],
             'description',
             'creTime',
             'updTime',
@@ -59,5 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
             
         ],
     ]) ?>
+    
 
 </div>

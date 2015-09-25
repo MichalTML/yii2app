@@ -7,8 +7,7 @@ use yii\helpers\Html;
 
 $this->title = 'Update Project ' . ' P'.$model->sygnature.'_'.$model->projectName;
 $this->params['breadcrumbs'][] = ['label' => 'Project list', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => 'Project: P' . $model->sygnature . '_' . $model->projectName, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Update project: P' . $model->sygnature . '_' . $model->projectName;
 ?>
 <div class="project-data-update">
 

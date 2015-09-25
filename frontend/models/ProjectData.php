@@ -53,10 +53,10 @@ class ProjectData extends \yii\db\ActiveRecord
      */
     public function rules() {
         return [
-            [[ 'projectName', 'clientId', 'deadline', 'projectStatus', 'sygnature' ], 'required' ],
+            [[ 'projectName', 'clientId', 'deadline', 'projectStatus', 'sygnature', 'projectStart' ], 'required' ],
             [[ 'id', 'clientId' ], 'integer' ],
             [[ 'id', 'sygnature' ], 'unique' ],
-            [ 'projectName', 'match', 'pattern' => '/^[a-zA-Z0-9\s]*$/', 'message' => 'Project name can only contain letters.' ],
+            [ 'projectName', 'match', 'pattern' => '/^[a-zA-Z0-9\s]*$/', 'message' => 'Project name can only contain letters and numbers.' ],
             [ 'sygnature', 'string', 'length' => [2, 3 ] ],
         ];
     }
@@ -68,12 +68,13 @@ class ProjectData extends \yii\db\ActiveRecord
         return [
 
             'id' => 'ID',
-            'sygnature' => 'Sygnature',
+            'sygnature' => 'Porject Number',
             'clientId' => 'Client Name',
             'projectName' => 'Project Name',
             'ClientName' => 'Client',
             'creTime' => 'Created at',
             'deadline' => 'Deadline',
+            'projectStart' => 'Started at',
             'endTime' => 'End Time',
             'creUser.username' => 'Created by',
             'updTime' => 'Updated at',

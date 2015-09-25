@@ -22,7 +22,7 @@ class ProjectSearch extends ProjectData
     public function rules()
     {
         return [
-            [['projectName', 'creTime', 'deadline', 'endTime', 'sygnature', 'updTime', 'projectStatus0.statusName', 'client.name', 'ProjectName','creUser.username'], 'safe'],
+            [['projectStart', 'projectName', 'creTime', 'deadline', 'endTime', 'sygnature', 'updTime', 'projectStatus0.statusName', 'client.name', 'ProjectName','creUser.username'], 'safe'],
         ];
     }
    
@@ -78,6 +78,7 @@ class ProjectSearch extends ProjectData
 
         $query->andFilterWhere(['like', 'id', $this->id])
             ->andFilterWhere(['like', 'deadline', $this->deadline])
+            ->andFilterWhere(['like', 'projectStart', $this->projectStart])
             ->andFilterWhere(['like', 'sygnature', $this->sygnature])
             ->andFilterWhere(['like', 'projectName', $this->projectName])
             ->andFilterWhere(['like', 'project_data.creTime', $this->creTime])

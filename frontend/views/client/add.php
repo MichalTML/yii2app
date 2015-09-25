@@ -12,9 +12,6 @@ $this->params['breadcrumbs'][] = ['label' => 'Create new project', 'url' => ['pr
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= $this->render('_addform', [
         'model' => $model,
         'newClientNumber' => $newClientNumber,

@@ -190,44 +190,44 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                             ] );
                             ?>
 
-                            <?php Pjax::end(); ?>
+                            
+<?php
+$this->registerJs("  
+$(function(){
+    // get the click event of the Note button
+    $('.client-button').click(function(){
+        $('#client-modal').modal('show')
+                .find('#modalContent')
+                .load($(this).attr('value'));
+    });
+});
+$(function(){
+    // get the click event of the Note button
+    $('.view-button').click(function(){
+        $('#view-modal').modal('show')
+                .find('#modalContent')
+                .load($(this).attr('value'));
+    });
+});"
+);
+
+Modal::begin( [
+    'id' => 'client-modal',
+    'size' => 'modal-lg',
+    'header' => '<h4 class="modal-title">Client Detail View</h4>',
+    ]);
+    echo "<div id='modalContent'></div>";
+Modal::end();
 
 
-                        <?php
-                        Modal::begin( [
-                            'id' => 'modal',
-                            // 'size' => 'SIZE_SMALL',
-                            'header' => '<h4 class="modal-title">New Note</h4>',
-                                //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
-                        ] );
-                        echo "<div id='modalContent'></div>";
 
-                        Modal::end();
-                        ?>
-
-                            <?php
-                            Modal::begin( [
-                                'id' => 'client-modal',
-                                'size' => 'modal-lg',
-                                'header' => '<h4 class="modal-title">Client Detail View</h4>',
-                                    //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
-                            ] );
-                            echo "<div id='modalContent'></div>";
-
-                            Modal::end();
-                            ?>
-    
-                        <?php
-                            Modal::begin( [
-                                'id' => 'view-modal',
-                                // 'size' => 'SIZE_SMALL',
-                            'header' => '<h4 class="modal-title">Project Details</h4>',
-                                //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
-                        ] );
-                        echo "<div id='modalContent'></div>";
-
-                            Modal::end();
-                            ?>
-
+Modal::begin( [
+    'id' => 'view-modal',
+    'header' => '<h4 class="modal-title">Project Details</h4>',
+    ]);
+    echo "<div id='modalContent'></div>";
+Modal::end();
+?>
 
 </div>
+<?php Pjax::end(); ?>
