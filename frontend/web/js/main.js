@@ -11,12 +11,12 @@ $(document).ajaxStart(function() {
     "height": $(document).height(),
     "z-index": 99999 
     }).fadeTo(0, 0.8);
-    });
+});
     
-    $(document).ajaxStop(function() {
+$(document).ajaxStop(function() {
         $('.overlay').fadeOut('slow'); 
         
-    });
+});
  
 $(function(){
     // get the click event of the Note button

@@ -8,6 +8,7 @@ use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 use frontend\models\ProjectNotes;
 use frontend\models\ProjectFileData;
+use frontend\models\ProjectData;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\search\ProjectSearch */
@@ -49,6 +50,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'headerOptions' => ['style' => 'text-align: center;' ],
                         'attribute' => 'sygnature',
                         'value' => 'sygnature',
+                        'filter' => Html::activeDropDownList( $searchModel, 'sygnature', 
+                        ProjectData::getSygnatures(), ['class' => 'form-control', 'prompt' => ' ' ] ),
                         'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
                     ],
                     [
@@ -63,23 +66,26 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'headerOptions' => ['style' => 'text-align: center;' ],
                         'attribute' => 'projectStatus0.statusName',
                         'value' => 'projectStatus0.statusName',
+                        'filter' => Html::activeDropDownList( $searchModel, 'projectStatus0.statusName', 
+                        ProjectData::getProjectStatusList(), ['class' => 'form-control', 'prompt' => ' ' ] ),
                         'contentOptions' => function ($data){
                                         if($data->projectStatus == 2){
                                        return ['style' => 'color: #808080; font-weight: bold; text-align: center; vertical-align: middle;' ];
+                                        } elseif($data->projectStatus == 3) {
+                                       return ['style' => 'color: #cc8800; font-weight: bold;text-align: center; vertical-align: middle;' ];
                                         } else {
-                                       return ['style' => 'color: #87cd00; font-weight: bold;text-align: center; vertical-align: middle;' ];
-                                        }
+                                       return ['style' => 'color: #87cd00; font-weight: bold;text-align: center; vertical-align: middle;' ];                                          }
                         }
                     ],
                     [
-                        'attribute' => 'client.name',
+                        'attribute' => 'client.abr',
                         'label' => 'Client',
                         'headerOptions' => ['style' => 'text-align: center;' ],
-                        'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+                        'contentOptions' => ['style' => ' color: #337ab7; text-align: center; vertical-align: middle;' ],
                         'format' => 'raw',
                         'value' => function ($data)
                 {
-                    return Html::button( '<a href="">' . $data->getClientName( $data->clientId ) . '</a>', 
+                    return Html::button( $data->getClientName( $data->clientId ) , 
              ['value' => Url::toRoute( ['client/detail', 'id' => $data->clientId ] ), 'class' => 'client-button', 'id' => 'clientButton' ] );
                 },
                     ],
@@ -101,7 +107,9 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'label' => 'Created By',
                         'headerOptions' => ['style' => 'text-align: center;' ],
                         'attribute' => 'creUser.username',
-                        'value' => 'creUser.username',
+                        'value' => 'creUser.username',                        
+                        'filter' => Html::activeDropDownList( $searchModel, 'creUser.username', 
+                        ProjectData::getCreUserList(), ['class' => 'form-control', 'prompt' => ' ' ] ),
                         'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
                     ],
                     [
@@ -156,7 +164,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     },
                                             'note' => function ($url, $model)
                                     {
-                                        return Html::button( '<a href=""><i class="fa fa-file-text-o"></i></a>',
+                                        return Html::button( '<i style="color: blue;" class="fa fa-file-text-o"></i>',
                                         ['value' => $url, 'class' => 'note-button', 'id' => 'modalButton', 'title' => 'new note' ] );
                                     },
                                             'delete' => function($url, $model)
@@ -178,7 +186,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     },
                                         'edit' => function($url, $model)
                                     {
-                                        if ( $model->projectStatus == 2 )
+                                        if ( $model->projectStatus == 22 )
                                         {
                                             return '<span class="glyphicon glyphicon-pencil"></span>';
                                         } else
@@ -240,7 +248,7 @@ $(function(){
     // get the click event of the Note button
     $('.client-button').click(function(){
         $('#client-modal').modal('show')
-                .find('#modalContent')
+                .find('#client-view')
                 .load($(this).attr('value'));
     });
 });
@@ -265,7 +273,7 @@ Modal::begin( [
     'id' => 'client-modal',
     'header' => '<h4 class="modal-title">Client Detail View</h4>',
     ]);
-    echo "<div id='modalContent'></div>";
+    echo "<div id='client-view'></div>";
 Modal::end();
 
 Modal::begin( [

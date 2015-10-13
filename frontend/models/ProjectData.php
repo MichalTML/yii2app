@@ -54,9 +54,9 @@ class ProjectData extends \yii\db\ActiveRecord
     public function rules() {
         return [
             [[ 'projectName', 'clientId', 'deadline', 'projectStatus', 'sygnature', 'projectStart' ], 'required' ],
-            [[ 'id', 'clientId' ], 'integer' ],
+            [[ 'id', 'clientId'], 'integer' ],
             [[ 'id', 'sygnature' ], 'unique' ],
-            [ 'projectName', 'match', 'pattern' => '/^[a-zA-Z0-9\s]*$/', 'message' => 'Project name can only contain letters and numbers.' ],
+            [ 'projectName', 'match', 'pattern' => '/^[a-zA-Z0-9\s\|]*$/', 'message' => 'Project name can only contain letters and numbers.' ],
             [ 'sygnature', 'string', 'length' => [2, 3 ] ],
         ];
     }
@@ -228,6 +228,7 @@ class ProjectData extends \yii\db\ActiveRecord
      * All client_data table related methods
      * 
      */
+    
     public function getClient() {
         return $this->hasOne( ClientData::className(), ['id' => 'clientId' ] );
     }
@@ -241,19 +242,6 @@ class ProjectData extends \yii\db\ActiveRecord
         return $this->hasMany( ProjectNotes::className(), ['projectId' => 'id']);   
     }
 
-//     /**
-//     * @return \yii\db\ActiveQuery
-//     */
-//    public function getProjectStatus0()
-//    {
-//        return $this->hasOne(ProjectStatus::className(), ['id' => 'projectStatus']);
-//    }
-//    
-//    public function getProjectStatus0Name()
-//   {
-//       return $this->projectStatus0->statusName;
-//   }
-//
     public function getProjectStatus0() {
         return $this->hasOne( ProjectStatus::className(), ['id' => 'projectStatus' ] );
     }
@@ -273,10 +261,38 @@ class ProjectData extends \yii\db\ActiveRecord
     public static function getClientName( $data ) {
         $clientData = new ClientData;
         $clientName = $clientData->find()->where( ['id' => $data ] )->one();
-        return $clientName->name;
+        return $clientName->abr;
 
     }
     
+    public static function getSygnatures(){
+        $sygnatures = ProjectData::find()->select('sygnature')->asArray()->all();
+        foreach($sygnatures as $syg){
+            foreach($syg as $sygId)
+            {
+                $sygnaturesList[$sygId] = $sygId;
+            }            
+        }
+        return $sygnaturesList;
+    }
+    
+    public static function getProjectStatusList(){
+        $projectStatus = ProjectStatus::find()->asArray()->all();
+        $projectStatusList = ArrayHelper::map($projectStatus, 'statusName', 'statusName');
+        return $projectStatusList;
+    }
    
+    public static function getCreUserList(){
+        $users = ProjectData::find()->select('creUserId')->asArray()->all();
+        foreach ($users as $data ){
+            foreach ($data as $userId){
+                $userName = User::find()->where(['id' => $userId])->one();
+                if($userName){
+                    $usersNameList[$userName->username] = $userName->username;
+                }
+            }
+        }
+        return $usersNameList;
+    }
 
 }

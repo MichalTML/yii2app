@@ -17,12 +17,12 @@ class ProjectSearch extends ProjectData
      */
     
     public function attributes() {
-        return array_merge(parent::attributes(), ['projectStatus0.statusName', 'client.name', 'creUser.username', 'ProjectName']);
+        return array_merge(parent::attributes(), ['projectStatus0.statusName', 'client.abr', 'creUser.username', 'ProjectName']);
     }
     public function rules()
     {
         return [
-            [['projectStart', 'projectName', 'creTime', 'deadline', 'endTime', 'sygnature', 'updTime', 'projectStatus0.statusName', 'client.name', 'ProjectName','creUser.username'], 'safe'],
+            [['projectStart', 'projectName', 'creTime', 'deadline', 'endTime', 'sygnature', 'updTime', 'projectStatus0.statusName', 'client.abr', 'ProjectName','creUser.username'], 'safe'],
         ];
     }
    
@@ -42,25 +42,31 @@ class ProjectSearch extends ProjectData
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params, $order = null)
+    {        
         $query = ProjectData::find();
         
         $query->joinWith(['projectStatus0', 'client', 'creUser']);
-                
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-        
+        if($order){        
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+                'sort' => $order,
+            ]);
+        } else {
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+            ]);
+           
+        };
         $dataProvider->sort->attributes['projectStatus0.statusName'] =
                 [
                     'asc' => ['project_status.statusName' => SORT_ASC],
                     'desc' => ['project_status.statusName' => SORT_DESC],
                 ];
-        $dataProvider->sort->attributes['client.name'] =
+        $dataProvider->sort->attributes['client.abr'] =
                 [
-                    'asc' => ['client_data.name' => SORT_ASC],
-                    'desc' => ['client_data.name' => SORT_DESC],
+                    'asc' => ['client_data.abr' => SORT_ASC],
+                    'desc' => ['client_data.abr' => SORT_DESC],
                 ];
         $dataProvider->sort->attributes['creUser.username'] =
                 [
@@ -82,9 +88,9 @@ class ProjectSearch extends ProjectData
             ->andFilterWhere(['like', 'sygnature', $this->sygnature])
             ->andFilterWhere(['like', 'projectName', $this->projectName])
             ->andFilterWhere(['like', 'project_data.creTime', $this->creTime])
-            ->andFilterWhere(['like', 'project_status.statusName', $this->getAttribute('projectStatus0.statusName')])
-            ->andFilterWhere(['like', 'client_data.name', $this->getAttribute('client.name')])
-            ->andFilterWhere(['like', 'user.username', $this->getAttribute('creUser.username')]);
+            ->andFilterWhere(['=', 'project_status.statusName', $this->getAttribute('projectStatus0.statusName')])
+            ->andFilterWhere(['like', 'client_data.abr', $this->getAttribute('client.abr')])
+            ->andFilterWhere(['=', 'user.username', $this->getAttribute('creUser.username')]);
         return $dataProvider;
     }
 }

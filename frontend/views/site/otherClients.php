@@ -27,7 +27,7 @@ if(Yii::$app->user->isGuest){
                     <?php
                    
                         echo Html::a('<div class="mainbox-oind">'
-                                . '<div class="btn btn-default">Prospect Client Manager</div>'
+                                . '<div class="btn btn-default">Prospect Client Data</div>'
                                 . '<div class="mainbox_info"><span>Client Manager</span>
                                     - Lorem ipsum dolor sit amet, consectetur adipiscing
                                     elit. Sed molestie mi velit, et tincidunt neque mollis et. 
@@ -40,7 +40,7 @@ if(Yii::$app->user->isGuest){
                     <div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">       
 <?php
     echo Html::a('<div class="mainbox-ocindc">'
-                                . '<div class="btn btn-default">Prospect Contacts Manager</div>'
+                                . '<div class="btn btn-default">Prospect Contacts Data</div>'
                                 . '<div class="mainbox_info"><span>Contacts Manager</span> 
                                     - Lorem ipsum dolor sit amet, consectetur adipiscing
                                     elit. Sed molestie mi velit, et tincidunt neque mollis et.  

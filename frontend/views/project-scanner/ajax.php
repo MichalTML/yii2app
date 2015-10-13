@@ -5,9 +5,15 @@ use frontend\models\DB;
 use frontend\models\ExcelImporter;
 use frontend\models\ProjectSaver;
 
-//$_POST['name'] = 'PROJEKT_P54_robot_kuka_frezarka_3D_POLITECHNIKA';
+//$_POST['name'] = 'PROJEKT_P51_kontorla_wizyjna_4_wiaderek_JOKEY';
+
 if (isset($_POST['name'])){
+   $projectName = $_POST['name'];
+   
+   shell_exec("cp -R /media/data/NAS/TMA/TMA_KONST_TEMP/$projectName /media/data/app_data/project_data");
+   
    $projectImporter = new ProjectImporter($_POST['name']);
+   
    $excelImporter = new ExcelImporter($projectImporter->fileList);
    $saveProject = new ProjectSaver(DB::getConnection(), $excelImporter->files);
    $saveProject->importProjecteData( $projectImporter->projectsDatas, $projectImporter->filesCount);

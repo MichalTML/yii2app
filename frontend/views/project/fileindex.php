@@ -8,6 +8,7 @@ use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 use frontend\models\ProjectNotes;
 use frontend\models\ProjectFileData;
+use frontend\models\ProjectData;
 
 /* @var $this yii\web\View */
 /* @var $searchModel frontend\models\search\ProjectSearch */
@@ -30,17 +31,18 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         'condensed' => true,
         'responsive' => true,
         'hover' => true,
+        'headerRowOptions' => ['style' => 'font-size: 12px'],
         'rowOptions' => function ($model)
                                     {
                                         $filesSearch = ProjectFileData::find()->where(['projectId' => $model->sygnature])->one();
                                         if(isset($filesSearch->projectId)){
                                             
-                                        return ["style" => "background-color:#e6e6e6; "];
+                                        return ["style" => "background-color:#e6e6e6; font-size: 12px "];
                                         
                                         
                                         } else {
                                             
-                                            return ["style" => "border-color:white;"];
+                                            return ["style" => "border-color:white; font-size: 12px"];
                                     }},
                 'columns' => [
                     [
@@ -48,6 +50,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'headerOptions' => ['style' => 'text-align: center;' ],
                         'attribute' => 'sygnature',
                         'value' => 'sygnature',
+                        'filter' => Html::activeDropDownList( $searchModel, 'sygnature', 
+                        ProjectData::getSygnatures(), ['class' => 'form-control', 'prompt' => ' ' ] ),
                         'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
                     ],
                     [
@@ -69,6 +73,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'headerOptions' => ['style' => 'text-align: center;' ],
                         'attribute' => 'projectStatus0.statusName',
                         'value' => 'projectStatus0.statusName',
+                        'filter' => Html::activeDropDownList( $searchModel, 'projectStatus0.statusName', 
+                        ProjectData::getProjectStatusList(), ['class' => 'form-control', 'prompt' => ' ' ] ),
                         'contentOptions' => function ($data){
                                         if($data->projectStatus == 2){
                                         return ['style' => 'color: #808080; font-weight: bold; text-align: center; line-height: 2.5em;' ];
@@ -78,14 +84,14 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         }
                     ],
                     [
-                        'attribute' => 'client.name',
+                        'attribute' => 'client.abr',
                         'label' => 'Client',
                         'headerOptions' => ['style' => 'text-align: center;' ],
-                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
+                        'contentOptions' => ['style' => 'color: #337ab7; text-align: center; line-height: 2.5em;' ],
                         'format' => 'raw',
                         'value' => function ($data)
                 {
-                    return Html::button( '<a href="">' . $data->getClientName( $data->clientId ) . '</a>', ['value' => Url::toRoute( ['client/detail', 'id' => $data->clientId ] ), 'class' => 'client-button', 'id' => 'clientButton' ] );
+                    return Html::button( $data->getClientName( $data->clientId ), ['value' => Url::toRoute( ['client/detail', 'id' => $data->clientId ] ), 'class' => 'client-button', 'id' => 'clientButton' ] );
                 },
                     ],
                     [
@@ -93,6 +99,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'headerOptions' => ['style' => 'text-align: center;' ],
                         'attribute' => 'creUser.username',
                         'value' => 'creUser.username',
+                        'filter' => Html::activeDropDownList( $searchModel, 'creUser.username', 
+                        ProjectData::getCreUserList(), ['class' => 'form-control', 'prompt' => ' ' ] ),
                         'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
                     ],
                     [

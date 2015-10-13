@@ -25,8 +25,8 @@ if(Yii::$app->user->isGuest){
                     <div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">
                     <?php
                         echo Html::a('<div class="mainbox-ind">'
-                                . '<div class="btn btn-default">Client Manager</div>'
-                                . '<div class="mainbox_info"><span>Client Manager</span>
+                                . '<div class="btn btn-default">Client Data</div>'
+                                . '<div class="mainbox_info"><span>Client Data</span>
                                     - Lorem ipsum dolor sit amet, consectetur adipiscing
                                     elit. Sed molestie mi velit, et tincidunt neque mollis et. 
                                   </div>'
@@ -36,8 +36,8 @@ if(Yii::$app->user->isGuest){
 <div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">
 <?php
     echo Html::a('<div class="mainbox-indc">'
-                                . '<div class="btn btn-default">Contacts Manager</div>'
-                                . '<div class="mainbox_info"><span>Contacts Manager</span> 
+                                . '<div class="btn btn-default">Contacts Data</div>'
+                                . '<div class="mainbox_info"><span>Contacts Data</span> 
                                     - Lorem ipsum dolor sit amet, consectetur adipiscing
                                     elit. Sed molestie mi velit, et tincidunt neque mollis et.  
                                   </div>'

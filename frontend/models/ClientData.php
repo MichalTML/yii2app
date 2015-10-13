@@ -52,24 +52,24 @@ class ClientData extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules() {
+     public function rules() {
         return [
-            [[ 'name', 'adress', 'city', 'postal', 'phone', 'email', 'nip', 'krs', 'regon', 'www', 'clientNumber' ], 'required' ],
+            [[ 'name', 'adress', 'city', 'postal', 'nip', 'regon', 'www', 'clientNumber', 'abr' ], 'required' ],
             [[ 'creTime', 'updTime' ], 'safe' ],
             [[ 'clientNumber', 'name', 'regon', 'nip', 'krs','regon'  ], 'unique'],
         
            /// VALIDATION
             [ 'clientNumber', 'match', 'pattern' => '/^[0-9]{4}$/', 'message' => '( min. 4 digits ) Only numbers allowed' ],
-            [ 'name', 'match', 'pattern' => '/^[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ\s\.]*$/', 'message' => 'Name can only contain letters and .' ],
-            [ 'abr', 'match', 'pattern' => '/^[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ\s.-]*$/', 'message' => 'Abrevation can only contain letters and . -' ],
+            [ 'name', 'match', 'pattern' => '/^[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ\s\.\-]*$/', 'message' => 'Name can only contain letters and .' ],
+            [ 'abr', 'match', 'pattern' => '/^[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ\s\.\-]*$/', 'message' => 'Abrevation can only contain letters and . -' ],
             [ 'city', 'match', 'pattern' => '/^[a-zżźćńółęąśŻŹĆĄŚĘŁÓŃ0-9\s\.\-]*$/i', 'message' => 'City can only contain aplhanumeric signs and . -' ],
             [ 'postal', 'match', 'pattern' => '/^[a-zżźćńółęąśŻŹĆĄŚĘŁÓŃA-Z0-9\-]{1,10}$/', 'message' => '(max 10 signs) Postal code can only contain aplhanumeric and -' ],
-            [ 'phone', 'match', 'pattern' => '/^[0-9-+\s(\)]*$/', 'message' => 'Phone number can only contain numbers and + ( ) -' ],
-            [ 'fax', 'match', 'pattern' => '/^[0-9-+\s(\)]*$/', 'message' => 'Fax number can only contain numbers and + ( ) -' ],
+            [ 'phone', 'match', 'pattern' => '/^[0-9\-+\s\(\)]*$/', 'message' => 'Phone number can only contain numbers and + ( ) -' ],
+            [ 'fax', 'match', 'pattern' => '/^[0-9-+\s\(\)]*$/', 'message' => 'Fax number can only contain numbers and + ( ) -' ],
             ['email', 'email' , 'message' => 'Has to be valid email address'],
-            [ 'nip', 'match', 'pattern' => '/^[A-Z0-9]{7,14}$/', 'message' => 'NIP can only contain numbers' ],
-            [ 'krs', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => '( min. 10 digits ) KRS can only contain numbers' ],
-            [ 'regon', 'match', 'pattern' => '/^[0-9]{7,14}$/', 'message' => '( min. 7, max. 14 ) REGON can only contain numbers' ],
+            [ 'nip', 'match', 'pattern' => '/^[A-Z0-9]{7,14}$/', 'message' => 'Has to be valid NIP number' ],
+            [ 'krs', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Has to be valid KRS number' ],
+            [ 'regon', 'match', 'pattern' => '/^[0-9]{7,14}$/', 'message' => 'Has to be valid NIP number REGON number' ],
             [ 'www', 'match', 'pattern' => '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/', 'message' => 'Has to be valid website address']
        ];     
     }

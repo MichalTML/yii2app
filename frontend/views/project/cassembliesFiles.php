@@ -95,6 +95,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                 Html::button('10', [
                     'data-url'=>Url::toRoute( ['project-assemblies-files/pagination'] ),
                     'data-pagination'=>'10',
+                    'data-id'=> $id,
+                    'data-sygnature'=> $sygnature,
                     'type'=>'button', 
                     'title'=> 'send to treat', 
                     'class'=>'btn btn-success paginations'
@@ -102,6 +104,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                 Html::button('20', [
                     'data-url'=>Url::toRoute( ['project-assemblies-files/pagination'] ),
                     'data-pagination'=>'20',
+                    'data-id'=> $id,
+                    'data-sygnature'=> $sygnature,
                     'type'=>'button', 
                     'title'=> 'send to treatment', 
                     'class'=>'btn btn-success paginations'
@@ -109,6 +113,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                 Html::button('30', [
                     'data-url'=>Url::toRoute( ['project-assemblies-files/pagination'] ),
                     'data-pagination'=>'30',
+                    'data-id'=> $id,
+                    'data-sygnature'=> $sygnature,
                     'type'=>'button', 
                     'title'=> 'send to treatment', 
                     'class'=>'btn btn-success paginations'
@@ -118,6 +124,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
             
     ],
         'panel' => [
+            'headingOptions' => ['style' => 'color: #808080;'],
             'type'=>'default',
         ],
         'rowOptions' => function ($model) {
@@ -137,7 +144,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         'columns' => [
             [
                 'class' => 'yii\grid\SerialColumn',
-                'contentOptions' => ['style' => 'background-color:white;text-align: center; font-weight: bold; vertical-align: middle;'],
+                'contentOptions' => [ 'style' => 'text-align: center; font-weight: bold; vertical-align: middle;', 'class' => 'serial-col'],
             ],
 //            [
 //               'label' => 'Sygnature',
@@ -434,8 +441,8 @@ $(function(){
 $this->registerJs(
     "$(document).on('hidden.bs.modal', '#cmodal', function () {
      $.pjax.reload('#pjax-data');
-});
-    $('.send-button').click(function(){
+    });  
+     $('.send-button').click(function(){
     var data = $(this).data('id'); 
     var url = $(this).data('url');
      $.ajax({
@@ -500,7 +507,6 @@ $this->registerJs(
     
     });
     });
-    
     $('.mass-action').click(function(){
        var keys = $('#grid').yiiGridView('getSelectedRows');
        var data = $(this).data('id'); 
@@ -512,23 +518,31 @@ $this->registerJs(
        type: 'post',
        data: {id: keys, action: action},
        success: function (msg) {
-          $.pjax.reload('#pjax-data');
+          $.pjax.reload('#pjax-data');  
        }
     });}
+    $(document).ajaxStop(function(){
+        for( var x = 0; x < keys.length; x++){
+            $('tr[data-key=' + keys[x] + '] > td > input').prop('checked', true);
+        }
+    });
     });
     
-    $('.paginations).click(function(){ 
+   
+    
+    $('.paginations').click(function(){ 
        var pagination = $(this).data('pagination');
+       var id = $(this).data('id');
+       var sygnature = $(this).data('sygnature');
        var url = $(this).data('url');
-       if(keys.length > 0){
        $.ajax({
        url: url,
        type: 'post',
-       data: {pagination: pagination},
+       data: {pagination: pagination, sygnature: sygnature, id: id},
        success: function (msg) {
           $.pjax.reload('#pjax-data');
        }
-    });}
+    });
     });
     
     

@@ -45,21 +45,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'client.name',
                         'label' => 'Client',
                         'headerOptions' => ['style' => 'text-align: center;' ],
-                        'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
+                        'contentOptions' => ['style' => 'color: #337ab7;text-align: center; line-height: 2.5em;' ],
                         'format' => 'raw',
                         'value' => function ($data)
                 {
-                    return Html::button( '<a href="">' . $data->getClientName( $data->clientId ) . '</a>', ['value' => Url::toRoute( ['client/detail', 'id' => $data->clientId ] ), 'class' => 'client-button', 'id' => 'clientButton' ] );
+                    return Html::button( $data->getClientName( $data->clientId ), ['value' => Url::toRoute( ['client/detail', 'id' => $data->clientId ] ), 'class' => 'client-button', 'id' => 'clientButton' ] );
                 },
                     ],
-            [
-                'label' => 'Client Name',
-                'headerOptions' => ['style' => 'text-align: center;'],
-                'attribute' => 'client.name',
-                'value' => 'client.name',
-                'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;'],
-                
-            ],
             [
                 'label' => 'First Name',
                 'headerOptions' => ['style' => 'text-align: center;'],

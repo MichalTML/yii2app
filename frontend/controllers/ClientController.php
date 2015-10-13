@@ -39,7 +39,7 @@ class ClientController extends Controller
         $searchModel = new ClientSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         
-        $dataProvider->pagination->pageSize = 5;
+        $dataProvider->pagination->pageSize = 10;
         
         return $this->render('index', [
             'searchModel' => $searchModel, 
@@ -84,11 +84,15 @@ class ClientController extends Controller
             $numberFormatted = explode(' ', trim($number));
             $faxFormatted = explode(' ', trim($fax));
             if(count($numberFormatted) > 1){
-            $numberFormatted = trim(implode('', $numberFormatted));
-            } 
+                $numberFormatted = trim(implode('', $numberFormatted));
+            } else {
+                $numberFormatted = $number;    
+            }
             if(count($faxFormatted) > 1){
-            $faxFormatted = trim(implode('', $faxFormatted));
-            } 
+                $faxFormatted = trim(implode('', $faxFormatted));
+            } else {
+                $faxFormatted = $fax;
+            }
             $model->phone = $numberFormatted;
             $model->fax = $faxFormatted;
             if($model->save()){
@@ -97,6 +101,11 @@ class ClientController extends Controller
                 } else {
                     return $this->redirect(['index']);
                 }
+            } else {
+              return $this->render('create', [
+              'model' => $model,
+              'newClientNumber' => $newClientNumber,
+           ]);  
             }
         } else {            
             return $this->render('create', [
@@ -119,8 +128,26 @@ class ClientController extends Controller
         
         $newClientNumber = $model->setClientNumber();
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $number = $model->phone;
+            $fax = $model->fax;
+            $numberFormatted = explode(' ', trim($number));
+            $faxFormatted = explode(' ', trim($fax));
+            if(count($numberFormatted) > 1){
+                $numberFormatted = trim(implode('', $numberFormatted));
+            } else {
+                $numberFormatted = $number;    
+            }
+            if(count($faxFormatted) > 1){
+                $faxFormatted = trim(implode('', $faxFormatted));
+            } else {
+                $faxFormatted = $fax;
+            }
+            $model->phone = $numberFormatted;
+            $model->fax = $faxFormatted;
+            if($model->save()){
+            return $this->redirect(['index']);
+            }
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -171,11 +198,15 @@ class ClientController extends Controller
             $numberFormatted = explode(' ', trim($number));
             $faxFormatted = explode(' ', trim($fax));
             if(count($numberFormatted) > 1){
-            $numberFormatted = trim(implode('', $numberFormatted));
-            } 
+                $numberFormatted = trim(implode('', $numberFormatted));
+            } else {
+                $numberFormatted = $number;    
+            }
             if(count($faxFormatted) > 1){
-            $faxFormatted = trim(implode('', $faxFormatted));
-            } 
+                $faxFormatted = trim(implode('', $faxFormatted));
+            } else {
+                $faxFormatted = $fax;
+            }
             $model->phone = $numberFormatted;
             $model->fax = $faxFormatted;            
             if($model->save()){
@@ -199,29 +230,33 @@ class ClientController extends Controller
         //below code is where you will do your own stuff. This is just a sample code need to do work on saving files
         if ($model->load(Yii::$app->request->post())){
             $file = UploadedFile::getInstances($model, 'path');
-             $target = $root.'/krs-pdf/'.$file[0]->name;
+             $date = date('y-h-i-s');
+             $target = $root.'/krs-pdf/'.date('y-h-i-s').$date.$file[0]->name;
              $imageName = explode('.', $file[0]);
-             $imagePath = $root.'/krs-pdf/'.$imageName[0].'.jpg';
+             $imagePath = $root.'/krs-pdf/'.$date.$imageName[0].'.jpg';
              
     
             if(move_uploaded_file($file[0]->tempName, $target)) {
                 
-//                $imagick = new \Imagick();
-//                $imagick->readImage($target.'[0]');
-//                $imagick->setImageFormat('jpg');
-//                $imagick->setCompressionQuality(97);
-//                
-//                $imagick->writeImage($imagePath);
+                $imagick = new \Imagick();
+                $imagick->readImage($target.'[0]');
+                $imagick->setImageFormat('jpg');
+                $imagick->setCompressionQuality(97);
+                
+                $imagick->writeImage($imagePath);
                 
                 $result = $model->find()->where(['clientId' => $id])->one();
                 if(!empty($result)){
-                $model = $model->find()->where(['id'=>($result->id)])->one();
-                $model->path = $target;
+                    $model = $model->find()->where(['id'=>($result->id)])->one();
+                    $model->name = $date.$file[0]->name;
+                    $model->path = $target;
+                    $model->imagePath = $imagePath;
                 } else {
-                $model->clientId = $id;
-                $model->path = $target;
-                $model->name = $file[0]->name;
-                $model->isNewRecord = true;
+                    $model->clientId = $id;
+                    $model->path = $target;
+                    $model->name = $file[0]->name;
+                    $model->imagePath = $imagePath;
+                    $model->isNewRecord = true;
                 }
                 if($model->save()){
                    $client = new ClientData;

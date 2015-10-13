@@ -1,13 +1,10 @@
 <?php
 
-use yii\helpers\Html;
 use yii\widgets\DetailView;
-use common\models\PermissionHelpers;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\models\ClientData */
 ?>
-<div class="client-data-view">
 
     <?= DetailView::widget([
         'model' => $model,
@@ -34,5 +31,3 @@ use common\models\PermissionHelpers;
             
         ],
     ]) ?>
-
-</div>

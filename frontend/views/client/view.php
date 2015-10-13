@@ -20,9 +20,8 @@ use yii\widgets\DetailView;
             'nip',
             'krs',
             'regon',
-            'www',
             [
-             'attribute' => 'recurring',
+             'attribute' => 'website',
              'format' => 'raw',
              'value' => '<a target="_blank" href="http://'.$model->www.'">'.$model->www.'</a>',
                         

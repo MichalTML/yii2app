@@ -21,4 +21,3 @@ use yii\widgets\DetailView;
         ],
     ]) ?>
 
-</div>

@@ -36,15 +36,12 @@ class ProjectController extends Controller {
     public function actionIndex() {
         $this->layout = 'action';
         $searchModel = new ProjectSearch();
-        $dataProvider = $searchModel->search( Yii::$app->request->queryParams );      
-
-
+        $order = ['defaultOrder' => ['sygnature' => 'DESC']];
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $order);
         return $this->render( 'index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,     
-                ] );
-        
-        
+                ] );      
     }
 
     /**
@@ -59,7 +56,7 @@ class ProjectController extends Controller {
     }
     
     public function actionCview( $id ) {
-    $this->layout = 'action';
+        $this->layout = 'action';
         return $this->renderPartial( 'cview', [
                     'model' => $this->findModel( $id ),
                 ] );
@@ -77,12 +74,10 @@ class ProjectController extends Controller {
         $projectPermissions = new ProjectPermissions();
         $lastId = $model->find()->select('sygnature')->orderBy(['sygnature' => SORT_DESC])->one();
         if(isset($lastId->sygnature)){
-        $freeId = $lastId->sygnature + 1;
+            $freeId = $lastId->sygnature + 1;
         } else {
             $freeId = 1;
-        }
-        
-        
+        }     
         if ( $model->load( Yii::$app->request->post() )) {
             $weeks = $model->deadline;
             $days = $weeks * 7;
@@ -90,29 +85,22 @@ class ProjectController extends Controller {
             $deadline = date("Y-m-d", strtotime("+".$days." days", strtotime($date)));
             $model->deadline = $deadline;
             if($model->save()){
-            $projectId = $model->id;
-                
-            if ( $projectPermissions->load( Yii::$app->request->post() ) ) {
-
-                $userIds = $projectPermissions->userId;
-
-                foreach ( $userIds as $userId ) {
-
-                    $projectPermissions->userId = intval( $userId );
-                    $projectPermissions->projectId = $projectId;
-
-
-                    if ( $projectPermissions->checkPermissionsExists( $projectId, $userId ) ) {
-
-                        $projectPermissions->isNewRecord = true;
-                        $projectPermissions->id = null;
-                        $projectPermissions->save();
+                $projectId = $model->id;                
+                if ( $projectPermissions->load( Yii::$app->request->post() ) ) {
+                    $userIds = $projectPermissions->userId;
+                    foreach ( $userIds as $userId ) {
+                        $projectPermissions->userId = intval( $userId );
+                        $projectPermissions->projectId = $projectId;
+                        if ( $projectPermissions->checkPermissionsExists( $projectId, $userId ) ) {
+                            $projectPermissions->isNewRecord = true;
+                            $projectPermissions->id = null;
+                            $projectPermissions->save();
+                        }
                     }
                 }
+                $model->setProjectName( $model->sygnature, $model->projectName );
+                return $this->redirect( ['index' ] );
             }
-            $model->setProjectName( $model->sygnature, $model->projectName );
-            return $this->redirect( ['index' ] );
-        }
         } else {
             return $this->render( 'create', [
                         'model' => $model,
@@ -136,13 +124,10 @@ class ProjectController extends Controller {
         $projectPermissions = new ProjectPermissions();
         //$lastId = $model->find()->select('sygnature')->orderBy(['sygnature' => SORT_DESC])->one();
         $freeId = $model->sygnature;
-
         if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
-
             if ( $projectPermissions->load( Yii::$app->request->post() ) ) {
                 $projectPermissions->deleteAll( 'projectId ="' . $id . '"' );
                 $userIds = $projectPermissions->userId;
-
                 foreach ( $userIds as $user ) {
                     $projectPermissions->userId = intval( $user );
                     $projectPermissions->projectId = $id;
@@ -151,10 +136,9 @@ class ProjectController extends Controller {
                     $projectPermissions->save();
                 }
             }
-            $model->setProjectName( $model->id, $model->projectName );    
-            return $this->redirect( ['index' ] );
+                $model->setProjectName( $model->id, $model->projectName );    
+                return $this->redirect( ['index' ] );
         } else {
-
             return $this->render( 'update', [
                         'model' => $model,
                         'projectPermissions' => $projectPermissions,
@@ -170,7 +154,6 @@ class ProjectController extends Controller {
      * @return mixed
      */
     public function actionDelete( $id ) {
-        $model = $this->findModel( $id );
         $this->findModel( $id )->delete();
         //$this->deleteUserProjectStatus( $model->id );
         return $this->redirect( ['index' ] );
@@ -192,21 +175,19 @@ class ProjectController extends Controller {
     }
     
    public function actionNotes($id) {
-    $project = User::findOne($id);
-    return $this->render('__detailView', [
-         'project' => $project,
-     ]);
-}
+        $project = User::findOne($id);
+        return $this->render('__detailView', [
+            'project' => $project,
+        ]);
+    }
+    
     public function actionParts($sygnature, $id){
         $this->layout = 'action';
         $searchProject = $this->findModel($id);
-        $searchModel = new ProjectFileDataSearch();
-        
-        $searchAssemblies = new ProjectAssembliesDataSearch();
-                
+        $searchModel = new ProjectFileDataSearch();        
+        $searchAssemblies = new ProjectAssembliesDataSearch();                
         $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature );
-        $assemliesData = $searchAssemblies->search( Yii::$app->request->queryParams, $sygnature );
-              
+        $assemliesData = $searchAssemblies->search( Yii::$app->request->queryParams, $sygnature );              
          return $this->render( 'files', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,  
@@ -219,14 +200,11 @@ class ProjectController extends Controller {
     public function actionCparts($sygnature, $id){
         $this->layout = 'action';
         $searchProject = $this->findModel($id);
-        $searchModel = new ProjectFileDataSearch();
-        
-        $searchAssemblies = new ProjectAssembliesDataSearch();
-                
+        $searchModel = new ProjectFileDataSearch();        
+        $searchAssemblies = new ProjectAssembliesDataSearch();                
         $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature );
-        $assemliesData = $searchAssemblies->search( Yii::$app->request->queryParams, $sygnature );
-              
-         return $this->render( 'cfiles', [
+        $assemliesData = $searchAssemblies->search( Yii::$app->request->queryParams, $sygnature );              
+        return $this->render( 'cfiles', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,  
                     'project' => $searchProject,
@@ -235,24 +213,22 @@ class ProjectController extends Controller {
                 ] );
     }
     
-    public function actionCtreatment($sygnature, $id){
-        
-        $this->layout = 'action';
-        
+    public function actionCtreatment($sygnature, $id, $pagination = 20){        
+        $this->layout = 'action';        
         $searchModel = new ProjectAssembliesFilesSearch();
-                                $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 1);
-                                
-                                $dataProvider->pagination->pageSize = 20;
-                                
-                                return $this->render( 'cassembliesFiles', [
-                                            'searchModel' => $searchModel,
-                                            'dataProvider' => $dataProvider,
-                                            'id' => $id,
-                                            'sygnature' => $sygnature,
-                                        ] );
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 1);
+        $dataProvider->pagination->pageSize = $pagination;
+        return $this->render( 'cassembliesFiles',
+                            [
+                              'searchModel' => $searchModel,
+                               'dataProvider' => $dataProvider,
+                               'id' => $id,
+                               'sygnature' => $sygnature,
+                            ] 
+                            );
     }
 
-     public function actionUpload(){
+     public function actionUpload(){ // getting project list for upload
          $path = '/media/data/app_data/project_data/';
          $projects = [];
          $prjectScan = new \FilesystemIterator($path);
@@ -265,45 +241,14 @@ class ProjectController extends Controller {
          ]);
      }
      
-     public function actionFileindex(){
-         $this->layout = 'action';
+     public function actionFileindex(){ // constructuros INDEX
+        $this->layout = 'action';
         $searchModel = new ProjectSearch();
-        $dataProvider = $searchModel->search( Yii::$app->request->queryParams );      
-
-
+        $order = ['defaultOrder' => ['sygnature' => 'DESC']];
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $order );      
         return $this->render( 'fileindex', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,     
                 ] );
     }
-    /**
-     * Update User function with ProjectStatus
-     * @param string $firstlastName string grabbed from post, name of construsctor
-     * check if Project Status already exists if N then add it
-     */
-    //protected function updateUserProjectStatus( $userName, $projectId ) {
-    //$user = User::find()->where( ['firstlastName' => $userName ] )->one();
-    //$projectList = explode('|', $user->projectStatus);
-    //if(!in_array( $projectId, $projectList ) ){  
-    // $user->projectStatus.= '|' . $projectId;
-    // $user->projectStatus = trim($user->projectStatus, '|');      
-    // $user->save();        
-    // } 
-    // }
-    // protected function deleteUserProjectStatus( $projectId ) {
-    //$users = User::find()->where( ['role_id' => 1 ] )->all();
-    // foreach ( $users as $user ) {
-    //  $projectList = explode( '|', $user->projectStatus );
-    //  if ( array_search( $projectId, $projectList ) !== false ) {
-    //    $idToDelte = array_search( $projectId, $projectList );
-    //     unset( $projectList[ $idToDelte ] );
-//            var_dump($projectList);
-//            die();
-    //$updatedProjectList = implode( '|', $projectList );
-    //$updatedProjectList = trim( $updatedProjectList, '|' );
-    // $user->projectStatus = $updatedProjectList;
-    // $user->save();
-    //  }
-    //  }
-    //}
 }

@@ -44,7 +44,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                 'label' => 'Name',
                 'headerOptions' => ['style' => 'text-align: center;' ],
                 'attribute' => 'name',
-                'value' => 'name',
+                'value' => 'abr',
                 'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
             ],
             [
@@ -52,13 +52,6 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                 'headerOptions' => ['style' => 'text-align: center;' ],
                 'attribute' => 'city',
                 'value' => 'city',
-                'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
-            ],
-            [
-                'label' => 'Phone',
-                'headerOptions' => ['style' => 'text-align: center;' ],
-                'attribute' => 'phone',
-                'value' => 'phone',
                 'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
             ],
             [
@@ -98,13 +91,6 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                 'headerOptions' => ['style' => 'text-align: center;' ],
                 'attribute' => 'regon',
                 'value' => 'regon',
-                'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
-            ],
-            [
-                'label' => 'Created At',
-                'headerOptions' => ['style' => 'text-align: center;' ],
-                'attribute' => 'creTime',
-                'value' => 'creTime',
                 'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
             ],
             [

@@ -24,132 +24,138 @@ use yii\helpers\Url;
     foreach($projectData as $project){
             $json[$project['name']] = $project['sygnature'];
     }
-    $jsonFiles = json_encode( $json );
- ?>
-        <button type="submit" id="import-project" class="btn btn-default">Import</button>
+    ?>
+    <button type="submit" id="import-project" class="btn btn-default">Import</button>
     </div></div>
+<?php   
+    if(isset($json)){
+        $jsonFiles = json_encode( $json );
+        echo '<div id="json" style="height: 0; width: 0;posistion: absolute; visibility: hidden;">' . $jsonFiles . '</div>';
+    } else {
+        $jsonFiles = '';
+        echo '<div id="json" style="height: 0; width: 0;posistion: absolute; visibility: hidden;">' . $jsonFiles . '</div>';
+    }
+ ?>
+        
 
 </div>
 
 
 <input id="url" type="hidden" value="<?php echo Url::toRoute( ['project-scanner/ajax']);?>"></input>
 
-<?php
-//echo '<button class="btn btn-primary btn-sm">';
-//	echo Spinner::widget(['preset' => 'tiny', 'id' => 'spinner', 'align' => 'left', 'caption' => 'Loading &hellip;']);
-//echo '</button>';
-//?>
+<?php ?>
 <script>
-      $(function(){
-          var statusOption;
-    $("#import-project").click(function(){
-        var $jsonFile = '<?php echo $jsonFiles ?>';
+$(document).ready(function(){
+        var statusOption;
+        $("#import-project").click(function(){
+        var $jsonFile = $("#json").html();
         var $json = jQuery.parseJSON($jsonFile);
         var $option = $("#project").val();
         var $sygnature = $json[$option];
         if($option.length > 1){
-        var $url = $("#url").val();
-        var formatData = {name: $option};
-        $.ajax({
-        type: "POST",
-        url: $url,
-        data: formatData,
-        dataType: "json", 
-        error: function(msg){
-            console.log(msg);
-        },
-        success: function(msg){
-           if(msg.error.length > 0){
-            var item = $('<div class="upload-status" id="upload-status" style="font-size: 14px; color: red;">' + msg.error + '</div>').hide().fadeIn(2000);
-        } else {
-            var item = $('<div class="upload-status2" id="upload-status" style="font-size: 16px; color: #87cd00">Project Imported Correctly\n\
-<div class="files-info"><ul><li><b>Main Project Files</b> (' + msg.mainFiles + '): ' + msg.mainFilesAdded + ' (added)</li><li><b>Assemblies Files</b> (' + msg.assemblieFiles + '): ' + msg.assemblieFilesAdded + ' (added)<li><b>Main Assemblies Files</b> (' + msg.assemblieMainFiles + '): ' + msg.assemblieMainFilesAdded + ' (added)</li></div></div>').hide().fadeIn(2000);
-        }
-           $("#infobox").append(item);
-           $("#upload-status").append('<button class="btn btn-default" id="revert" style="margin-top: 10px; ">Revert</button>').on('click', '#revert', function () {
-           statusOption = 'accept';
-        var formatData2 = {state: 'no', sygnature: $sygnature};
-        $.ajax({
-        type: "POST",
-        url: $url,
-        data: formatData2,
-        dataType: "json", 
-        error: function(msg){
-            var item = $('<div class="upload-status" id="upload-status" style="font-size: 16px; color: red">' + msg.status + '</div>').hide().fadeIn(2000);
-            $("#infobox").append(item);
-        },
-        success: function(msg){
-            var item = $('<div class="upload-status" id="upload-status" style="font-size: 16px; color: red">' + msg.status + '</div>').hide().fadeIn(2000);
-            $("#infobox").append(item);
-        }
+            var $url = $("#url").val();
+            var formatData = {name: $option};
+            $.ajax({
+                type: "POST",
+                url: $url,
+                data: formatData,
+                dataType: "json", 
+                error: function(msg){
+                    console.log(msg);
+                },
+                success: function(msg){
+                if(msg.error.length > 0){
+                    var content = "<div class=\"upload-status\" id=\"upload-status\" style=\"font-size: 14px; color: red;\">" + msg.error + "</div>";
+                    var item = $(content).hide().fadeIn(2000);
+                } else {
+                    var content = "<div class=\"upload-status2\" id=\"upload-status\" style=\"font-size: 16px; color: #87cd00\">Project Imported Correctly<div class=\"files-info\"><ul><li><b> Main Project Files</b> (" + msg.mainFiles + "): " + msg.mainFilesAdded + " (added)</li><li><b> Assemblies Files</b> (" + msg.assemblieFiles + "): " + msg.assemblieFilesAdded + " (added)<li><b>Main Assemblies Files</b> (" + msg.assemblieMainFiles + "): " + msg.assemblieMainFilesAdded + " (added)</li></div></div>"
+                    var item = $(content).hide().fadeIn(2000);
+                }   
+                
+                $("#infobox").append(item);
+                var statusContent = "<button class=\"btn btn-default\" id=\"revert\" style=\"margin-top: 10px; \">Revert</button>";
+                $("#upload-status").append(statusContent).on("click", "#revert", function () {
+                    statusOption = "accept";
+                    var formatData2 = {state: "no", sygnature: $sygnature};
+                    $.ajax({
+                        type: "POST",
+                        url: $url,
+                        data: formatData2,
+                        dataType: "json", 
+                        error: function(msg){
+                            var item = $("<div class=\"upload-status\" id=\"upload-status\" style=\"font-size: 16px; color: red\">"
+                            + msg.status + "</div>").hide().fadeIn(2000);
+                            $("#infobox").append(item);
+                        },
+                        success: function(msg){
+                            var item = $("<div class=\"upload-status\" id=\"upload-status\" style=\"font-size: 16px; color: red\">"
+                            + msg.status + "</div>").hide().fadeIn(2000);
+                            $("#infobox").append(item);
+                        }
         
-    }); 
-        }); 
-           $("#upload-status").append('<button class="btn btn-default" id="accept" style="margin-top: 10px; margin-right: 10px">Accept</button>').on('click', '#accept', function () {
-        statusOption = 'accept';
-        var formatData2 = {state: 'yes', sygnature: $sygnature};
-        $.ajax({
-        type: "POST",
-        url: $url,
-        data: formatData2,
-        dataType: "json", 
-        error: function(msg){
-            var item = $('<div class="upload-status" id="upload-status" style="font-size: 16px; color: red">' + msg.status + '</div>').hide().fadeIn(2000);
-            $("#infobox").append(item);
-        },
-        success: function(msg){
-            var item = $('<div class="upload-status" id="upload-status" style="font-size: 16px; color: #87cd00">' + msg.status + '</div>').hide().fadeIn(2000);
-            $("#infobox").append(item);
-        }
-        
-    });
-        }); 
-        
+                    }); 
+                }); 
+                var uploadStatus2 = "<button class=\"btn btn-default\" id=\"accept\" style=\"margin-top: 10px; margin-right: 10px\">Accept</button>";
+                $("#upload-status").append(uploadStatus2).on("click", "#accept", function () {
+                    statusOption = "accept";
+                    var formatData2 = {state: "yes", sygnature: $sygnature};
+                    $.ajax({
+                        type: "POST",
+                        url: $url,
+                        data: formatData2,
+                        dataType: "json", 
+                        error: function(msg){
+                            var content = "<div class=\"upload-status\" id=\"upload-status\" style=\"font-size: 16px; color: red\">" + msg.status + "</div>";
+                            var item = $(content).hide().fadeIn(2000);
+                            $("#infobox").append(item);
+                        },
+                        success: function(msg){
+                            var content = "<div class=\"upload-status\" id=\"upload-status\" style=\"font-size: 16px; color: #87cd00\">" + msg.status + "</div>";
+                            var item = $(content).hide().fadeIn(2000);
+                            $("#infobox").append(item);
+                        }        
+                    });
+                });         
+                }       
+            });
         }
         });
-    }
-    });
     
-      // Hide it initially
-    $(document).ajaxStart(function() {
-        if( statusOption === 'accept'){
-        $("#upload-status").fadeOut("fast");
-        $(".overlay").css({
-         "position": "absolute", 
-          "width": $(document).width(), 
-          "height": $(document).height(),
-          "z-index": 99999 
-    }).fadeTo(0, 0.8);    
-        } else {
-        $("#upload-info").fadeOut("slow");
-        var item = $('<div class="upload-status" id="upload" style="color: #87cd00; font-size: 18px;" ><span id="font">Importing Project...</span></div>').hide().fadeIn(1000);
-        function blinker() {
-    $('#font').fadeOut(1000).fadeIn(1000);
-}setInterval(blinker, 1000); //Runs every second
-        $("#infobox").append(item);
-        //$("#modalContent").append("<div class='status-info'>asdasdasdas</div>").fadeIn("slow");
-        $("body").prepend("<div class=\"overlay\"></div>");
-    $(".overlay").css({
-    "position": "absolute", 
-    "width": $(document).width(), 
-    "height": $(document).height(),
-    "z-index": 99999 
-    }).fadeTo(0, 0.8);
-    }
-    });
+         // Hide it initially
+        $(document).ajaxStart(function() {
+            if( statusOption === "accept"){
+            $("#upload-status").fadeOut("fast");
+            $(".overlay").css({
+                "position": "absolute", 
+                "width": $(document).width(), 
+                "height": $(document).height(),
+                "z-index": 99999 
+            }).fadeTo(0, 0.8);    
+            } else {
+            $("#upload-info").fadeOut("slow");
+            var item = $("<div class=\"upload-status\" id=\"upload\" \n\
+            style=\"color: #87cd00; font-size: 18px;\" ><span id=\"font\">Importing Project...</span></div>").hide().fadeIn(1000);
+            function blinker() {
+                $("#font").fadeOut(1000).fadeIn(1000);
+            }setInterval(blinker, 1000); //Runs every second
+                $("#infobox").append(item);        
+                $("body").prepend("<div class=\"overlay\"></div>");
+                $(".overlay").css({
+                    "position": "absolute", 
+                    "width": $(document).width(), 
+                    "height": $(document).height(),
+                    "z-index": 99999 
+                }).fadeTo(0, 0.8);
+            }
+        });
     
-    $(document).ajaxStop(function() {
-    if( statusOption === 'accept'){
-         $('.overlay').fadeOut('slow'); 
-    } else {
-       // $("#infobox").hide("fast");
-        $("#upload").fadeOut("fast");
-        //$("#upload-info").fadeIn("slow");
-        $('.overlay').fadeOut('slow'); 
-    } 
+        $(document).ajaxStop(function() {
+            if( statusOption === "accept"){
+                $(".overlay").fadeOut("slow"); 
+            } else {
+                $("#upload").fadeOut("fast");
+                $(".overlay").fadeOut("slow"); 
+            } 
+        });
     });
-});
-    
 </script>
-
-     

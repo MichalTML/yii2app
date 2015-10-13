@@ -349,7 +349,7 @@ class ProjectAssembliesFilesController extends Controller
         if (Yii::$app->request->isAjax) {
                 $data = Yii::$app->request->post();
                 switch ($data['action']){
-                    case 'destma';
+                    case 'desttma';
                         foreach($data['id'] as $id){
                             $model = $this->findModel($id);
                             $model->destinationId = 1;
@@ -404,10 +404,13 @@ class ProjectAssembliesFilesController extends Controller
     public function actionPagination(){
         if (Yii::$app->request->isAjax) {
                 $data = Yii::$app->request->post();
-                $this->$data['pagination']
+                $data['pagination'];
+                $data['sygnature'];
+                $data['id'];
                 \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return [
-            'code' => 200,
-            ];
+        
+        return $this->redirect(['project/ctreatment', 
+            'sygnature' => $data['sygnature'], 'id' => $data['id'], 'pagination' => $data['pagination']]);
     }
+}
 }
