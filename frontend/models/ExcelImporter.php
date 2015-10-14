@@ -14,7 +14,8 @@ class ExcelImporter
 
         if ( !file_exists( $file ) )
         {
-            exit( "File load error!" );
+            $json = "Excel file load error!";
+            return json_encode($json);
         }
         $this->file = $file;
         $this->readFile();

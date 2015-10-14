@@ -3,6 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+$(document).ready(function(){
+        $('.content-box').css('transition', '4s');
+        $('.content-box').css('margin-top', '-50px');
+
+    });
+    
 $(document).ajaxStart(function() {
     $("body").prepend("<div class=\"overlay\"></div>");
     $(".overlay").css({

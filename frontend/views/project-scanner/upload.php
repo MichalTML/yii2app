@@ -68,15 +68,19 @@ $(document).ready(function(){
                     var content = "<div class=\"upload-status\" id=\"upload-status\" style=\"font-size: 14px; color: red;\">" + msg.error + "</div>";
                     var item = $(content).hide().fadeIn(2000);
                 } else {
-                    var content = "<div class=\"upload-status2\" id=\"upload-status\" style=\"font-size: 16px; color: #87cd00\">Project Imported Correctly<div class=\"files-info\"><ul><li><b> Main Project Files</b> (" + msg.mainFiles + "): " + msg.mainFilesAdded + " (added)</li><li><b> Assemblies Files</b> (" + msg.assemblieFiles + "): " + msg.assemblieFilesAdded + " (added)<li><b>Main Assemblies Files</b> (" + msg.assemblieMainFiles + "): " + msg.assemblieMainFilesAdded + " (added)</li></div></div>"
+                    var content = "<div class=\"upload-status2\" id=\"upload-status\" style=\"font-size: 16px; color: #87cd00\">Project Imported Correctly<div class=\"files-info\"><ul><li><b> Main Project Files</b> (" + msg.mainFiles + "): " + msg.mainFilesAdded + " (added)</li><li><b> Main Assemblies Files</b> (" + msg.assemblieMainFiles + "): " + msg.assemblieMainFilesAdded + " (added)<li><b>Assemblies Files</b> (" + msg.assemblieFiles + "): " + msg.assemblieFilesAdded  + " | " + msg.assemblieFilesFiltered + " (added)</li></div></div>";
                     var item = $(content).hide().fadeIn(2000);
                 }   
                 
                 $("#infobox").append(item);
+                if(msg.error.length > 0){
+                var statusContent = "";
+                } else {
                 var statusContent = "<button class=\"btn btn-default\" id=\"revert\" style=\"margin-top: 10px; \">Revert</button>";
+                }
                 $("#upload-status").append(statusContent).on("click", "#revert", function () {
                     statusOption = "accept";
-                    var formatData2 = {state: "no", sygnature: $sygnature};
+                    var formatData2 = {state: "no", projectName: $option, sygnature: $sygnature};
                     $.ajax({
                         type: "POST",
                         url: $url,
@@ -95,10 +99,14 @@ $(document).ready(function(){
         
                     }); 
                 }); 
+                if(msg.error.length > 0){
+                var uploadStatus2 = "";
+            } else {
                 var uploadStatus2 = "<button class=\"btn btn-default\" id=\"accept\" style=\"margin-top: 10px; margin-right: 10px\">Accept</button>";
+            }
                 $("#upload-status").append(uploadStatus2).on("click", "#accept", function () {
                     statusOption = "accept";
-                    var formatData2 = {state: "yes", sygnature: $sygnature};
+                    var formatData2 = {state: "yes", projectName: $option, sygnature: $sygnature};
                     $.ajax({
                         type: "POST",
                         url: $url,

@@ -60,7 +60,7 @@ class ClientContacts extends \yii\db\ActiveRecord
             ['lastName', 'match', 'pattern' => '/^[A-ZŻŹĆĄŚĘŁÓŃ]{1}[a-zżźćńółęąś]*$/', 'message' => 'valid example: Johnson'],
             [ 'phone', 'match', 'pattern' => '/^[0-9-+\s(\)]*$/', 'message' => 'Phone number can only contain numbers and + ( ) -' ],
             [ 'fax', 'match', 'pattern' => '/^[0-9-+\s(\)]*$/', 'message' => 'Fax number can only contain numbers and + ( ) -' ],
-            ['email', 'email' , 'message' => 'Has to be valid email address'],
+            ['email', 'match' , 'pattern' => '/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/', 'message' => 'Has to be valid email address'],
             [ 'department', 'match', 'pattern' => '/^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\s]*$/', 'message' => 'Only letters allowed' ],
             [ 'position', 'match', 'pattern' => '/^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\s]*$/', 'message' => 'Only letters allowed' ],
             ];            

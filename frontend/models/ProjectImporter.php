@@ -7,7 +7,7 @@ class ProjectImporter
 {
     
     public $excelFormat = ['xls' => 1, 'xlsx' => 1, 'ods' => 1];
-    public $projectsRootDirectory = 'e:\tma_projekty\\'; // project root path
+    public $projectsRootDirectory = '/media/data/app_data/project_data/'; // project root path
     public $projectMainTables = ['data', 'project', 'orders' ];
     public $rootStructure = [
         'project' => ['Projekt', 'projket', 'Project', 'project' ],
@@ -26,14 +26,15 @@ class ProjectImporter
 
     public function __construct($projectName) {
         $this->projects = array_values( array_diff( scandir( $this->projectsRootDirectory ), array( '..', '.' ) ) );
-        //var_dump($this->projects);
+        
         // remove this loop to get all projects from root dir
         foreach($this->projects as $id => $name){
             if($name !== $projectName){
-                unset($this->projects[$id]);
-                $this->projects = array_values($this->projects);
+                unset($this->projects[$id]);                
             }   
         }
+        $this->projects = array_values($this->projects);
+        
         if(count($this->projects) < 1 ){
                 $error = 'Check if '. $projectName .' data exists and are valid, then try again.';
                 $this->summary['error'] = $error;
@@ -41,12 +42,21 @@ class ProjectImporter
                 echo $info;
                 exit;
             }
-        $this->getProjectData();
-        $this->getAssembliesPaths();
-        $this->getFileList();
-        $this->getMainFiles();
-        $this->getMainAssemblyFiles();
-        $this->getAssemblyFiles();
+        $this->getProjectData(); // $projectsDatas         
+        $this->getAssembliesPaths();  // $assembliesPaths        
+        $this->getFileList(); // $fileList        
+        
+        if(!$this->fileList){  
+        $error = 'Check if parts list is valid, then try again.';
+        $this->summary['error'] = $error;
+                $info = json_encode($this->summary); 
+                echo $info;
+                exit;
+        }        
+        
+        $this->getMainFiles(); // $mainProjectFiles        
+        $this->getMainAssemblyFiles(); // $mainAssemblyFiles        
+        $this->getAssemblyFiles(); // $assembliesFiles 
     }
     
     // switching coding, unused method
@@ -95,7 +105,10 @@ class ProjectImporter
                 {
                     if ( isset($this->excelFormat[$fileInfo->getExtension()]))
                     {
-                        $this->fileList = $fileInfo->getPathname();
+                        $fileSyg = explode('_', $fileInfo->getFilename());
+                        if( preg_match( '/p{1}[0-9]*/i', $fileSyg[0] )){
+                            $this->fileList = $fileInfo->getPathname();
+                        }
                     }
                 }
             }
@@ -119,6 +132,7 @@ class ProjectImporter
             return round( $bytes / $kilo, 2 ) . ' KB';
         }
         if ( $bytes < $giga )
+
         {
             return round( $bytes / $mega, 2 ) . ' MB';
         }
@@ -332,14 +346,5 @@ class ProjectImporter
     }
 
 }
-
-//$project = new ProjectImporter;
-
-//var_dump($project->projectsDatas);
-//var_dump($project->getAssembliesPaths());
-//var_dump($project->getMainFiles());
-//var_dump($project->getMainAssemblyFiles());
-//var_dump($project->getAssemblyFiles());
-
 
 

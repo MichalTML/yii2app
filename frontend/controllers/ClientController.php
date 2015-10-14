@@ -37,8 +37,8 @@ class ClientController extends Controller
     {
         $this->layout = 'action';
         $searchModel = new ClientSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
+        $order = ['defaultOrder' => ['clientNumber' => 'ASC']];
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $order);
         $dataProvider->pagination->pageSize = 10;
         
         return $this->render('index', [

@@ -42,15 +42,22 @@ class ClientSearch extends ClientData
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $order = null)
     {
         $query = ClientData::find();
         $query->joinWith(['creUser']);
         
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
+        if($order){        
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+                'sort' => $order,
+            ]);
+        } else {
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+            ]);           
+        }
+       
         $dataProvider->sort->attributes['creUser.username'] =
                 [
                     'asc' => ['user.username' => SORT_ASC],

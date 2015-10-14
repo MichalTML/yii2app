@@ -15,7 +15,11 @@ use kartik\label\LabelInPlace;
     
 <?php
 $model->sygnature = $freeId;
+$model->projectStatus = 3;
+$model->getProjectPermissionsId();
+$checkboxList = json_encode($model->getProjectPermissionsId());
 ?>
+    <span id="checkboxList" style="position: absolute; display: hidden;"><?php echo $checkboxList ?></span>;
     
 <div class ="create-form col-lg-10" style="font-size: 12px">
     <?php
@@ -168,6 +172,14 @@ $this->registerJs("$('#projectdata-deadline').on('change', function(){
                             var deadline = deadline + '-' + data.getDate();
                         }
                         $('#deadline-field').attr('value', deadline);
+                    }
+                    });
+                    $(document).ready(function(){
+                    var userList = $('#checkboxList').html();
+                    var parsedList = jQuery.parseJSON(userList);
+                    for(var x = 0; x < parsedList.length; x++){
+                    $('.checkbox > label > input[value=' + parsedList[x] + ']').prop('checked', true);
+                    console.log(parsedList[0]);
                     }
                     });
                     ");

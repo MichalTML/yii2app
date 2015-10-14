@@ -16,7 +16,7 @@ $this->title = 'TMA Project Manager';
 <div class="site-index">
     <div class="jumbotron">
 
-        <div class="col-lg-12" style="min-width: 700px; padding: 0; margin-top: 50px;">     
+        <div class="col-lg-12 content-box" style="min-width: 700px; padding: 0; margin-top: 50px;">     
             <div class="row" style="margin-top: 100px">
 
                 <?php
@@ -55,7 +55,21 @@ $this->title = 'TMA Project Manager';
                     echo '</div>';
                     }
                     ?>
-                           
+                    
+                    <?php
+                    if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 10 )
+                    {
+                        echo '<div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">';
+                        echo Html::a( '<div class="mainbox-treat">'
+                                . '<div class="btn btn-default">Treatment Manager</div>'
+                                . '<div class="mainbox_info"><span>Treatment Manager</span>
+                                    - Lorem ipsum dolor sit amet, consectetur adipiscing
+                                    elit. Sed molestie mi velit, et tincidunt neque mollis et. 
+                                  </div>'
+                                . '</div>', ['project/fileindex' ] );
+                    echo '</div>';
+                    }
+                    ?>
 
                     <?php
                     if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 0 )
@@ -139,6 +153,8 @@ $this->title = 'TMA Project Manager';
         </div>
     </div>       
 </div>
+
+
 
 
 

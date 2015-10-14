@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="site-index">
     <div class="jumbotron">
         
-   <div class="col-lg-12" style="min-width: 700px; padding: 0; margin-top: 50px;">     
+   <div class="col-lg-12 content-box" style="min-width: 700px; padding: 0; margin-top: 50px;">     
 <div class="row" style="margin-top: 100px">
             
 <?php

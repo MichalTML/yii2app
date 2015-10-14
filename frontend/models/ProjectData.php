@@ -221,6 +221,15 @@ class ProjectData extends \yii\db\ActiveRecord
             return $userNames = '-----------------------------';
         
     }
+    
+    public function getProjectPermissionsId() {
+        if(!empty($this->projectPermissions)){        
+            foreach ( $this->projectPermissions as $key ) {
+                $userList[] = $key->userId;
+            }
+            return $userList;
+        }        
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -235,7 +244,9 @@ class ProjectData extends \yii\db\ActiveRecord
 
     public function getClientList() {
         $droptions = ClientData::find()->asArray()->all();
-        return ArrayHelper::map( $droptions, 'id', 'name' );
+        $droptionsArray = ArrayHelper::map( $droptions, 'id', 'name' );
+        asort($droptionsArray);        
+        return $droptionsArray;
     }
     
     public function getNote() {

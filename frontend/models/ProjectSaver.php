@@ -20,15 +20,16 @@ class ProjectSaver
     public $fileCount = ['mainFiles' => '', 'mainFilesAdded' => '', 'assemblieFiles' => '', 'assemblieFilesAdded' => '', 'assemblieMainFiles' => '', 'assemblieMainFilesAdded' => '' ];
     public $status = ['status' => ''];
 
-    public function __construct( $db, $filter = null ) {
-        
+    public function __construct( $db, $filter = null ) {         
         $this->db = $db;
         $this->filterDatas = $filter;
+        
+        $stmt = $this->db->prepare("TRUNCATE TABLE project_files_transfer_temp");
+        $stmt->execute();
     }
 
-    public function importProjecteData( $data, $files ) {
+    public function importProjecteData( $data, $files ) {     
         foreach ( $data as $project ) {
-            
             $projectId = intval( $project[ 'id' ] );
             $check = $this->db->prepare( "SELECT * FROM project_file_data WHERE (projectId = :projectId)" );
             $check->bindparam( ':projectId', $projectId );
@@ -49,10 +50,15 @@ class ProjectSaver
                 $stmt->bindparam( ':files', $project[ 'files' ] );
                 $stmt->bindparam( ':assembliesMainFiles', $files[$projectId][ 'mainAssemblyFiles' ] );
                 $stmt->bindparam( ':projectMainFiles', $files[$projectId][ 'mainProjectFiles' ] );
-                $stmt->bindparam( ':assembliesFiles', $files[$projectId][ 'assemblyFiles' ] );
+                $stmt->bindparam( ':assembliesFiles', $files[$projectId][ 'assemblyFiles' ] );             
 
                 if ( $stmt->execute() )
                 {
+                    $tableName = 'project_file_data';
+                    $tempTable = $this->db->prepare( "INSERT INTO project_files_transfer_temp (fileId, tableName) VALUES (:fileId, :tableName)" );
+                    $tempTable->bindparam( ':fileId', $projectId );
+                    $tempTable->bindparam( ':tableName', $tableName );
+                    $tempTable->execute();
                     foreach ( $project as $key => $value ) {
                         if ( $key != 'assemblies' && $key != 'id' )
                         {
@@ -69,6 +75,7 @@ class ProjectSaver
         }
         $this->checkLogs();
         $this->clearLog();
+        
     }
 
     public function importAssembliesData( $data ) {
@@ -98,7 +105,12 @@ class ProjectSaver
                     $stmt->bindparam( ':name', $name );
 
                     if ( $stmt->execute())
-                    {
+                    {   
+                        $tableName = 'project_assemblies_data';
+                        $tempTable = $this->db->prepare( "INSERT INTO project_files_transfer_temp (fileId, tableName) VALUES (:fileId, :tableName)" );
+                        $tempTable->bindparam( ':fileId', $path );
+                        $tempTable->bindparam( ':tableName', $tableName );
+                        $tempTable->execute();
                         $result[ $id ] = ['name' => $name, 'path' => $path, 'id' => $assemblieId ];
                         $this->log[ $projectId ] = $result;
                     } else
@@ -148,6 +160,12 @@ class ProjectSaver
                     $fileCount++;
                     if ( $stmt->execute() )
                     {
+                        $tableName = 'project_main_files';
+                        $tempTable = $this->db->prepare( "INSERT INTO project_files_transfer_temp (fileId, tableName) VALUES (:fileId, :tableName)" );
+                        $tempTable->bindparam( ':fileId', $file[ 'path' ] );
+                        $tempTable->bindparam( ':tableName', $tableName );
+                        $tempTable->execute();
+                        
                         $result[ $file[ 'name' ] . '.' . $file[ 'ext' ] ] = ['name' => $file[ 'name' ], 'path' => $file[ 'path' ], 'ext' => $file[ 'ext' ], 'size' => $file[ 'size' ], 'createdAt' => $file[ 'creation' ], 'updatedAt' => $file[ 'modify' ] ];
                         $this->log[ $projectId ] = $result;
                     } else
@@ -166,7 +184,7 @@ class ProjectSaver
             $this->fileCount['mainFilesAdded'] = $fileCount;
             
             
-        }
+        }        
         $this->checkLogs();
         $this->clearLog();
     }
@@ -212,6 +230,12 @@ class ProjectSaver
                     $fileCount++;
                     if ( $stmt->execute() )
                     {
+                        $tableName = 'project_assemblies_main_files';
+                        $tempTable = $this->db->prepare( "INSERT INTO project_files_transfer_temp (fileId, tableName) VALUES (:fileId, :tableName)" );
+                        $tempTable->bindparam( ':fileId', $file[ 'path' ] );
+                        $tempTable->bindparam( ':tableName', $tableName );
+                        $tempTable->execute();
+                        
                         $result[ $file[ 'name' ] . '.' . $file[ 'ext' ] ] = ['name' => $file[ 'name' ],
                             'path' => $file[ 'path' ], 'ext' => $file[ 'ext' ], 'size' => $file[ 'size' ],
                             'createdAt' => $file[ 'creation' ], 'updatedAt' => $file[ 'modify' ],
@@ -237,16 +261,29 @@ class ProjectSaver
     }
 
     public function importAssembliesFiles( $data, $count ) {
-
         foreach ( $data as $projectId => $files ) {
             $projectId = intval( $projectId );
             $fileCount = 0;
+            $excelFileCount = 0;
             foreach ( $files as $assemblieId => $file ) {
                 $newAssemblieId = $projectId . $assemblieId;
                 foreach ( $file as $record ) {
                     if ( $this->filterFile( $this->filterDatas, $record['name'] ) )
                    {
                         $typeId = intval( $record[ 'typeId' ] );
+                        /*
+                         * check for file copies and count them
+                         */
+                        $copyCheck = $this->db->prepare( "SELECT * FROM project_assemblies_files WHERE (projectId=:projectId AND name=:name AND assemblieId=:assemblieId)" );
+                        $copyCheck->bindparam( ':projectId', $projectId );
+                        $copyCheck->bindparam( ':name', $record[ 'name' ] );
+                        $copyCheck->bindparam( ':assemblieId', $newAssemblieId );
+                        if ( $copyCheck->execute() & count( $copyCheck->fetchAll() ) == 0 )
+                        {
+                            $excelFileCount++;
+                        }
+                        
+                        
                         $check = $this->db->prepare( "SELECT * FROM project_assemblies_files WHERE (path=:path AND projectId=:projectId AND name=:name AND ext=:ext AND assemblieId=:assemblieId AND size=:size)" );
                         $check->bindparam( ':path', $record[ 'path' ] );
                         $check->bindparam( ':projectId', $projectId );
@@ -257,8 +294,7 @@ class ProjectSaver
                         $check->bindparam( ':size', $record[ 'size' ] );
 
                         if ( $check->execute() & count( $check->fetchAll() ) > 0 )
-                        {
-
+                        {                         
                             $result[ $record[ 'name' ] . '.' . $record[ 'ext' ] ] = ['name' => $record[ 'name' ],
                                 'path' => $record[ 'path' ], 'ext' => $record[ 'ext' ], 'error' => 'record already in table' ];
                             $this->raport[ $projectId ][ $newAssemblieId ][ 'assmblieFiles' ] = $result;
@@ -286,6 +322,12 @@ class ProjectSaver
                             $fileCount++;
                             if ( $stmt->execute() )
                             {
+                                $tableName = 'project_assemblies_files';
+                                $tempTable = $this->db->prepare( "INSERT INTO project_files_transfer_temp (fileId, tableName) VALUES (:fileId, :tableName)" );
+                                $tempTable->bindparam( ':fileId', $record[ 'path' ] );
+                                $tempTable->bindparam( ':tableName', $tableName );
+                                $tempTable->execute();
+                                
                                 $result[ $record[ 'name' ] . '.' . $record[ 'ext' ] ] = ['name' => $record[ 'name' ],
                                     'typeId' => $record[ 'typeId' ], 'path' => $record[ 'path' ], 'ext' => $record[ 'ext' ],
                                     'size' => $record[ 'size' ], 'createdAt' => $record[ 'creation' ], 'updatedAt' => $record[ 'modify' ],
@@ -306,6 +348,7 @@ class ProjectSaver
                 $this->log[ $projectId ][ 'assemblyFilesAdded' ] = $fileCount;
                 $this->fileCount['assemblieFiles'] = $countFiles;
                 $this->fileCount['assemblieFilesAdded'] = $fileCount;
+                $this->fileCount['assemblieFilesFiltered'] = $excelFileCount;
                 
             }
         }
@@ -315,10 +358,7 @@ class ProjectSaver
 
     public function filterFile( $filterFile, $data ) {
         foreach ( $filterFile as $filter ) {
-            
-            if(isset($filter['name'])){
-            }
-            
+  
             if (isset($filter['name']) && $data == $filter[ 'name' ] )
             {
                 if ( !isset( $filter[ 'thickness' ] ) )
@@ -364,8 +404,61 @@ class ProjectSaver
     
     public function finalize($option, $sygnature = null) {
      if($option === 'yes'){
+         $stmt = $this->db->prepare("TRUNCATE TABLE project_files_transfer_temp");
+         $stmt->execute();
          $this->status['status'] = 'Project Data Saved';     
      } else {
+        $check = $this->db->prepare( "SELECT fileId, tableName FROM project_files_transfer_temp");
+        $check->execute();
+        $result = $check->fetchAll();
+        foreach($result as $data){
+            switch($data['tableName']):
+                case('project_file_data'):
+                    $stmt = $this->db->prepare("DELETE FROM  project_file_data WHERE projectId = :fileId");
+                    $stmt->bindparam( ':fileId', $data['fileId']);
+                    $stmt->execute();
+                    break;
+                case('project_assemblies_data'):
+                    $stmt = $this->db->prepare("DELETE FROM  project_assemblies_data WHERE path = :path");
+                    $stmt->bindparam( ':path', $data['fileId'] );
+                    $stmt->execute();
+                    break;
+                case('project_main_files'):
+                    $stmt = $this->db->prepare("DELETE FROM  project_main_files WHERE path = :path");
+                    $stmt->bindparam( ':path', $data['fileId'] );
+                    $stmt->execute();
+                    break;
+                case('project_assemblies_main_files'):
+                    $stmt = $this->db->prepare("DELETE FROM  project_assemblies_main_files WHERE path = :path");
+                    $stmt->bindparam( ':path', $data['fileId'] );
+                    $stmt->execute();
+                    break;
+                case('project_assemblies_files'):
+                    $stmt = $this->db->prepare("DELETE FROM  project_assemblies_files WHERE path = :path");
+                    $stmt->bindparam( ':path', $data['fileId'] );
+                    $stmt->execute();
+                    break;
+            endswitch;
+        }            
+            $stmt = $this->db->prepare("TRUNCATE TABLE project_files_transfer_temp");
+            $stmt->execute();
+            $this->status['status'] = 'Project Import process has been reverted.';
+     }
+    }
+    
+    public function statusChange($sygnature){
+        $check = $this->db->prepare( "SELECT projectId FROM project_file_data WHERE projectId=:projectId" );
+        $check->bindparam( ':projectId', $sygnature );
+        $check->execute();
+        if($check->fetchAll() > 0){
+        $check = $this->db->prepare( "UPDATE project_data SET projectStatus=:projectStatus WHERE sygnature=:projectId" );
+        $status = 1;
+        $check->bindparam( ':projectId', $sygnature );
+        $check->bindparam( ':projectStatus', $status);
+        $check->execute(); 
+        }
+    }
+    public function delete($sygnature) {
          $stmt = $this->db->prepare("DELETE FROM  project_assemblies_data WHERE projectId = :projectId");
          $stmt->bindparam( ':projectId', $sygnature );
          $stmt->execute();
@@ -387,7 +480,7 @@ class ProjectSaver
          $stmt->execute();
          
          $this->status['status'] = 'Project Import process has been reverted.';
-     }
     }
+    
 
 }
