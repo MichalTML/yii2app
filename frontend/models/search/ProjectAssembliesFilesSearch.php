@@ -21,7 +21,7 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
 
     public function rules() {
         return [
-            [[ 'priority.name', 'type.name', 'assemblie.name', 'sygnature', 'name', 'path', 'size', 'ext', 'material', 'feedback', 'createdAt', 'updatedAt', 'status.statusName','thickness', 'destination.destination' ], 'safe' ],
+            [[ 'priority.name', 'type.name', 'assemblie.name', 'sygnature', 'name', 'path', 'size', 'ext', 'material', 'feedback', 'createdAt', 'updatedAt', 'status.statusName','thickness', 'destination.destination'], 'safe' ],
         ];
     }
 
@@ -40,7 +40,7 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
      *
      * @return ActiveDataProvider
      */
-    public function search( $params, $sygnature = null, $treatment = null ) {
+    public function search( $params, $sygnature = null, $treatment = null, $action = null ) {
         if ( !$treatment )
         {
             if ( !$sygnature )
@@ -58,13 +58,21 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
             } else{
                 $query = ProjectAssembliesFiles::find()
                     ->andFilterWhere( ['project_assemblies_files.projectId' => $sygnature ] )
-                    ->andFilterWhere( ['or',
-                ['=', 'project_assemblies_files.ext', 'pdf' ],
-                ['=', 'project_assemblies_files.ext', 'dxf' ] ] );
+                    ->andFilterWhere( ['AND',
+                    ['=', 'project_assemblies_files.ext', 'dft' ],
+                     ]);
             }
             
         }
-
+        
+        if ($action){
+            $query = ProjectAssembliesFiles::find()
+                    ->andFilterWhere( ['AND',
+                    ['=', 'project_assemblies_files.ext', 'dft' ],
+                    ['=', 'project_assemblies_files.projectId', $sygnature],
+                    ['=', 'project_assemblies_files.statusId', '1' ]
+                     ]);
+        }
         $query->joinWith( ['priority', 'type', 'assemblie', 'status', 'destination' ] );
 
         $dataProvider = new ActiveDataProvider( [
@@ -107,23 +115,13 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
             return $dataProvider;
         }
 
-        $query->andFilterWhere( [
-            'id' => $this->id,
-            'projectId' => $this->projectId,
-            'assemblieId' => $this->assemblieId,
-            'typeId' => $this->typeId,
-            'flag' => $this->flag,
-            'quanity' => $this->quanity,
-            'quanityDone' => $this->quanityDone,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
-        ] );
+        
 
         $query->andFilterWhere( ['like', 'sygnature', $this->sygnature ] )
-                ->andFilterWhere( ['like', 'name', $this->name ] )
+                ->andFilterWhere( ['like', 'project_assemblies_files.name', $this->name ] )
                 ->andFilterWhere( ['like', 'path', $this->path ] )
                 ->andFilterWhere( ['like', 'size', $this->size ] )
-                ->andFilterWhere( ['like', 'ext', $this->ext ] )
+                ->andFilterWhere( ['like', 'ext', $this->ext ] )                
                 ->andFilterWhere( ['like', 'feedback', $this->feedback ] )
                 ->andFilterWhere( ['like', 'material', $this->material])
                 ->andFilterWhere( ['=', 'project_assemblies_data.name', $this->getAttribute( 'assemblie.name' ) ] )

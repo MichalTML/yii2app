@@ -142,4 +142,17 @@ class ProjectAssembliesFiles extends \yii\db\ActiveRecord
     {
         return $this->hasOne(FileDestination::className(), ['id' => 'destinationId']);
     }
+    
+    public static function getFile($sygnature, $name, $ext){
+        $filesData = new ProjectAssembliesFiles;
+        $result = $filesData->find()
+                        ->andFilterWhere(['sygnature' => $sygnature])
+                        ->andFilterWhere(['name' => $name])
+                        ->andFilterWhere(['ext' => $ext])
+                        ->one();
+        if($result){
+            return $result->path;
+        }
+        return false;
+    }
 }

@@ -12,6 +12,7 @@ use yii\filters\VerbFilter;
 use frontend\models\search\ProjectFileDataSearch;
 use frontend\models\search\ProjectAssembliesDataSearch;
 use frontend\models\search\ProjectAssembliesFilesSearch;
+use frontend\models\ProjectFileData;
 
 /**
  * ProjectController implements the CRUD actions for ProjectData model.
@@ -194,6 +195,7 @@ class ProjectController extends Controller {
                     'project' => $searchProject,
                     'assemblieData' => $assemliesData,
                     'id' => $id,
+                    'sygnature' => $sygnature,
                 ] );
     }
     
@@ -210,6 +212,7 @@ class ProjectController extends Controller {
                     'project' => $searchProject,
                     'assemblieData' => $assemliesData,
                     'id' => $id,
+                    'sygnature' => $sygnature,
                 ] );
     }
     
@@ -250,5 +253,37 @@ class ProjectController extends Controller {
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,     
                 ] );
+    }
+    
+    public function actionTreatmentindex(){ // treatment index
+        $projectList = new ProjectFileData;
+        $projectSygs = $projectList->find()->asArray()->select(['projectId'])->all();
+        foreach($projectSygs as $project){
+            $filter[] = $project['projectId'];
+        }
+        $this->layout = 'action';
+        $searchModel = new ProjectSearch();
+        $order = ['defaultOrder' => ['sygnature' => 'DESC']];
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $order, $filter);
+        return $this->render( 'treatmentindex', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,     
+                ] ); 
+    }
+    
+    public function actionTreatmentmanager($sygnature, $id, $pagination = 20){
+        $this->layout = 'action';        
+        $searchModel = new ProjectAssembliesFilesSearch();
+        $action = 'treat';
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 1, $action);
+        $dataProvider->pagination->pageSize = $pagination;
+        return $this->render( 'treatmentfiles',
+                            [
+                              'searchModel' => $searchModel,
+                               'dataProvider' => $dataProvider,
+                               'id' => $id,
+                               'sygnature' => $sygnature,
+                            ] 
+                            );
     }
 }

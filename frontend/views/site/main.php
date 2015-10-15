@@ -66,7 +66,7 @@ $this->title = 'TMA Project Manager';
                                     - Lorem ipsum dolor sit amet, consectetur adipiscing
                                     elit. Sed molestie mi velit, et tincidunt neque mollis et. 
                                   </div>'
-                                . '</div>', ['project/fileindex' ] );
+                                . '</div>', ['project/treatmentindex' ] );
                     echo '</div>';
                     }
                     ?>

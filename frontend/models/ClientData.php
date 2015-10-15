@@ -66,7 +66,7 @@ class ClientData extends \yii\db\ActiveRecord
             [ 'postal', 'match', 'pattern' => '/^[a-zżźćńółęąśŻŹĆĄŚĘŁÓŃA-Z0-9\-]{1,10}$/', 'message' => '(max 10 signs) Postal code can only contain aplhanumeric and -' ],
             [ 'phone', 'match', 'pattern' => '/^[0-9\-+\s\(\)]*$/', 'message' => 'Phone number can only contain numbers and + ( ) -' ],
             [ 'fax', 'match', 'pattern' => '/^[0-9-+\s\(\)]*$/', 'message' => 'Fax number can only contain numbers and + ( ) -' ],
-            ['email', 'match' , 'pattern' => '/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/', 'message' => 'Has to be valid email address'],
+            ['email', 'match' , 'pattern' => '/^[a-zA-Z0-9\_\.\+\-]+@[a-zA-Z0-9\-\_]+\.[a-zA-Z0-9\-\\_\.]+$/', 'message' => 'Has to be valid email address'],
             [ 'nip', 'match', 'pattern' => '/^[A-Z0-9]{7,14}$/', 'message' => 'Has to be valid NIP number' ],
             [ 'krs', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Has to be valid KRS number' ],
             [ 'regon', 'match', 'pattern' => '/^[0-9]{7,14}$/', 'message' => 'Has to be valid NIP number REGON number' ],

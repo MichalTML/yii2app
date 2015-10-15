@@ -5,7 +5,6 @@ use frontend\models\search\ProjectMainFilesSearch;
 use frontend\models\search\ProjectAssembliesMainFilesSearch;
 use frontend\models\search\ProjectAssembliesFilesSearch;
 use yii\bootstrap\Modal;
-use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\User */

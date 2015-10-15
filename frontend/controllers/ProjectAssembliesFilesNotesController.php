@@ -143,4 +143,25 @@ class ProjectAssembliesFilesNotesController extends Controller
         }
     
 }
+
+    public function actionNotet($id)
+{
+    $model = new ProjectAssembliesFilesNotes();
+    if ($model->load(Yii::$app->request->post())) {
+        
+        $model->fileId = intval($id);
+        
+     if ( $model->save() )
+            {
+            }
+        } else
+        {
+            
+            return $this->renderAjax( '__notet', [
+                        'model' => $model,
+                        'projectId' => $id,
+            ] );
+        }
+    
+}
 }

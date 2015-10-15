@@ -35,46 +35,20 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         'hover' => true,
         'resizableColumns' => false,
         'toolbar' => [
-        [            
-            
-            'content'=>
-            Html::button('<i class="fa fa-home"></i>', [
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
-                    'data-action'=>'desttma',
-                    'type'=>'button', 
-                    'title'=> 'destination TMA', 
-                    'class'=>'btn btn-success mass-action'
-                ]).' '.
-            Html::button('<i class="fa fa-sign-out"></i>', [
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
-                    'data-action'=>'destout',
-                    'type'=>'button', 
-                    'title'=> 'destination outsource', 
-                    'class'=>'btn btn-success mass-action'
-                ]),
-            'options' => ['class' => 'btn-group-sm', 'style' => '']
-            ],
                 [
             'content'=>
-            Html::button('LOW', [
+            Html::button('<i class="fa fa-plus"></i>', [
                     'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
-                    'data-action'=>'lowprio',
+                    'data-action'=>'add',
                     'type'=>'button', 
-                    'title'=> 'set priority low', 
+                    'title'=> '+1 ready file', 
                     'class'=>'btn btn-success mass-action'
                 ]). ' '.
-            Html::button('NORMAL', [
+            Html::button('<i class="fa fa-minus"></i>', [
                     'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
-                    'data-action'=>'normprio',
+                    'data-action'=>'deduct',
                     'type'=>'button', 
-                    'title'=> 'set priority normal', 
-                    'class'=>'btn btn-success mass-action'
-                ]). ' '.
-            Html::button('HIGH', [
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
-                    'data-action'=>'highprio',
-                    'type'=>'button', 
-                    'title'=> 'set priority high', 
+                    'title'=> '-1 ready file', 
                     'class'=>'btn btn-success mass-action'
                 ]),
             'options' => ['class' => 'btn-group-sm', 'style' => '']
@@ -82,7 +56,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                  [
             'content'=>
                 Html::button('<i class="fa fa-paper-plane"></i>', [
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction', 'action' => '1'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction', 'action' => '2'] ),
                     'data-action'=>'treatfile',
                     'type'=>'button', 
                     'title'=> 'send to treatment', 
@@ -93,7 +67,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
             [
                 'content'=>
                 Html::button('10', [
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination', 'target' => 'treatment'] ),
                     'data-pagination'=>'10',
                     'data-id'=> $id,
                     'data-sygnature'=> $sygnature,
@@ -102,7 +76,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     'class'=>'btn btn-success paginations'
                 ]).' '.
                 Html::button('20', [
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination', 'target' => 'treatment'] ),
                     'data-pagination'=>'20',
                     'data-id'=> $id,
                     'data-sygnature'=> $sygnature,
@@ -111,7 +85,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     'class'=>'btn btn-success paginations'
                 ]).' '.
                 Html::button('30', [
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination', 'target' => 'treatment'] ),
                     'data-pagination'=>'30',
                     'data-id'=> $id,
                     'data-sygnature'=> $sygnature,
@@ -128,17 +102,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
             'type'=>'default',
         ],
         'rowOptions' => function ($model) {
-        if($model->statusId == 1){
-            return ['style' => 'background-color: #CCF3FF; font-size:10px'];
-        }elseif ( $model->statusId == 2)
-            {
-                return ['style' => 'background-color: #E6FFB2; font-size:10px'];
-            }elseif($model->statusId == 3){
-                return ['style' => 'background-color: #E599A3; font-size:10px'];
-            
-        } else {
             return ['style' => 'font-size:10px'];
-        }},
+        },
         'headerRowOptions' => ['style' => 'font-size:10px'],
         'filterRowOptions' => ['style' => 'max-height: 10px'],
         'columns' => [
@@ -146,13 +111,6 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                 'class' => 'yii\grid\SerialColumn',
                 'contentOptions' => [ 'style' => 'text-align: center; font-weight: bold; vertical-align: middle;', 'class' => 'serial-col'],
             ],
-//            [
-//               'label' => 'Sygnature',
-//               'attribute' => 'sygnature',
-//               'value' => 'sygnature',
-//               'headerOptions' => ['style' => 'text-align: center;' ],
-//               'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
-//           ],
            [
                'label' => 'File Name',
                'attribute' => 'name',
@@ -190,14 +148,6 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'filter' => Html::activeDropDownList($searchModel, 'thickness', ArrayHelper::map(  ProjectAssembliesFiles::find()->where(['projectId' => $sygnature])->orderBy(['thickness' => SORT_ASC])->asArray()->all(), 'thickness','thickness'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'thickness',
                'headerOptions' => ['style' => 'text-align: center; min-width: 70px;' ],
-               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
-           ],
-            [
-               'label' => 'Status',
-               'attribute' => 'status.statusName',
-               'filter' => Html::activeDropDownList($searchModel, 'status.statusName', ArrayHelper::map(FileStatus::find()->asArray()->all(), 'statusName','statusName'),['class'=>'form-control', 'prompt' => ' ']),
-               'value' => 'status.statusName',
-               'headerOptions' => ['style' => 'text-align: center; min-width: 90px;' ],
                'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
            ],
             [
@@ -252,46 +202,32 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                 'header' => '',
                                 'headerOptions' => ['style' => 'background-color:white; min-width: 70px;text-align: center; border-bottom-color: transparent;' ],
                                 'contentOptions' => ['style' => 'margin-top: 5px; background-color:white;text-align:center;  line-height: 2.0;;' ],
-                                'template' => '{desttma} {destout} | {priorup} {priordown} {seenote} {note} | {downloaddxf} {downloadpdf}',
+                                'template' => '{seenote} {note} | {downloaddxf} {downloadpdf} | {add} {deduct} | {sendtreatment}',
                                 'buttons' => [  
-                                    'destout' => function ($url, $model)
+                                    'add' => function ($url, $model)
                                     {
-                                    if($model->destinationId == 2){
-                                        return '<i class="fa fa-sign-out"></i>';
+                                    if($model->quanityDone == $model->quanity){
+                                        return '<i class="fa fa-plus"></i>';
                                     } else {
-                                        return Html::button( '<a href=""><i class="fa fa-sign-out"></i></a>', ['value' => $url, 'class' => 'destout-button', 'id' => 'priorup', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'destination outsource' ] );
+                                        return Html::button( '<a href=""><i class="fa fa-plus"></i></a>', ['value' => $url, 'class' => 'add-button', 'id' => 'add', 'data-id' => $model->id, 'data-url' => $url, 'title' => '+1 ready file' ] );
                                     }},
-                                    'desttma' => function ($url, $model)
-                                    {
-                                    if($model->destinationId == 1){
-                                        return '<i class="fa fa-home"></i>';
+                                    'deduct' => function ($url, $model){
+                                    if($model->quanityDone == 0){
+                                        return '<i class="fa fa-minus"></i>';
                                     } else {
-                                        return Html::button( '<a href=""><i class="fa fa-home"></i></a>', ['value' => $url, 'class' => 'desttma-button', 'id' => 'priorup', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'destination TMA' ] );
-                                    }},
-                                    'priorup' => function ($url, $model)
-                                    {
-                                    if($model->priorityId == 2){
-                                        return '<i class="fa fa-arrow-up"></i>';
-                                    } else {
-                                        return Html::button( '<a href=""><i class="fa fa-arrow-up"></i></a>', ['value' => $url, 'class' => 'priorup-button', 'id' => 'priorup', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'increase priority' ] );
-                                    }},
-                                            'priordown' => function ($url, $model){
-                                    if($model->priorityId == 0){
-                                        return '<i class="fa fa-arrow-down"></i>';
-                                    } else {
-                                        return Html::button( '<a href=""><i class="fa fa-arrow-down"></i></a>', ['value' => $url, 'class' => 'priordown-button', 'id' => 'priordown', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'drecrease priority' ] );
+                                        return Html::button( '<a href=""><i class="fa fa-minus"></i></a>', ['value' => $url, 'class' => 'deduct-button', 'id' => 'deduct', 'data-id' => $model->id, 'data-url' => $url, 'title' => '-1 ready file' ] );
                                             }},
-//                                    'sendtreatment' => function ($url, $model)
-//                                    {
-// 
-//                                   if ($model->statusId == 0 & $model->destinationId != 0) {
-//                                        return Html::button( '<a href=""><i class="fa fa-paper-plane"></i></a>', ['value' => $url, 'class' => 'send-button', 'id' => 'send', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'treatment send' ] );
-//                                    } elseif ($model->statusId == 3){
-//                                        return Html::button( '<a href=""><i class="fa fa-paper-plane"></i></a>', ['value' => $url, 'class' => 'send-button', 'id' => 'send', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'treatment send' ] );
-//                                    }else{
-//                                        return '<i class="fa fa-paper-plane-o"></i>';
-//                                    }
-//                                    },
+                                    'sendtreatment' => function ($url, $model)
+                                    {
+ 
+                                   if ($model->statusId == 1 & $model->destinationId != 0) {
+                                        return Html::button( '<a href=""><i class="fa fa-paper-plane"></i></a>', ['value' => $url, 'class' => 'send-button', 'id' => 'send', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'treatment send' ] );
+                                    } elseif ($model->statusId == 3){
+                                        return Html::button( '<a href=""><i class="fa fa-paper-plane"></i></a>', ['value' => $url, 'class' => 'send-button', 'id' => 'send', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'treatment send' ] );
+                                    }else{
+                                        return '<i class="fa fa-paper-plane-o"></i>';
+                                    }
+                                    },
                                     'seenote' => function ($url, $model)
                                     {
                                     $searchModel = new ProjectAssembliesFilesNotesSearch();
@@ -308,7 +244,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     {
                                         return Html::button( '<a href=""><i class="fa fa-file-text-o"></i></a>', ['value' => $url, 'class' => 'cnote-button', 'title' => 'new note' ] );
                                     },
-                                            'downloaddxf' => function($url, $model)
+                                    'downloaddxf' => function($url, $model)
                                     {
                                         if($url){
                                         return Html::a( '<span class="fa fa-download"></span>', $url, [
@@ -318,7 +254,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                         }
                                         return '<span class="fa fa-download"></span>';
                                     },
-                                            'downloadpdf' => function($url, $model)
+                                    'downloadpdf' => function($url, $model)
                                     {
                                         if($url){
                                         return Html::a( '<span class="fa fa-file-pdf-o"></span>', $url, [
@@ -328,19 +264,9 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                         }
                                         return '<span class="fa fa-file-pdf-o"></span>';
                                     },
-                                    
-//                                            'view' => function($url, $model)
-//                                    {
-//                                        return Html::button( '<a href=""><i class="glyphicon glyphicon-eye-open"></i></a>', ['value' => $url, 'class' => 'file-button', 'id' => 'file-button', 'title' => 'file details' ] );
-//                                    },
                                         ],
-                                        'urlCreator' => function ($action, $model, $key, $index) use ($id) 
+                                    'urlCreator' => function ($action, $model, $key, $index) use ($id) 
                                 {
-//                                    if ( $action === 'delete' )
-//                                    {
-//                                        $url = Url::toRoute( ['project-main-files/delete', 'id' => $model->id ] );
-//                                        return $url;
-//                                    }
                                     if ( $action === 'downloadpdf' )
                                     {
                                         $path = ProjectAssembliesFiles::getFile($model->sygnature, $model->name, 'pdf');
@@ -361,14 +287,9 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                             $url = '';
                                         }
                                     }
-//                                    if ( $action === 'view' )
-//                                    {
-//                                        $url = Url::toRoute( ['project-assemblies-files/view', 'id' => $model->id ] );
-//                                        return $url;
-//                                    }
                                     if ( $action === 'note' )
                                     {
-                                        $url = Url::toRoute( ['project-assemblies-files-notes/note', 'id' => $model->id ] );
+                                        $url = Url::toRoute( ['project-assemblies-files-notes/tnote', 'id' => $model->id ] );
                                         return $url;
                                     }
                                      if ( $action === 'seenote' )
@@ -376,19 +297,19 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                         $url = Url::toRoute( ['project-assemblies-files-notes/view', 'id' => $model->id ] );
                                         return $url;
                                     }
-//                                    if ( $action === 'sendtreatment' )
-//                                    {
-//                                        $url = Url::toRoute( ['project-assemblies-files/sendtreatment'] );
-//                                        return $url;
-//                                    }
-                                    if ( $action === 'priorup' )
+                                    if ( $action === 'sendtreatment' )
                                     {
-                                        $url = Url::toRoute( ['project-assemblies-files/priorup'] );
+                                        $url = Url::toRoute( ['project-assemblies-files/sendtreatment'] );
                                         return $url;
                                     }
-                                    if ( $action === 'priordown' )
+                                    if ( $action === 'add' )
                                     {
-                                        $url = Url::toRoute( ['project-assemblies-files/priordown'] );
+                                        $url = Url::toRoute( ['project-assemblies-files/add'] );
+                                        return $url;
+                                    }
+                                    if ( $action === 'deduct' )
+                                    {
+                                        $url = Url::toRoute( ['project-assemblies-files/deduct'] );
                                         return $url;
                                     }
                                     if ( $action === 'desttma' )
@@ -462,7 +383,8 @@ $this->registerJs(
     "$(document).on('hidden.bs.modal', '#cmodal', function () {
      $.pjax.reload('#pjax-data');
     });  
-     $('.send-button').click(function(){
+    
+    $('.send-button').click(function(){
     var data = $(this).data('id'); 
     var url = $(this).data('url');
      $.ajax({
@@ -475,7 +397,8 @@ $this->registerJs(
     
     });
     });
-    $('.priorup-button').click(function(){
+    
+    $('.deduct-button').click(function(){
     var data = $(this).data('id'); 
     var url = $(this).data('url');
      $.ajax({
@@ -488,7 +411,8 @@ $this->registerJs(
     
     });
     });
-    $('.priordown-button').click(function(){
+    
+    $('.add-button').click(function(){
     var data = $(this).data('id'); 
     var url = $(this).data('url');
      $.ajax({
@@ -501,32 +425,7 @@ $this->registerJs(
     
     });
     });
-    $('.desttma-button').click(function(){
-    var data = $(this).data('id'); 
-    var url = $(this).data('url');
-     $.ajax({
-       url: url,
-       type: 'post',
-       data: {id: data},
-       success: function (msg) {
-          $.pjax.reload('#pjax-data');
-       }
-    
-    });
-    });
-    $('.destout-button').click(function(){
-    var data = $(this).data('id'); 
-    var url = $(this).data('url');
-     $.ajax({
-       url: url,
-       type: 'post',
-       data: {id: data},
-       success: function (msg) {
-          $.pjax.reload('#pjax-data');
-       }
-    
-    });
-    });
+  
     $('.mass-action').click(function(){
        var keys = $('#grid').yiiGridView('getSelectedRows');
        var data = $(this).data('id'); 
@@ -547,8 +446,6 @@ $this->registerJs(
         }
     });
     });
-    
-   
     
     $('.paginations').click(function(){ 
        var pagination = $(this).data('pagination');

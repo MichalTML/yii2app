@@ -42,9 +42,17 @@ class ProjectSearch extends ProjectData
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $order = null)
+    public function search($params, $order = null, $filter = null)
     {        
         $query = ProjectData::find();
+        //var_dump($filter);
+        if($filter){
+            foreach($filter as $sygnature){
+                $query->orFilterWhere(['sygnature' => $sygnature]);
+            }
+        }
+        
+      
         
         $query->joinWith(['projectStatus0', 'client', 'creUser']);
         if($order){        
@@ -57,7 +65,8 @@ class ProjectSearch extends ProjectData
                 'query' => $query,
             ]);
            
-        };
+        }
+        
         $dataProvider->sort->attributes['projectStatus0.statusName'] =
                 [
                     'asc' => ['project_status.statusName' => SORT_ASC],

@@ -71,5 +71,23 @@ $(document).ready(function(){
     
 });
 
+$(document).ready(function(){
+    var table = [];
+    $('.treatment-row').each(function(){
+       var temp = $(this).data('key');
+       var sygnature = $('.treatment-row[data-key=' + temp + '] td:first-child').html();
+      $('.treatment-row[data-key=' + temp + ']').mouseenter(function(){
+         $('.treatment-row[data-key=' + temp + '] td').addClass('highlight'); 
+      });
+      $('.treatment-row[data-key=' + temp + ']').mouseleave(function(){
+         $('.treatment-row[data-key=' + temp + '] td').removeClass('highlight'); 
+      });
+      $('.treatment-row[data-key=' + temp + ']').click(function(){
+          url = "/index.php?r=project%2Ftreatmentmanager&sygnature=" + sygnature + "&id=" + temp;
+          window.location = url;
+      });
+   });       
+});
+
 
 

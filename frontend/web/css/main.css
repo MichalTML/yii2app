@@ -1837,6 +1837,26 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     padding: 0;
 }
 
+.add-button{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.deduct-button{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 .desttma-button{
     border: 0px;
     height: auto;
@@ -2107,4 +2127,9 @@ filter: alpha(opacity=50);
 
 .panel{
     color: #808080;
+}
+
+.highlight{
+ background-color: #87cd00;
+ cursor: pointer;
 }

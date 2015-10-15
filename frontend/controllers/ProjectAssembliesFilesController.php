@@ -130,12 +130,18 @@ class ProjectAssembliesFilesController extends Controller
         
     }
     
-        public function actionSendtreatment()
+        public function actionSendtreatment($action)
     {
            if (Yii::$app->request->isAjax) {
            $data = Yii::$app->request->post();
            $model = $this->findModel($data['id']);
-           $model->statusId = 1;
+           if($action = 1 & $model->destinationId != 0 & $model->statusId != 2){
+                            $model->statusId = $action;
+                        }
+                        if($action = 2 ){
+                            $model->statusId = $action;
+                        }
+           }
            $model->save();
            if($model->save()){
            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -150,7 +156,6 @@ class ProjectAssembliesFilesController extends Controller
            }
     }
            
-    }
     
     public function actionPriorup()
     {
@@ -345,51 +350,73 @@ class ProjectAssembliesFilesController extends Controller
     }
     }
     
-    public function actionMassaction(){
+    public function actionMassaction($action = null){
         if (Yii::$app->request->isAjax) {
                 $data = Yii::$app->request->post();
                 switch ($data['action']){
-                    case 'desttma';
+                    case 'desttma':
                         foreach($data['id'] as $id){
                             $model = $this->findModel($id);
                             $model->destinationId = 1;
                             $model->save();
                         }
                         break;
-                    case 'destout';
+                    case 'destout':
                         foreach($data['id'] as $id){
                             $model = $this->findModel($id);
                             $model->destinationId = 2;
                             $model->save();
                         }
                         break;
-                    case 'lowprio';
+                    case 'lowprio':
                         foreach($data['id'] as $id){           
                         $model = $this->findModel($id);
                         $model->priorityId = 0;
                         $model->save();
                         }
                         break;
-                    case 'normprio';
+                    case 'normprio':
                         foreach($data['id'] as $id){           
                         $model = $this->findModel($id);
                         $model->priorityId = 1;
                         $model->save();
                         }
                         break;
-                    case 'highprio';
+                    case 'highprio':
                         foreach($data['id'] as $id){           
                         $model = $this->findModel($id);
                         $model->priorityId = 2;
                         $model->save();
                         }
                         break;
-                    case 'treatfile';
+                    case 'treatfile':
                         foreach($data['id'] as $id){
                         $model = $this->findModel($id);
-                        if($model->destinationId != 0){
-                            $model->statusId = 1;
+                        if($action == 1 & $model->destinationId != 0 & $model->statusId != 2){
+                            $model->statusId = $action;
                             $model->save();
+                        }
+                        if($action == 2 & $model->quanity == $model->quanityDone){
+                            $model->statusId = $action;
+                            $model->save();
+                        }
+                        }
+                        break;
+                    case 'add':
+                        foreach($data['id'] as $id){           
+                        $model = $this->findModel($id);
+                        if($model->quanity != $model->quanityDone){
+                            $model->quanityDone+=1;
+                            $model->save();    
+                        }
+                        }
+                        break;
+                    case 'deduct':
+                        foreach($data['id'] as $id){           
+                        $model = $this->findModel($id);
+                        if($model->quanityDone != 0){
+                            $model->quanityDone-=1;
+                            $model->save();    
                         }
                         }
                         break;
@@ -401,16 +428,68 @@ class ProjectAssembliesFilesController extends Controller
     }
     }
     
-    public function actionPagination(){
+    public function actionPagination($target = null){
         if (Yii::$app->request->isAjax) {
                 $data = Yii::$app->request->post();
                 $data['pagination'];
                 $data['sygnature'];
                 $data['id'];
                 \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        
+        if($target){
+        return $this->redirect(['project/treatmentmanager', 
+            'sygnature' => $data['sygnature'], 'id' => $data['id'], 'pagination' => $data['pagination']]);
+        }
         return $this->redirect(['project/ctreatment', 
             'sygnature' => $data['sygnature'], 'id' => $data['id'], 'pagination' => $data['pagination']]);
+        }
     }
-}
+    
+    public function actionAdd(){
+           if (Yii::$app->request->isAjax) {
+           $data = Yii::$app->request->post();
+           $model = $this->findModel($data['id']);
+           if($model->quanity !=$model->quanityDone){
+               $model->quanityDone+=1;
+           } else {
+               $model->quanityDone;
+           }   
+           if($model->save()){
+           \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return [
+            'code' => 200,
+        ];
+           } else {
+               \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return [
+            'code' => 100,
+        ];
+           }
+        }
+    }
+           
+
+    
+    public function actionDeduct(){
+           if (Yii::$app->request->isAjax) {
+           $data = Yii::$app->request->post();
+           $model = $this->findModel($data['id']);
+           if($model->quanityDone !=0 ){
+               $model->quanityDone-=1;
+           } else {
+               $model->quanityDone;
+           }     
+           if($model->save()){
+           \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return [
+            'code' => 200,
+        ];
+           } else {
+               \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return [
+            'code' => 100,
+        ];
+           }
+        }
+    }
+    
 }
