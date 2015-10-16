@@ -40,7 +40,7 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
      *
      * @return ActiveDataProvider
      */
-    public function search( $params, $sygnature = null, $treatment = null, $action = null ) {
+    public function search( $params, $sygnature = null, $treatment = null, $action = null, $order = null ) {
         if ( !$treatment )
         {
             if ( !$sygnature )
@@ -65,6 +65,8 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
             
         }
         
+        
+            
         if ($action){
             $query = ProjectAssembliesFiles::find()
                     ->andFilterWhere( ['AND',
@@ -74,11 +76,17 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
                      ]);
         }
         $query->joinWith( ['priority', 'type', 'assemblie', 'status', 'destination' ] );
-
+        
+        if($order){        
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+                'sort' => $order,
+            ]);
+        } else {
         $dataProvider = new ActiveDataProvider( [
             'query' => $query,
         ] );
-        
+        }
         
         $dataProvider->sort->attributes[ 'destination.destination' ] = [
                     'asc' => ['file_destination.destination' => SORT_ASC ],

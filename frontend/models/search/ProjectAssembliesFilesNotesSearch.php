@@ -39,14 +39,18 @@ class ProjectAssembliesFilesNotesSearch extends ProjectAssembliesFilesNotes
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $filter = null)
     {
         $query = ProjectAssembliesFilesNotes::find();
-
+        
+        if($filter){
+            $query = ProjectAssembliesFilesNotes::find()->where( ['typeId' => $filter]);
+        }
+        
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        
         $this->load($params);
 
         if (!$this->validate()) {

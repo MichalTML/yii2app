@@ -8,7 +8,7 @@ use yii\bootstrap\Modal;
 /* @var $model common\models\User */
 
 $this->title = 'P' . $project->sygnature . '_' . $project->projectName . ' Technical Documentation';
-$this->params[ 'breadcrumbs' ][] = ['label' => 'Project list', 'url' => ['fileindex' ] ];
+$this->params[ 'breadcrumbs' ][] = ['label' => 'Project list', 'url' => ['fileindex'] ];
 $this->params[ 'breadcrumbs' ][] = $this->title;
 ?>
 <br />

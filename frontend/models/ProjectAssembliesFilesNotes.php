@@ -100,9 +100,19 @@ class ProjectAssembliesFilesNotes extends \yii\db\ActiveRecord
         return $this->hasOne(ProjectFilesNotesType::className(), ['id' => 'typeId']);
     }
     
-    public function getTypeList()
+    public function getTypeList($filter = null)
     {
-        $droptions = ProjectFilesNotesType::find()->asArray()->all();
+        if($filter){
+            $droptions = ProjectFilesNotesType::find()
+                    ->where( ['id' => $filter])
+                    ->asArray()
+                    ->all();
+        return ArrayHelper::map( $droptions, 'id', 'type' );
+        }
+        $droptions = ProjectFilesNotesType::find()
+                ->where( ['!=', 'id', 3])
+                ->asArray()
+                ->all();
         return ArrayHelper::map( $droptions, 'id', 'type' );
     }
     /**

@@ -46,11 +46,11 @@ class ProjectAssembliesFilesNotesController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
-    {
-         $searchModel = new ProjectAssembliesFilesNotesSearch();
+    public function actionView($id, $filter = null)
+    {   
+         $searchModel = new ProjectAssembliesFilesNotesSearch;
          $searchModel->fileId = $id;
-         $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
+         $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $filter);
          $dataProvider->pagination->pageSize = 5;
                             return Yii::$app->controller->renderPartial( 'view', [
                                         'searchModel' => $searchModel,
@@ -144,7 +144,7 @@ class ProjectAssembliesFilesNotesController extends Controller
     
 }
 
-    public function actionNotet($id)
+    public function actionTnote($id)
 {
     $model = new ProjectAssembliesFilesNotes();
     if ($model->load(Yii::$app->request->post())) {

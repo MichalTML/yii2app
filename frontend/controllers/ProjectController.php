@@ -275,7 +275,8 @@ class ProjectController extends Controller {
         $this->layout = 'action';        
         $searchModel = new ProjectAssembliesFilesSearch();
         $action = 'treat';
-        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 1, $action);
+        $order = ['defaultOrder' => ['priorityId' => 'DESC']];
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 1, $action, $order);
         $dataProvider->pagination->pageSize = $pagination;
         return $this->render( 'treatmentfiles',
                             [

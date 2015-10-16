@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use frontend\models\ProjectAssembliesFiles;
 use frontend\models\search\ProjectAssembliesFilesSearch;
+use frontend\models\ProjectAssembliesFilesNotes;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -135,12 +136,21 @@ class ProjectAssembliesFilesController extends Controller
            if (Yii::$app->request->isAjax) {
            $data = Yii::$app->request->post();
            $model = $this->findModel($data['id']);
-           if($action = 1 & $model->destinationId != 0 & $model->statusId != 2){
-                            $model->statusId = $action;
+           if($action == 1 & $model->destinationId != 0 & $model->statusId != 2){
+              $model->statusId = $action;
+           }
+           if($action == 2 ){
+               $model->statusId = $action;
+           }
+           if($action == 3 ){
+               $notesCheck = ProjectAssembliesFilesNotes::find()
+                                ->andWhere(['fileId' => $data['id']] )
+                                ->andWhere(['typeId' => 3])
+                                ->all();
+                        if($notesCheck){
+               $model->statusId = $action;
                         }
-                        if($action = 2 ){
-                            $model->statusId = $action;
-                        }
+           }
            }
            $model->save();
            if($model->save()){
@@ -416,6 +426,19 @@ class ProjectAssembliesFilesController extends Controller
                         $model = $this->findModel($id);
                         if($model->quanityDone != 0){
                             $model->quanityDone-=1;
+                            $model->save();    
+                        }
+                        }
+                        break;
+                        case 'rejectfile':
+                        foreach($data['id'] as $id){  
+                        $notesCheck = ProjectAssembliesFilesNotes::find()
+                                ->andWhere(['fileId' => $id] )
+                                ->andWhere(['typeId' => 3])
+                                ->all();
+                        if($notesCheck){
+                            $model = $this->findModel($id);
+                            $model->statusId = 3;
                             $model->save();    
                         }
                         }

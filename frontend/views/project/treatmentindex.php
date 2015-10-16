@@ -98,8 +98,4 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                      ],          
                             ] );
 ?>
-<?php
-$url = Url::toRoute( ['project/treatmentmanager', 'id' => ''] );
-echo $url;
-?>
 </div>

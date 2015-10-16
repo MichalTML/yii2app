@@ -7,17 +7,16 @@ use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
 use frontend\models\ProjectAssembliesData;
-use frontend\models\FileStatus;
 use frontend\models\ProjectAssembliesFilesTypes;
 use frontend\models\FilePriority;
-use frontend\models\search\ProjectAssembliesFilesNotesSearch;
+use frontend\models\ProjectAssembliesFilesNotes;
 use frontend\models\ProjectAssembliesFiles;
 use frontend\models\FileDestination;
 
 
 
 $this->title = 'P' . $sygnature .  ' Treatment Files Manager';
-$this->params[ 'breadcrumbs' ][] = ['label' => 'Project list', 'url' => ['fileindex' ] ];
+$this->params[ 'breadcrumbs' ][] = ['label' => 'Project list', 'url' => ['treatmentindex' ] ];
 $this->params[ 'breadcrumbs' ][] = $this->title;
 ?>
 
@@ -61,7 +60,14 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     'type'=>'button', 
                     'title'=> 'send to treatment', 
                     'class'=>'btn btn-success mass-action'
-                ]),
+                ]). ' '.
+                 Html::button('<i class="fa fa-exclamation-triangle"></i>', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction', 'action' => '3'] ),
+                    'data-action'=>'rejectfile',
+                    'type'=>'button', 
+                    'title'=> 'reject file', 
+                    'class'=>'btn btn-success mass-action'
+                ]),    
             'options' => ['class' => 'btn-group-sm', 'style' => 'margin-right:50px;'],                     
         ],
             [
@@ -102,6 +108,13 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
             'type'=>'default',
         ],
         'rowOptions' => function ($model) {
+            $notesCheck = ProjectAssembliesFilesNotes::find()
+                                ->andWhere(['fileId' => $model->id] )
+                                ->andWhere(['typeId' => 0])
+                                ->all();
+            if($notesCheck){
+                return ['style' => 'background-color: #e6e6e6; font-size:10px'];
+            }
             return ['style' => 'font-size:10px'];
         },
         'headerRowOptions' => ['style' => 'font-size:10px'],
@@ -145,7 +158,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
             [
                'label' => 'Thick(mm)',
                'attribute' => 'thickness',
-               'filter' => Html::activeDropDownList($searchModel, 'thickness', ArrayHelper::map(  ProjectAssembliesFiles::find()->where(['projectId' => $sygnature])->orderBy(['thickness' => SORT_ASC])->asArray()->all(), 'thickness','thickness'),['class'=>'form-control', 'prompt' => ' ']),
+               'filter' => Html::activeDropDownList($searchModel, 'thickness', ArrayHelper::map(  ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'statusId' => '1', 'ext' => 'dft'])->orderBy(['thickness' => SORT_ASC])->asArray()->all(), 'thickness','thickness'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'thickness',
                'headerOptions' => ['style' => 'text-align: center; min-width: 70px;' ],
                'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
@@ -202,7 +215,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                 'header' => '',
                                 'headerOptions' => ['style' => 'background-color:white; min-width: 70px;text-align: center; border-bottom-color: transparent;' ],
                                 'contentOptions' => ['style' => 'margin-top: 5px; background-color:white;text-align:center;  line-height: 2.0;;' ],
-                                'template' => '{seenote} {note} | {downloaddxf} {downloadpdf} | {add} {deduct} | {sendtreatment}',
+                                'template' => '{seenote} {note} | {downloaddxf} {downloadpdf} <br /> {add} {deduct} | {sendtreatment} {reject}',
                                 'buttons' => [  
                                     'add' => function ($url, $model)
                                     {
@@ -220,20 +233,33 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     'sendtreatment' => function ($url, $model)
                                     {
  
-                                   if ($model->statusId == 1 & $model->destinationId != 0) {
-                                        return Html::button( '<a href=""><i class="fa fa-paper-plane"></i></a>', ['value' => $url, 'class' => 'send-button', 'id' => 'send', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'treatment send' ] );
-                                    } elseif ($model->statusId == 3){
+                                   if ($model->quanity == $model->quanityDone & $model->destinationId != 0) {
                                         return Html::button( '<a href=""><i class="fa fa-paper-plane"></i></a>', ['value' => $url, 'class' => 'send-button', 'id' => 'send', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'treatment send' ] );
                                     }else{
                                         return '<i class="fa fa-paper-plane-o"></i>';
                                     }
                                     },
+                                            'reject' => function ($url, $model)
+                                    {
+                                        $notesCheck = ProjectAssembliesFilesNotes::find()
+                                        ->andWhere(['fileId' => $model->id] )
+                                        ->andWhere(['typeId' => 3])
+                                        ->all();
+                                   if ($model->statusId == 1 & $model->destinationId != 0 & $notesCheck) {
+                                        return Html::button( '<a href=""><i class="fa fa-exclamation-triangle"></i></a>', ['value' => $url, 'class' => 'reject-button', 'id' => 'reject', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'reject file' ] );
+                                    }else{
+                                        return '<i class="fa fa-exclamation-triangle"></i>';
+                                    }
+                                    },
                                     'seenote' => function ($url, $model)
                                     {
-                                    $searchModel = new ProjectAssembliesFilesNotesSearch();
-                                    $searchModel->fileId = $model->id;
-                                    $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
-                                    if ($dataProvider->totalCount > 0) {
+                                    $searchModel = new ProjectAssembliesFilesNotes;
+                                    $result = $searchModel->find()
+                                            ->andFilterWhere(['fileId' => $model->id])
+                                            ->andFilterWhere(['typeId' => 0])
+                                            ->all();
+                                    
+                                    if ($result) {
                                         return Html::button( '<a href=""><i class="fa fa-file-text"></i></a>', ['value' => $url, 'class' => 'seenote-button', 'id' => 'seenote-button', 'title' => 'see notes' , 'data' => $model->id] );
                                     } else {
                                         return '<i class="fa fa-file-o"></i>';
@@ -294,12 +320,17 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     }
                                      if ( $action === 'seenote' )
                                     {
-                                        $url = Url::toRoute( ['project-assemblies-files-notes/view', 'id' => $model->id ] );
+                                        $url = Url::toRoute( ['project-assemblies-files-notes/view', 'id' => $model->id, 'filter' => 0 ] );
+                                        return $url;
+                                    }
+                                    if ( $action === 'reject' )
+                                    {
+                                        $url = Url::toRoute( ['project-assemblies-files/sendtreatment', 'action' => 3] );
                                         return $url;
                                     }
                                     if ( $action === 'sendtreatment' )
                                     {
-                                        $url = Url::toRoute( ['project-assemblies-files/sendtreatment'] );
+                                        $url = Url::toRoute( ['project-assemblies-files/sendtreatment', 'action' => '2'] );
                                         return $url;
                                     }
                                     if ( $action === 'add' )
@@ -396,6 +427,22 @@ $this->registerJs(
        }
     
     });
+    });
+    
+    $('.reject-button').click(function(){
+    var result = confirm('Are you sure you want to reject this file?');
+    if(result){
+    var data = $(this).data('id'); 
+    var url = $(this).data('url');
+     $.ajax({
+       url: url,
+       type: 'post',
+       data: {id: data},
+       success: function (msg) {
+          $.pjax.reload('#pjax-data');
+       }
+    });
+    }
     });
     
     $('.deduct-button').click(function(){

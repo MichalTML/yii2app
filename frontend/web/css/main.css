@@ -1837,6 +1837,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     padding: 0;
 }
 
+.reject-button{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 .add-button{
     border: 0px;
     height: auto;

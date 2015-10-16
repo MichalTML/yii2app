@@ -250,7 +250,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                 ],
             ['class' => 'yii\grid\ActionColumn',
                                 'header' => '',
-                                'headerOptions' => ['style' => 'background-color:white; min-width: 70px;text-align: center; border-bottom-color: transparent;' ],
+                                'headerOptions' => ['style' => 'background-color:white; min-width: 70px; text-align: center; border-bottom-color: transparent;' ],
                                 'contentOptions' => ['style' => 'margin-top: 5px; background-color:white;text-align:center;  line-height: 2.0;;' ],
                                 'template' => '{desttma} {destout} | {priorup} {priordown} {seenote} {note} | {downloaddxf} {downloadpdf}',
                                 'buttons' => [  
