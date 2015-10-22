@@ -16,12 +16,12 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
      * @inheritdoc
      */
     public function attributes() {
-        return array_merge( parent::attributes(), ['priority.name', 'type.name', 'assemblie.name', 'status.statusName', 'destination.destination'] );
+        return array_merge( parent::attributes(), ['Programming', 'CNC', 'ConvTreat', 'Anodizing', 'priority.name', 'type.name', 'assemblie.name', 'status.statusName', 'destination.destination'] );
     }
 
     public function rules() {
         return [
-            [[ 'priority.name', 'type.name', 'assemblie.name', 'sygnature', 'name', 'path', 'size', 'ext', 'material', 'feedback', 'createdAt', 'updatedAt', 'status.statusName','thickness', 'destination.destination'], 'safe' ],
+            [[ 'Programming', 'CNC', 'ConvTreat', 'Anodizing', 'priority.name', 'type.name', 'assemblie.name', 'sygnature', 'name', 'path', 'size', 'ext', 'material', 'feedback', 'createdAt', 'updatedAt', 'status.statusName','thickness', 'destination.destination'], 'safe' ],
         ];
     }
 
@@ -40,43 +40,64 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
      *
      * @return ActiveDataProvider
      */
-    public function search( $params, $sygnature = null, $treatment = null, $action = null, $order = null ) {
-        if ( !$treatment )
-        {
-            if ( !$sygnature )
-            {
-                $query = ProjectAssembliesFiles::find();
-            } else{
-                $query = ProjectAssembliesFiles::find()
-                        ->andFilterWhere( ['project_assemblies_files.projectId' => $sygnature ] );
-            }
-        } else
-        {
-            if ( !$sygnature )
-            {
-                $query = ProjectAssembliesFiles::find();
-            } else{
-                $query = ProjectAssembliesFiles::find()
-                    ->andFilterWhere( ['project_assemblies_files.projectId' => $sygnature ] )
-                    ->andFilterWhere( ['AND',
-                    ['=', 'project_assemblies_files.ext', 'dft' ],
-                     ]);
-            }
-            
-        }
+    public function search( $params, $sygnature = null, $treatment = null, $order = null ) {
         
-        
-            
-        if ($action){
+        if( $sygnature != null & $treatment == 'tindex'){
             $query = ProjectAssembliesFiles::find()
-                    ->andFilterWhere( ['AND',
-                    ['=', 'project_assemblies_files.ext', 'dft' ],
-                    ['=', 'project_assemblies_files.projectId', $sygnature],
-                    ['=', 'project_assemblies_files.statusId', '1' ]
-                     ]);
+                ->andFilterWhere( ['=', 'project_assemblies_files.projectId', $sygnature ] )
+                ->andFilterWhere( ['=', 'project_assemblies_files.ext', 'dft'] )
+                ->joinWith( ['priority', 'type', 'assemblie', 'status', 'destination']);
+        } elseif ($sygnature != null & $treatment == null){
+            $query = ProjectAssembliesFiles::find()
+                ->andFilterWhere( ['=', 'project_assemblies_files.projectId', $sygnature ] )
+                ->joinWith( ['priority', 'type', 'assemblie', 'status', 'destination']);
+        } elseif ($sygnature != null & $treatment == 'treatmanager'){
+            $query = ProjectAssembliesFiles::find()
+                ->andFilterWhere( ['=', 'project_assemblies_files.projectId', $sygnature ] )
+                ->andFilterWhere( ['=', 'project_assemblies_files.ext', 'dft'] )
+                ->andFilterWhere( ['or',
+                ['=', 'project_assemblies_files.statusId', '1' ], 
+                ['=', 'project_assemblies_files.statusId', '4' ],         
+                        ])
+                ->joinWith( ['priority', 'type', 'assemblie', 'status', 'destination', 'programming', 'cnc', 'anod', 'ct'], false)
+                ->distinct()
+                ;
         }
-        $query->joinWith( ['priority', 'type', 'assemblie', 'status', 'destination' ] );
+//        if ( !$treatment )
+//        {
+//            if ( !$sygnature )
+//            {
+//                
+//            } else{
+//                $query = ProjectAssembliesFiles::find()
+//                        
+//            }
+//        } else
+//        {
+//            if ( !$sygnature )
+//            {
+//                $query = ProjectAssembliesFiles::find();
+//            } elseif (!$action){
+//                $query = ProjectAssembliesFiles::find()
+//                    ->andFilterWhere( ['project_assemblies_files.projectId' => $sygnature ] )
+//                    
+//            }
+//            
+//        }
+//        
+//        if ($action){
+//            $query = ProjectAssembliesFiles::find();
+//            $query->where( ['AND',
+//                    ['=', 'project_assemblies_files.ext', 'pdf' ],
+//                    ['=', 'project_assemblies_files.projectId', $sygnature],
+//                    ['=', 'project_assemblies_files.statusId', '1' ]
+//                     ]);
+//        }
+            
+        //$query->joinWith( ['priority', 'type', 'assemblie', 'status', 'destination', 'programming', 'cnc', 'anod', 'ct']);
         
+        
+
         if($order){        
             $dataProvider = new ActiveDataProvider([
                 'query' => $query,
@@ -112,8 +133,7 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
                     'asc' => ['file_status.statusName' => SORT_ASC ],
                     'desc' => ['file_status.statusName' => SORT_DESC ],
         ];
-
-
+        
         $this->load( $params );
 
         if ( !$this->validate() )
@@ -137,7 +157,12 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
                 ->andFilterWhere( ['=', 'file_priority.name', $this->getAttribute( 'priority.name' ) ] )
                 ->andFilterWhere( ['=', 'file_destination.destination', $this->getAttribute( 'destination.destination' ) ] )
                 ->andFilterWhere( ['=', 'thickness', $this->thickness] )
-                ->andFilterWhere( ['=', 'project_assemblies_files_types.name', $this->getAttribute( 'type.name' ) ] );
+                ->andFilterWhere( ['=', 'project_assemblies_files_types.name', $this->getAttribute( 'type.name' ) ] )                 
+                ->andFilterWhere( ['like', 'programming.statusId', $this->getAttribute( 'Programming') ] )
+                ->andFilterWhere( ['like', 'cnc.statusId', $this->getAttribute( 'CNC') ] )
+                ->andFilterWhere( ['like', 'ct.statusId', $this->getAttribute( 'ConvTreat') ] )
+                ->andFilterWhere( ['like', 'anod.statusId', $this->getAttribute( 'Anodizing') ]    
+                    );
 
         return $dataProvider;
     }

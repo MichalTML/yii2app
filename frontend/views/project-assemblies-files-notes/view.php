@@ -28,7 +28,7 @@ use yii\data\ActiveDataProvider;
 [
                 'value' => 'note',
                 'label' => 'Note Content',
-                'contentOptions' => ['style' => 'width:400px; font-size: 14px; vertical-align: middle;']
+                'contentOptions' => ['style' => 'word-wrap: break-word; overflow: hidden; max-width:400px; font-size: 14px; vertical-align: middle;']
                 
             ],
             [

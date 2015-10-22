@@ -39,6 +39,7 @@ $model->typeId = 3;
     var $note = $("#projectassembliesfilesnotes-note").val();
     
     if($note.length > 0){  
+         $("#rmodal").modal("hide");
          $("#cmodal").modal("hide");
     }
     

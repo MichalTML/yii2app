@@ -13,7 +13,8 @@ class ProjectScannerController extends Controller {
         
          $model = new ProjectData();
          
-         $path = '/media/data/NAS/TMA/TMA_KONST_TEMP/';
+         $path = 'e:/tma_projekty/';
+         //$path = '/media/data/NAS/TMA/TMA_KONST_TEMP/';
          //$path = '/media/data/app_data/project_data/';
          $prjectScan = new \FilesystemIterator($path);
 

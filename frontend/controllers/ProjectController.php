@@ -219,7 +219,7 @@ class ProjectController extends Controller {
     public function actionCtreatment($sygnature, $id, $pagination = 20){        
         $this->layout = 'action';        
         $searchModel = new ProjectAssembliesFilesSearch();
-        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 1);
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 'tindex');
         $dataProvider->pagination->pageSize = $pagination;
         return $this->render( 'cassembliesFiles',
                             [
@@ -274,13 +274,12 @@ class ProjectController extends Controller {
     public function actionTreatmentmanager($sygnature, $id, $pagination = 20){
         $this->layout = 'action';        
         $searchModel = new ProjectAssembliesFilesSearch();
-        $action = 'treat';
         $order = ['defaultOrder' => ['priorityId' => 'DESC']];
-        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 1, $action, $order);
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 'treatmanager', $order);
         $dataProvider->pagination->pageSize = $pagination;
         return $this->render( 'treatmentfiles',
                             [
-                              'searchModel' => $searchModel,
+                               'searchModel' => $searchModel,
                                'dataProvider' => $dataProvider,
                                'id' => $id,
                                'sygnature' => $sygnature,

@@ -7,7 +7,7 @@ class ProjectImporter
 {
     
     public $excelFormat = ['xls' => 1, 'xlsx' => 1, 'ods' => 1];
-    public $projectsRootDirectory = '/media/data/app_data/project_data/'; // project root path
+    public $projectsRootDirectory = 'e:/tma_projekty/'; // project root path
     public $projectMainTables = ['data', 'project', 'orders' ];
     public $rootStructure = [
         'project' => ['Projekt', 'projket', 'Project', 'project' ],

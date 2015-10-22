@@ -11,7 +11,7 @@ if (isset($_POST['name'])){
    $projectName = $_POST['name'];
    
    //shell_exec("cp -Ru /media/data/NAS/TMA/TMA_KONST_TEMP/$projectName /media/data/app_data/project_data");
-   shell_exec("rsync -avh --no-compress --progress /media/data/NAS/TMA/TMA_KONST_TEMP/$projectName /media/data/app_data/project_data");
+   //shell_exec("rsync -avh --no-compress --progress /media/data/NAS/TMA/TMA_KONST_TEMP/$projectName /media/data/app_data/project_data");
    /* ProjectImporter class
     * purpose: scanning dest folder and getting all info into mylti dim. arrrays
     */

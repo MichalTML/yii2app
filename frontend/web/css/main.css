@@ -1827,6 +1827,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     padding: 0;
 }
 
+.flag-button{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 .send-button{
     border: 0px;
     height: auto;
@@ -1847,6 +1857,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     padding: 0;
 }
 
+.reject-button-note{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 .add-button{
     border: 0px;
     height: auto;
@@ -2142,4 +2161,65 @@ filter: alpha(opacity=50);
 .highlight{
  background-color: #87cd00;
  cursor: pointer;
+}
+
+.mass-action{
+    height: 35px;
+    vertical-align: center;
+    //width: 50px;
+}
+
+.cnc{
+    background-image: url('/images/icon_laser_cutting.png');
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 50px;
+}
+
+.cnc-label{
+    background-image: url('/images/cnc-label.png');
+    background-size: 30%;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-width: 80px;
+}
+
+.ct{
+    background-image: url('/images/ico_insumosp.png');
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 50px;
+    
+}
+
+.ct-label{
+    background-image: url('/images/ct-label.png');
+    background-size: 30%;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-width: 80px;
+}
+
+
+.anod{
+    background-image: url('/images/anod.png');
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 50px;
+}
+
+.annod-label{
+    background-image: url('/images/anod-label.png');
+    background-size: 30%;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-width: 80px;
+}
+
+
+.paginations{
+    height: 35px;
 }

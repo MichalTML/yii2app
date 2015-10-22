@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use frontend\models\ProjectAssembliesFilesNotes;
 use frontend\models\search\ProjectAssembliesFilesNotesSearch;
+use frontend\models\ProjectAssembliesFiles;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -51,7 +52,9 @@ class ProjectAssembliesFilesNotesController extends Controller
          $searchModel = new ProjectAssembliesFilesNotesSearch;
          $searchModel->fileId = $id;
          $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $filter);
-         $dataProvider->pagination->pageSize = 5;
+         $notesNumber = ProjectAssembliesFilesNotes::find()->select(['id'])->all();
+         $pages = count($notesNumber);
+         $dataProvider->pagination->pagesize = $pages;
                             return Yii::$app->controller->renderPartial( 'view', [
                                         'searchModel' => $searchModel,
                                         'dataProvider' => $dataProvider,
@@ -145,7 +148,7 @@ class ProjectAssembliesFilesNotesController extends Controller
 }
 
     public function actionTnote($id)
-{
+    {
     $model = new ProjectAssembliesFilesNotes();
     if ($model->load(Yii::$app->request->post())) {
         
@@ -163,5 +166,29 @@ class ProjectAssembliesFilesNotesController extends Controller
             ] );
         }
     
-}
+    }   
+
+    public function actionRnote($id)
+    {   
+    $model = new ProjectAssembliesFilesNotes();
+    if ($model->load(Yii::$app->request->post())) {
+        
+        $model->fileId = intval($id);
+        
+     if ( $model->save() )
+            {
+     $file = ProjectAssembliesFiles::find()->where(['id' => $id])->one();
+     $file->statusId = 3;
+     $file->save();
+            }
+        } else
+        {
+            
+            return $this->renderAjax( '__notet', [
+                        'model' => $model,
+                        'projectId' => $id,
+            ] );
+        }
+    
+    }
 }

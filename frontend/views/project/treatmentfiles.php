@@ -12,8 +12,7 @@ use frontend\models\FilePriority;
 use frontend\models\ProjectAssembliesFilesNotes;
 use frontend\models\ProjectAssembliesFiles;
 use frontend\models\FileDestination;
-
-
+use frontend\models\ProjectAssembliesFilesData;
 
 $this->title = 'P' . $sygnature .  ' Treatment Files Manager';
 $this->params[ 'breadcrumbs' ][] = ['label' => 'Project list', 'url' => ['treatmentindex' ] ];
@@ -34,6 +33,49 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         'hover' => true,
         'resizableColumns' => false,
         'toolbar' => [
+            [
+            'content'=>
+            Html::button('<i class="fa fa-check-circle-o fa-2x"></i>', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'accept',
+                    'type'=>'button', 
+                    'title'=> 'accept file', 
+                    'class'=>'btn btn-success mass-action'
+                ]),
+            'options' => ['class' => 'btn-group-sm', 'style' => 'margin-right: 50px']
+            ],
+             [
+            'content'=>
+            Html::button('<i class="fa fa-code fa-2x"></i>', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'program',
+                    'type'=>'button', 
+                    'title'=> 'set status programming', 
+                    'class'=>'btn btn-success mass-action'
+                ]). ' '.
+            Html::button('', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'cnc',
+                    'type'=>'button', 
+                    'title'=> 'set status programming', 
+                    'class'=>'btn btn-success mass-action cnc'
+                ]). ' '.
+            Html::button('', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'ct',
+                    'type'=>'button', 
+                    'title'=> 'set status conventional treatment', 
+                    'class'=>'btn btn-success mass-action ct'
+                ]).' '.
+            Html::button('', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'anodizing',
+                    'type'=>'button', 
+                    'title'=> 'set status anodizing', 
+                    'class'=>'btn btn-success mass-action anod'
+                ]),
+            'options' => ['class' => 'btn-group-sm', 'style' => 'margin-right: 50px']
+            ],
                 [
             'content'=>
             Html::button('<i class="fa fa-plus"></i>', [
@@ -50,7 +92,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     'title'=> '-1 ready file', 
                     'class'=>'btn btn-success mass-action'
                 ]),
-            'options' => ['class' => 'btn-group-sm', 'style' => '']
+            'options' => ['class' => 'btn-group-sm', 'style' => 'margin-right: 50px']
             ],
                  [
             'content'=>
@@ -58,7 +100,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     'data-url'=>Url::toRoute( ['project-assemblies-files/massaction', 'action' => '2'] ),
                     'data-action'=>'treatfile',
                     'type'=>'button', 
-                    'title'=> 'send to treatment', 
+                    'title'=> 'finish element', 
                     'class'=>'btn btn-success mass-action'
                 ]). ' '.
                  Html::button('<i class="fa fa-exclamation-triangle"></i>', [
@@ -67,9 +109,17 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     'type'=>'button', 
                     'title'=> 'reject file', 
                     'class'=>'btn btn-success mass-action'
-                ]),    
+                ]). ' '.
+                 Html::button('<i class="fa fa-arrow-circle-down"></i>', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction', 'action' => '2'] ),
+                    'data-url2'=> Url::toRoute( ['project-assemblies-files/downloadzip'] ),
+                    'data-action'=>'download',
+                    'type'=>'button', 
+                    'title'=> 'download file package', 
+                    'class'=>'btn btn-success mass-action'
+                ]),
             'options' => ['class' => 'btn-group-sm', 'style' => 'margin-right:50px;'],                     
-        ],
+            ],
             [
                 'content'=>
                 Html::button('10', [
@@ -78,7 +128,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     'data-id'=> $id,
                     'data-sygnature'=> $sygnature,
                     'type'=>'button', 
-                    'title'=> 'send to treat', 
+                    'title'=> 'show 10 records', 
                     'class'=>'btn btn-success paginations'
                 ]).' '.
                 Html::button('20', [
@@ -87,7 +137,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     'data-id'=> $id,
                     'data-sygnature'=> $sygnature,
                     'type'=>'button', 
-                    'title'=> 'send to treatment', 
+                    'title'=> 'show 20 records', 
                     'class'=>'btn btn-success paginations'
                 ]).' '.
                 Html::button('30', [
@@ -96,13 +146,13 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     'data-id'=> $id,
                     'data-sygnature'=> $sygnature,
                     'type'=>'button', 
-                    'title'=> 'send to treatment', 
+                    'title'=> 'show 30 records', 
                     'class'=>'btn btn-success paginations'
                 ]),
             'options' => ['class' => 'btn-group-sm']
             ],
             
-    ],
+        ],
         'panel' => [
             'headingOptions' => ['style' => 'color: #808080;'],
             'type'=>'default',
@@ -113,7 +163,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                 ->andWhere(['typeId' => 0])
                                 ->all();
             if($notesCheck){
-                return ['style' => 'background-color: #e6e6e6; font-size:10px'];
+                return ['style' => 'background-color: #fef7b9; font-size:10px'];
             }
             return ['style' => 'font-size:10px'];
         },
@@ -124,33 +174,29 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                 'class' => 'yii\grid\SerialColumn',
                 'contentOptions' => [ 'style' => 'text-align: center; font-weight: bold; vertical-align: middle;', 'class' => 'serial-col'],
             ],
-           [
+            [
                'label' => 'File Name',
                'attribute' => 'name',
                'value' => 'name',
                'headerOptions' => ['style' => 'text-align: center; min-width: 240px;' ],
                'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
            ],
-            [
-               'label' => 'Assemblie',
-               'attribute' => 'assemblie.name',
-               'filter' => Html::activeDropDownList($searchModel, 'assemblie.name', ArrayHelper::map(ProjectAssembliesData::find()->where( ['projectId' => $sygnature])->asArray()->all(), 'name','name'),['class'=>'form-control', 'prompt' => ' ']),
-               'value' => 'assemblie.name',
-               'headerOptions' => ['style' => 'text-align: center; min-width: 160px;' ],
-               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
-           ],
-            [
+           [
                'label' => 'Type',
                'attribute' => 'type.name',
-               'filter' => Html::activeDropDownList($searchModel, 'type.name', ArrayHelper::map(  ProjectAssembliesFilesTypes::find()->asArray()->all(), 'name','name'),['class'=>'form-control', 'prompt' => ' ']),
+               'filter' => Html::activeDropDownList($searchModel, 'type.name', 
+                       ArrayHelper::map(  ProjectAssembliesFilesTypes::find()->asArray()->all(), 
+                               'name','name'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'type.name',
                'headerOptions' => ['style' => 'text-align: center; min-width: 90px' ],
                'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
            ],
-             [
+           [
                'label' => 'Material',
                'attribute' => 'material',
-               'filter' => Html::activeDropDownList($searchModel, 'material', ArrayHelper::map(  ProjectAssembliesFiles::find()->where(['projectId' => $sygnature])->asArray()->all(), 'material','material'),['class'=>'form-control', 'prompt' => ' ']),
+               'filter' => Html::activeDropDownList($searchModel, 'material', 
+                       ArrayHelper::map(  ProjectAssembliesFiles::find()->where(['projectId' => $sygnature])->asArray()->all(), 
+                               'material','material'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'material',
                'headerOptions' => ['style' => 'text-align: center; width: 140px' ],
                'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
@@ -158,24 +204,100 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
             [
                'label' => 'Thick(mm)',
                'attribute' => 'thickness',
-               'filter' => Html::activeDropDownList($searchModel, 'thickness', ArrayHelper::map(  ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'statusId' => '1', 'ext' => 'dft'])->orderBy(['thickness' => SORT_ASC])->asArray()->all(), 'thickness','thickness'),['class'=>'form-control', 'prompt' => ' ']),
+               'filter' => Html::activeDropDownList($searchModel, 'thickness', 
+                       ArrayHelper::map(  ProjectAssembliesFiles::find()
+                               ->where(['projectId' => $sygnature, 'statusId' => '1', 'ext' => 'dft'])
+                               ->orderBy(['thickness' => SORT_ASC])->asArray()->all(), 
+                               'thickness','thickness'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'thickness',
                'headerOptions' => ['style' => 'text-align: center; min-width: 70px;' ],
-               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+               'contentOptions' => ['style' => 'background-color: white; text-align: center; vertical-align: middle;' ],
+           ],
+//            [
+//               'label' => 'Dest.',
+//               'attribute' => 'destination.destination',
+//               'filter' => Html::activeDropDownList($searchModel, 'destination.destination', ArrayHelper::map(FileDestination::find()->asArray()->all(), 'destination','destination'),['class'=>'form-control', 'prompt' => ' ']),
+//               'value' => 'destination.destination',
+//               'headerOptions' => ['style' => 'text-align: center; min-width: 70px;' ],
+//               'contentOptions' => function($model){
+//            if($model->destinationId == 0){
+//                return ['style' => 'color: red;text-align: center; vertical-align: middle;' ];
+//            } else {
+//            return ['style' => 'color:#87cd00; text-align: center; vertical-align: middle;' ];
+//               }
+//               }
+//           ],
+            [
+               'header' => '<i class="fa fa-code fa-2x" title="status programming"></i>',
+               'attribute' => 'Programming',
+               'value' => function(){return '';},
+               'filter' => Html::activeDropDownList($searchModel, 'Programming', 
+                           [2 => 'on'],['class'=>'form-control', 'prompt' => ' ']),
+               'headerOptions' => ['style' => 'min-width: 80px; color: #337ab7; text-align: center;' ],
+               'contentOptions' => function($model){
+                   $projectAssembliesFiles = new ProjectAssembliesFiles;                   
+                   if($projectAssembliesFiles->getFileStatus($model->id, '2')){
+                        return ['style' => 'background-color: #E6FFB2; color: #87cd00; '
+                            . 'text-align: center; vertical-align: middle; white-space: nowrap;' ];
+                   } else {
+                        return ['style' => 'background-color: #e6e6e6; color: #87cd00; text-align: '
+                            . 'center; vertical-align: middle; white-space: nowrap;' ];
+                    }
+               },
+           ],
+           [
+               'header' => '',
+               'attribute' => 'CNC',
+               'value' => function(){return '';},
+                       'filter' => Html::activeDropDownList($searchModel, 'CNC', 
+                           [3 => 'on'],['class'=>'form-control', 'prompt' => ' ']),
+               'headerOptions' => ['class' => 'cnc-label', 'style' => 'text-align: center;', 'title' => 'status CNC' ],
+               'contentOptions' => function($model){
+                   $projectAssembliesFiles = new ProjectAssembliesFiles;
+                   if($projectAssembliesFiles->getFileStatus($model->id, '3')){
+                        return ['style' => 'background-color: #E6FFB2; color: #87cd00; '
+                            . 'text-align: center; vertical-align: middle; white-space: nowrap;' ];
+                   } else {
+                        return ['style' => 'background-color: #e6e6e6; color: #87cd00; '
+                            . 'text-align: center; vertical-align: middle; white-space: nowrap;' ];
+                   }                       
+               },
            ],
             [
-               'label' => 'Dest.',
-               'attribute' => 'destination.destination',
-               'filter' => Html::activeDropDownList($searchModel, 'destination.destination', ArrayHelper::map(FileDestination::find()->asArray()->all(), 'destination','destination'),['class'=>'form-control', 'prompt' => ' ']),
-               'value' => 'destination.destination',
-               'headerOptions' => ['style' => 'text-align: center; min-width: 70px;' ],
+               'label' => '',
+               'attribute' => 'ConvTreat',
+               'value' => function(){return '';},
+               'filter' => Html::activeDropDownList($searchModel, 'ConvTreat', 
+                           [4 => 'on'],['class'=>'form-control', 'prompt' => ' ']),
+               'headerOptions' => ['class' => 'ct-label', 'style' => 'text-align: center;', 'title' => 'status conventional treatment'  ],
                'contentOptions' => function($model){
-            if($model->destinationId == 0){
-                return ['style' => 'color: red;text-align: center; vertical-align: middle;' ];
-            } else {
-            return ['style' => 'color:#87cd00; text-align: center; vertical-align: middle;' ];
-               }
-               }
+                   $projectAssembliesFiles = new ProjectAssembliesFiles;                   
+                   if($projectAssembliesFiles->getFileStatus($model->id, '4')){
+                        return ['style' => 'background-color: #E6FFB2; color: #87cd00; '
+                            . 'text-align: center; vertical-align: middle; white-space: nowrap;' ];
+                   } else {
+                        return ['style' => 'background-color: #e6e6e6; color: #87cd00; '
+                       . 'text-align: center; vertical-align: middle; white-space: nowrap;' ];
+                    }
+               },
+            ],
+            [
+               'header' => '',
+               'attribute' => 'Anodizing',
+               'value' => function(){return '';},
+               'filter' => Html::activeDropDownList($searchModel, 'Anodizing', 
+                           [5 => 'on'],['class'=>'form-control', 'prompt' => ' ']),
+               'headerOptions' => ['class' => 'annod-label', 'style' => 'text-align: center;', 'title' => 'status anodizing'  ],
+                'contentOptions' => function($model){
+                   $projectAssembliesFiles = new ProjectAssembliesFiles;
+                   if($projectAssembliesFiles->getFileStatus($model->id, '5')){
+                        return ['style' => 'background-color: #E6FFB2; color: #87cd00; '
+                            . 'text-align: center; vertical-align: middle; white-space: nowrap;' ];
+                   } else {
+                        return ['style' => 'background-color: #e6e6e6; color: #87cd00; '
+                       . 'text-align: center; vertical-align: middle; white-space: nowrap;' ];
+                   }              
+               },
            ],
             [
                'label' => 'Priority',
@@ -185,11 +307,11 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'headerOptions' => ['style' => 'text-align: center; width: 70px' ],
                'contentOptions' => function($model){
                if($model->priorityId == 1){
-                   return ['style' => 'color: blue;text-align: center; vertical-align: middle;' ];
+                   return ['style' => 'background-color:#b9c9fe; color: white;text-align: center; vertical-align: middle;' ];
                } elseif ($model->priorityId == 0){
-                   return ['style' => 'color: orange;text-align: center; vertical-align: middle;' ];
+                   return ['style' => 'background-color:#fdbe87; color: white;text-align: center; vertical-align: middle;' ];
                } else {
-                   return ['style' => 'color: red;text-align: center; vertical-align: middle;' ];
+                   return ['style' => 'background-color:#fb2d2d; color: white;text-align: center; vertical-align: middle;' ];
                }
                
                }
@@ -199,58 +321,72 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'attribute' => 'quanity',
                'value' => 'quanity',
                'headerOptions' => ['style' => 'text-align: center;' ],
-               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+               'contentOptions' => function($model){
+               if($model->quanity == $model->quanityDone){
+                   return['style' => 'background-color:#E6FFB2 ;text-align: center; vertical-align: middle;' ];
+               } else {
+                   return['style' => 'background-color:white; text-align: center; vertical-align: middle;' ];
+               }
+               }
+               
            ],
            [
                'label' => 'Fin.',
                'attribute' => 'quanityDone',
                'value' => 'quanityDone',
                'headerOptions' => ['style' => 'text-align: center;' ],
-               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+                'contentOptions' => function($model){
+               if($model->quanity == $model->quanityDone){
+                   return['style' => 'background-color:#E6FFB2 ;text-align: center; vertical-align: middle;' ];
+               } else {
+                   return['style' => 'background-color:white; text-align: center; vertical-align: middle;' ];
+               }
+               }
            ],
             ['class' => '\kartik\grid\CheckboxColumn',
                    'rowSelectedClass' => 'row-selected',
+                    'contentOptions' => ['style' => 'background-color:white; text-align: center; vertical-align: middle;' ],
                 ],
             ['class' => 'yii\grid\ActionColumn',
                                 'header' => '',
                                 'headerOptions' => ['style' => 'background-color:white; min-width: 70px;text-align: center; border-bottom-color: transparent;' ],
-                                'contentOptions' => ['style' => 'margin-top: 5px; background-color:white;text-align:center;  line-height: 2.0;;' ],
-                                'template' => '{seenote} {note} | {downloaddxf} {downloadpdf} <br /> {add} {deduct} | {sendtreatment} {reject}',
+                                'contentOptions' => function($model){
+                                $fileStatus = ProjectAssembliesFilesData::find()->select(['id'])->where(['fileId' => $model->id, 'statusId' => '1'])->one();
+                                if($fileStatus){
+                                    return ['style' => 'margin-top: 5px; background-color:#e6ffb2;text-align:center;  line-height: 2.0;' ];
+                                }
+                                    return ['style' => 'margin-top: 5px; background-color:#E599A3;text-align:center;  line-height: 2.0;' ];      
+                                },
+                                'template' => '{seenote} {note} | {downloaddxf} {downloadpdf} <br /> {add} {deduct} | {sendtreatment} {reject}',                                          
                                 'buttons' => [  
                                     'add' => function ($url, $model)
                                     {
-                                    if($model->quanityDone == $model->quanity){
+                                    $fileStatus = ProjectAssembliesFilesData::find()->select(['id'])->where(['fileId' => $model->id, 'statusId' => '1'])->one();
+                                    if($model->quanityDone == $model->quanity || $fileStatus == null){
                                         return '<i class="fa fa-plus"></i>';
                                     } else {
                                         return Html::button( '<a href=""><i class="fa fa-plus"></i></a>', ['value' => $url, 'class' => 'add-button', 'id' => 'add', 'data-id' => $model->id, 'data-url' => $url, 'title' => '+1 ready file' ] );
                                     }},
                                     'deduct' => function ($url, $model){
-                                    if($model->quanityDone == 0){
+                                        $fileStatus = ProjectAssembliesFilesData::find()->select(['id'])->where(['fileId' => $model->id, 'statusId' => '1'])->one();
+                                    if($model->quanityDone == 0 || $fileStatus == null){
                                         return '<i class="fa fa-minus"></i>';
                                     } else {
                                         return Html::button( '<a href=""><i class="fa fa-minus"></i></a>', ['value' => $url, 'class' => 'deduct-button', 'id' => 'deduct', 'data-id' => $model->id, 'data-url' => $url, 'title' => '-1 ready file' ] );
                                             }},
                                     'sendtreatment' => function ($url, $model)
                                     {
- 
-                                   if ($model->quanity == $model->quanityDone & $model->destinationId != 0) {
-                                        return Html::button( '<a href=""><i class="fa fa-paper-plane"></i></a>', ['value' => $url, 'class' => 'send-button', 'id' => 'send', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'treatment send' ] );
+                                                $fileStatus = ProjectAssembliesFilesData::find()->select(['id'])->where(['fileId' => $model->id, 'statusId' => '1'])->one();
+                                   if ($model->quanity == $model->quanityDone & $model->destinationId != 0 & $fileStatus != null) {
+                                        return Html::button( '<a href=""><i class="fa fa-paper-plane"></i></a>', ['value' => $url, 'class' => 'send-button', 'id' => 'send', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'finish element' ] );
                                     }else{
                                         return '<i class="fa fa-paper-plane-o"></i>';
                                     }
                                     },
-                                            'reject' => function ($url, $model)
-                                    {
-                                        $notesCheck = ProjectAssembliesFilesNotes::find()
-                                        ->andWhere(['fileId' => $model->id] )
-                                        ->andWhere(['typeId' => 3])
-                                        ->all();
-                                   if ($model->statusId == 1 & $model->destinationId != 0 & $notesCheck) {
-                                        return Html::button( '<a href=""><i class="fa fa-exclamation-triangle"></i></a>', ['value' => $url, 'class' => 'reject-button', 'id' => 'reject', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'reject file' ] );
-                                    }else{
-                                        return '<i class="fa fa-exclamation-triangle"></i>';
-                                    }
-                                    },
+                                    'reject' => function ($url, $model)
+                                    {                                      
+                                        return Html::button( '<a href=""><i class="fa fa-exclamation-triangle"></i></a>', ['value' => $url, 'class' => 'reject-button-note', 'id' => 'reject', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'reject file' ] );
+                                    },                                    
                                     'seenote' => function ($url, $model)
                                     {
                                     $searchModel = new ProjectAssembliesFilesNotes;
@@ -324,8 +460,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                         return $url;
                                     }
                                     if ( $action === 'reject' )
-                                    {
-                                        $url = Url::toRoute( ['project-assemblies-files/sendtreatment', 'action' => 3] );
+                                    {   
+                                        $url = Url::toRoute( ['project-assemblies-files-notes/rnote', 'id' => $model->id] );
                                         return $url;
                                     }
                                     if ( $action === 'sendtreatment' )
@@ -361,7 +497,14 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         ]);
 
         
-        
+                        Modal::begin( [
+                            'id' => 'rmodal',
+                            'header' => '<h4 class="modal-title">New Note</h4>',
+                        ] );
+                        echo "<div id='modalContent'></div>";
+
+                        Modal::end();
+                        
                         Modal::begin( [
                             'id' => 'cmodal',
                             'header' => '<h4 class="modal-title">New Note</h4>',
@@ -429,21 +572,17 @@ $this->registerJs(
     });
     });
     
-    $('.reject-button').click(function(){
-    var result = confirm('Are you sure you want to reject this file?');
-    if(result){
-    var data = $(this).data('id'); 
-    var url = $(this).data('url');
-     $.ajax({
-       url: url,
-       type: 'post',
-       data: {id: data},
-       success: function (msg) {
-          $.pjax.reload('#pjax-data');
-       }
+    $('.reject-button-note').click(function(){
+        $('#rmodal').modal('show')
+                .find('#modalContent')
+                .load($(this).attr('value'));
     });
-    }
-    });
+    
+    $(document).on('hidden.bs.modal', '#rmodal', function () {
+     $.pjax.reload('#pjax-data');
+    }); 
+    
+    
     
     $('.deduct-button').click(function(){
     var data = $(this).data('id'); 
@@ -472,27 +611,44 @@ $this->registerJs(
     
     });
     });
-  
+    
     $('.mass-action').click(function(){
        var keys = $('#grid').yiiGridView('getSelectedRows');
        var data = $(this).data('id'); 
        var action = $(this).data('action');
        var url = $(this).data('url');
+       var url2 = $(this).data('url2');
        if(keys.length > 0){
        $.ajax({
        url: url,
        type: 'post',
        data: {id: keys, action: action},
-       success: function (msg) {
+       success: function () {
+          if(action === 'download'){
+          $.ajax({
+            url: url2,
+            type: 'POST',
+            success: function() {
+            window.location = url2;
+            }
+          });
+          } else {
           $.pjax.reload('#pjax-data');  
-       }
-    });}
-    $(document).ajaxStop(function(){
-        for( var x = 0; x < keys.length; x++){
-            $('tr[data-key=' + keys[x] + '] > td > input').prop('checked', true);
+          }
         }
-    });
-    });
+        });
+        }
+        
+      $(document).one('ajaxStop', function() {
+          if(keys.length > 0){
+            for( var x = 0; x < keys.length; x++){
+                $('input[value=' + keys[x] + ']').prop('checked', false);
+                $('input[value=' + keys[x] + ']').prop('checked', true);    
+            }
+            }
+      });  
+     
+      });
     
     $('.paginations').click(function(){ 
        var pagination = $(this).data('pagination');

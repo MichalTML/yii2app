@@ -13,6 +13,7 @@ use frontend\models\FilePriority;
 use frontend\models\search\ProjectAssembliesFilesNotesSearch;
 use frontend\models\ProjectAssembliesFiles;
 use frontend\models\FileDestination;
+use frontend\models\ProjectAssembliesFilesNotes;
 
 
 
@@ -83,7 +84,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
             'content'=>
                 Html::button('<i class="fa fa-paper-plane"></i>', [
                     'data-url'=>Url::toRoute( ['project-assemblies-files/massaction', 'action' => '1'] ),
-                    'data-action'=>'treatfile',
+                    'data-action'=>'sendtotreatment',
                     'type'=>'button', 
                     'title'=> 'send to treatment', 
                     'class'=>'btn btn-success mass-action'
@@ -130,13 +131,13 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         'rowOptions' => function ($model) {
         if($model->statusId == 1){
             return ['style' => 'background-color: #CCF3FF; font-size:10px'];
-        }elseif ( $model->statusId == 2)
-            {
-                return ['style' => 'background-color: #E6FFB2; font-size:10px'];
-            }elseif($model->statusId == 3){
-                return ['style' => 'background-color: #E599A3; font-size:10px'];
-            
-        } else {
+        }elseif ( $model->statusId == 2){
+            return ['style' => 'background-color: #E6FFB2; font-size:10px'];
+        }elseif($model->statusId == 3){
+            return ['style' => 'background-color: #E599A3; font-size:10px'];
+        }elseif($model->statusId == 4){
+            return ['style' => 'background-color: #aac0ee; font-size:10px'];  
+        }else {
             return ['style' => 'font-size:10px'];
         }},
         'headerRowOptions' => ['style' => 'font-size:10px'],
@@ -158,7 +159,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'attribute' => 'name',
                'value' => 'name',
                'headerOptions' => ['style' => 'text-align: center; min-width: 240px;' ],
-               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+               'contentOptions' => ['style' => 'background-color: white; text-align: center; vertical-align: middle;' ],
            ],
             [
                'label' => 'Assemblie',
@@ -166,7 +167,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'filter' => Html::activeDropDownList($searchModel, 'assemblie.name', ArrayHelper::map(ProjectAssembliesData::find()->where( ['projectId' => $sygnature])->asArray()->all(), 'name','name'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'assemblie.name',
                'headerOptions' => ['style' => 'text-align: center; min-width: 160px;' ],
-               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+               'contentOptions' => ['style' => 'background-color: white; text-align: center; vertical-align: middle;' ],
            ],
             [
                'label' => 'Type',
@@ -174,7 +175,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'filter' => Html::activeDropDownList($searchModel, 'type.name', ArrayHelper::map(  ProjectAssembliesFilesTypes::find()->asArray()->all(), 'name','name'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'type.name',
                'headerOptions' => ['style' => 'text-align: center; min-width: 90px' ],
-               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+               'contentOptions' => ['style' => 'background-color: white;text-align: center; vertical-align: middle;' ],
            ],
              [
                'label' => 'Material',
@@ -182,7 +183,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'filter' => Html::activeDropDownList($searchModel, 'material', ArrayHelper::map(  ProjectAssembliesFiles::find()->where(['projectId' => $sygnature])->asArray()->all(), 'material','material'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'material',
                'headerOptions' => ['style' => 'text-align: center; width: 140px' ],
-               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+               'contentOptions' => ['style' => 'background-color: white;text-align: center; vertical-align: middle;' ],
            ],
             [
                'label' => 'Thick(mm)',
@@ -190,7 +191,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'filter' => Html::activeDropDownList($searchModel, 'thickness', ArrayHelper::map(  ProjectAssembliesFiles::find()->where(['projectId' => $sygnature])->orderBy(['thickness' => SORT_ASC])->asArray()->all(), 'thickness','thickness'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'thickness',
                'headerOptions' => ['style' => 'text-align: center; min-width: 70px;' ],
-               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+               'contentOptions' => ['style' => 'background-color: white; text-align: center; vertical-align: middle;' ],
            ],
             [
                'label' => 'Status',
@@ -198,7 +199,13 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'filter' => Html::activeDropDownList($searchModel, 'status.statusName', ArrayHelper::map(FileStatus::find()->asArray()->all(), 'statusName','statusName'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'status.statusName',
                'headerOptions' => ['style' => 'text-align: center; min-width: 90px;' ],
-               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+               'contentOptions' => function($model){
+                    if($model->statusId == 0){
+                        return ['style' => 'background-color: white; text-align: center; vertical-align: middle;' ];
+                    } else {
+                        return ['style' => 'text-align: center; vertical-align: middle;' ];
+                    }
+               }
            ],
             [
                'label' => 'Dest.',
@@ -208,9 +215,9 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'headerOptions' => ['style' => 'text-align: center; min-width: 70px;' ],
                'contentOptions' => function($model){
             if($model->destinationId == 0){
-                return ['style' => 'color: red;text-align: center; vertical-align: middle;' ];
+                return ['style' => 'background-color: white;  color: red;text-align: center; vertical-align: middle;' ];
             } else {
-            return ['style' => 'color:#87cd00; text-align: center; vertical-align: middle;' ];
+            return ['style' => 'background-color: white;  color:#87cd00; text-align: center; vertical-align: middle;' ];
                }
                }
            ],
@@ -222,11 +229,11 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'headerOptions' => ['style' => 'text-align: center; width: 70px' ],
                'contentOptions' => function($model){
                if($model->priorityId == 1){
-                   return ['style' => 'color: blue;text-align: center; vertical-align: middle;' ];
+                   return ['style' => 'background-color: #b9c9fe; color: white;text-align: center; vertical-align: middle;' ];
                } elseif ($model->priorityId == 0){
-                   return ['style' => 'color: orange;text-align: center; vertical-align: middle;' ];
+                   return ['style' => 'background-color: #fdbe87;color: white;text-align: center; vertical-align: middle;' ];
                } else {
-                   return ['style' => 'color: red;text-align: center; vertical-align: middle;' ];
+                   return ['style' => 'background-color: #fb2d2d;color: white;text-align: center; vertical-align: middle;' ];
                }
                
                }
@@ -236,22 +243,32 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'attribute' => 'quanity',
                'value' => 'quanity',
                'headerOptions' => ['style' => 'text-align: center;' ],
-               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+               'contentOptions' => ['style' => 'background-color: white;  text-align: center; vertical-align: middle;' ],
            ],
            [
                'label' => 'Fin.',
                'attribute' => 'quanityDone',
                'value' => 'quanityDone',
                'headerOptions' => ['style' => 'text-align: center;' ],
-               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+               'contentOptions' => ['style' => 'background-color: white;  text-align: center; vertical-align: middle;' ],
            ],
             ['class' => '\kartik\grid\CheckboxColumn',
                    'rowSelectedClass' => 'row-selected',
+                    'contentOptions' => ['style' => 'background-color: white;'],
                 ],
             ['class' => 'yii\grid\ActionColumn',
                                 'header' => '',
                                 'headerOptions' => ['style' => 'background-color:white; min-width: 70px; text-align: center; border-bottom-color: transparent;' ],
-                                'contentOptions' => ['style' => 'margin-top: 5px; background-color:white;text-align:center;  line-height: 2.0;;' ],
+                                'contentOptions' => function($model){
+                                $notesCheck = ProjectAssembliesFilesNotes::find()
+                                ->andWhere(['fileId' => $model->id] )
+                                ->andWhere(['typeId' => 3])
+                                ->all();
+                                if($notesCheck){
+                                    return ['style' => 'margin-top: 5px; background-color:#E599A3;text-align:center;  line-height: 2.0;;' ];
+                                    }
+                                return ['style' => 'margin-top: 5px; background-color:white;text-align:center;  line-height: 2.0;;' ];
+                                },
                                 'template' => '{desttma} {destout} | {priorup} {priordown} {seenote} {note} | {downloaddxf} {downloadpdf}',
                                 'buttons' => [  
                                     'destout' => function ($url, $model)
@@ -541,11 +558,16 @@ $this->registerJs(
           $.pjax.reload('#pjax-data');  
        }
     });}
-    $(document).ajaxStop(function(){
-        for( var x = 0; x < keys.length; x++){
-            $('tr[data-key=' + keys[x] + '] > td > input').prop('checked', true);
-        }
-    });
+    
+    $(document).one('ajaxStop', function() {
+          if(keys.length > 0){
+            for( var x = 0; x < keys.length; x++){
+                $('input[value=' + keys[x] + ']').prop('checked', false);
+                $('input[value=' + keys[x] + ']').prop('checked', true);    
+            }
+            }
+      });  
+      
     });
     
    

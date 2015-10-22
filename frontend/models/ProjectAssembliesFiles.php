@@ -2,7 +2,8 @@
 
 namespace frontend\models;
 
-use Yii;
+use frontend\models\ProjectAssembliesFilesData;
+use frontend\models\ProjectAssembliesFilesStatus;
 
 /**
  * This is the model class for table "project_assemblies_files".
@@ -155,4 +156,36 @@ class ProjectAssembliesFiles extends \yii\db\ActiveRecord
         }
         return false;
     }
+    
+    public function getProgramming(){
+        return $this->hasMany(ProjectAssembliesFilesData::classname(), ['fileId' => 'id'])->from(['programming' => ProjectAssembliesFilesData::tableName()]);   
+    }
+    
+    public function getCnc(){
+        return $this->hasMany(ProjectAssembliesFilesData::classname(), ['fileId' => 'id'])->from(['cnc' => ProjectAssembliesFilesData::tableName()]);    
+    }
+    
+    public function getCt(){
+        return $this->hasMany(ProjectAssembliesFilesData::classname(), ['fileId' => 'id'])->from(['ct' => ProjectAssembliesFilesData::tableName()]);   
+    }
+    
+    public function getAnod(){
+        return $this->hasMany(ProjectAssembliesFilesData::classname(), ['fileId' => 'id'])->from(['anod' => ProjectAssembliesFilesData::tableName()]);    
+    }
+    
+    public function getFileStatus($id, $statusId){
+        $model = ProjectAssembliesFilesData::find()
+                ->andWhere(['fileId' => $id])
+                ->andWhere(['statusId' => $statusId])
+                ->select(['timeStamp'])
+                ->one();
+        if($model){
+            $statusName = ProjectAssembliesFilesStatus::find()
+                    ->where(['statusId' => $statusId])
+                    ->select(['statusName'])
+                    ->one();
+            return $statusName->statusName;
+        }
+          
+    }    
 }
