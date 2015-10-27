@@ -33,7 +33,8 @@
         "kartik-v/yii2-widget-spinner": "@dev",
         "kartik-v/yii2-widget-fileinput": "@dev",
         "kartik-v/yii2-label-inplace": "*",
-        "kartik-v/yii2-field-range": "*"
+        "kartik-v/yii2-field-range": "*",
+		"costa-rico/yii2-images": "dev-master"
 		
     },
     "require-dev": {

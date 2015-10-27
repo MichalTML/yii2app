@@ -15,13 +15,10 @@ use frontend\models\ProjectAssembliesFiles;
 use frontend\models\FileDestination;
 use frontend\models\ProjectAssembliesFilesNotes;
 
-
-
 $this->title = 'P' . $sygnature .  ' Treatment Files Manager';
 $this->params[ 'breadcrumbs' ][] = ['label' => 'Project list', 'url' => ['fileindex' ] ];
 $this->params[ 'breadcrumbs' ][] = $this->title;
 ?>
-
 <div class="project-data-index">
 
     <?php Pjax::begin(['id' => 'pjax-data']); ?>
@@ -53,7 +50,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     'title'=> 'destination outsource', 
                     'class'=>'btn btn-success mass-action'
                 ]),
-            'options' => ['class' => 'btn-group-sm', 'style' => '']
+            'options' => ['class' => 'btn-group-sm btn-group', 'style' => '']
             ],
                 [
             'content'=>
@@ -78,7 +75,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     'title'=> 'set priority high', 
                     'class'=>'btn btn-success mass-action'
                 ]),
-            'options' => ['class' => 'btn-group-sm', 'style' => '']
+            'options' => ['class' => 'btn-group-sm btn-group', 'style' => '']
             ],
                  [
             'content'=>
@@ -89,7 +86,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     'title'=> 'send to treatment', 
                     'class'=>'btn btn-success mass-action'
                 ]),
-            'options' => ['class' => 'btn-group-sm', 'style' => 'margin-right:50px;'],                     
+            'options' => ['class' => 'btn-group-sm btn-group', 'style' => 'margin-right:50px;'],                     
         ],
             [
                 'content'=>
@@ -120,26 +117,18 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     'title'=> 'send to treatment', 
                     'class'=>'btn btn-success paginations'
                 ]),
-            'options' => ['class' => 'btn-group-sm']
+            'options' => ['class' => 'btn-group-sm btn-group']
             ],
             
     ],
         'panel' => [
             'headingOptions' => ['style' => 'color: #808080;'],
+            'contentOptions' => ['style' => 'width: 100%'],
             'type'=>'default',
         ],
         'rowOptions' => function ($model) {
-        if($model->statusId == 1){
-            return ['style' => 'background-color: #CCF3FF; font-size:10px'];
-        }elseif ( $model->statusId == 2){
-            return ['style' => 'background-color: #E6FFB2; font-size:10px'];
-        }elseif($model->statusId == 3){
-            return ['style' => 'background-color: #E599A3; font-size:10px'];
-        }elseif($model->statusId == 4){
-            return ['style' => 'background-color: #aac0ee; font-size:10px'];  
-        }else {
-            return ['style' => 'font-size:10px'];
-        }},
+            return ['class' => 'lighted-row', 'style' => 'font-size:10px'];
+        },
         'headerRowOptions' => ['style' => 'font-size:10px'],
         'filterRowOptions' => ['style' => 'max-height: 10px'],
         'columns' => [
@@ -147,13 +136,6 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                 'class' => 'yii\grid\SerialColumn',
                 'contentOptions' => [ 'style' => 'text-align: center; font-weight: bold; vertical-align: middle;', 'class' => 'serial-col'],
             ],
-//            [
-//               'label' => 'Sygnature',
-//               'attribute' => 'sygnature',
-//               'value' => 'sygnature',
-//               'headerOptions' => ['style' => 'text-align: center;' ],
-//               'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
-//           ],
            [
                'label' => 'File Name',
                'attribute' => 'name',
@@ -199,13 +181,16 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'filter' => Html::activeDropDownList($searchModel, 'status.statusName', ArrayHelper::map(FileStatus::find()->asArray()->all(), 'statusName','statusName'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'status.statusName',
                'headerOptions' => ['style' => 'text-align: center; min-width: 90px;' ],
-               'contentOptions' => function($model){
-                    if($model->statusId == 0){
-                        return ['style' => 'background-color: white; text-align: center; vertical-align: middle;' ];
-                    } else {
-                        return ['style' => 'text-align: center; vertical-align: middle;' ];
-                    }
-               }
+               'contentOptions' => function ($model) {
+        if($model->statusId == 1){
+            return ['style' => 'vertical-align: middle; text-align: center; background-color: #CCF3FF;'];
+        }elseif ( $model->statusId == 2){
+            return ['style' => 'vertical-align: middle; text-align: center; background-color: #E6FFB2;'];
+        }elseif($model->statusId == 3){
+            return ['style' => 'vertical-align: middle; text-align: center; background-color: #E599A3;'];
+        }elseif($model->statusId == 4){
+            return ['style' => 'vertical-align: middle; text-align: center; background-color: #aac0ee;'];  
+        }},
            ],
             [
                'label' => 'Dest.',
@@ -315,7 +300,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     $searchModel->fileId = $model->id;
                                     $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
                                     if ($dataProvider->totalCount > 0) {
-                                        return Html::button( '<a href=""><i class="fa fa-file-text"></i></a>', ['value' => $url, 'class' => 'seenote-button', 'id' => 'seenote-button', 'title' => 'see notes' , 'data' => $model->id] );
+                                        return Html::button( '<a href=""><i class="fa fa-file-text"></i></a>', ['file-name' => $model->name, 'value' => $url, 'class' => 'seenote-button', 'id' => 'seenote-button', 'title' => 'see notes' , 'data' => $model->id] );
                                     } else {
                                         return '<i class="fa fa-file-o"></i>';
 
@@ -438,7 +423,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         Modal::begin( [
                             'id' => 'file-notes-modal',
                             'size' => 'lg',
-                            'header' => '<h4 class="modal-title">File Notes</h4>',
+                            'header' => '<h4 class="modal-title">File: </h4>',
                         ] );
                         echo "<div id='modalContent'></div>";
 
@@ -466,14 +451,16 @@ $(function(){
 });");                          
                             
 $this->registerJs("
-$(function(){
-    // get the click event of the Note button
     $('.seenote-button').click(function(){
+        var fileName = $(this).attr('file-name');
         $('#file-notes-modal').modal('show')
                 .find('#modalContent')
-                .load($(this).attr('value'));
+                .load($(this).attr('data-url'));
+                $('.modal-title').empty();
+                $('.modal-title').append('<span class=\\'title\\'>' + fileName + '</span>');
+                $('.modal-header').addClass('color-title');
     });
-});");   
+"); 
 
 $this->registerJs(
     "$(document).on('hidden.bs.modal', '#cmodal', function () {
@@ -569,8 +556,6 @@ $this->registerJs(
       });  
       
     });
-    
-   
     
     $('.paginations').click(function(){ 
        var pagination = $(this).data('pagination');

@@ -38,22 +38,15 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'value' => 'sygnature',
                         'filter' => Html::activeDropDownList( $searchModel, 'sygnature', 
                         ProjectData::getSygnatures(), ['class' => 'form-control', 'prompt' => ' ' ] ),
-                        'contentOptions' => ['class' => '', 'style' => 'text-align: center; vertical-align: middle; color: white;' ],
+                        'contentOptions' => ['class' => '', 'style' => 'padding-left: 10px; text-align: left; vertical-align: middle; color: white;' ],
                     ],
                     [
                         'label' => 'Project Name',
                         'attribute' => 'projectName',
                         'headerOptions' => ['style' => 'text-align: center;' ],
                         'value' => 'projectName',
-                        'contentOptions' => ['style' => 'text-align: center; vertical-align: middle; white-space: nowrap; color:white' ]
+                        'contentOptions' => ['style' => 'padding-left: 10px; text-align: left; vertical-align: middle; white-space: nowrap; color:white' ]
                     ],                    
-                    [
-                        'label' => 'Deadline',
-                        'headerOptions' => ['style' => 'text-align: center;' ],
-                        'attribute' => 'deadline',
-                        'value' => 'deadline',
-                        'contentOptions' => ['style' => 'text-align: center; vertical-align: middle; color: white; width:100px' ],
-                    ],
                     [
                         'label' => 'Elements ',
                         'attribute' => 'Elements Count',

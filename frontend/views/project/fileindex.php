@@ -3,10 +3,8 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\helpers\Url;
-use frontend\models\search\ProjectSearch;
 use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
-use frontend\models\ProjectNotes;
 use frontend\models\ProjectFileData;
 use frontend\models\ProjectData;
 
@@ -76,10 +74,12 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'filter' => Html::activeDropDownList( $searchModel, 'projectStatus0.statusName', 
                         ProjectData::getProjectStatusList(), ['class' => 'form-control', 'prompt' => ' ' ] ),
                         'contentOptions' => function ($data){
-                                        if($data->projectStatus == 2){
-                                        return ['style' => 'color: #808080; font-weight: bold; text-align: center; line-height: 2.5em;' ];
+                                        if($data->projectStatus == 1){
+                                        return ['style' => 'color: #87cd00; font-weight: bold; text-align: center; line-height: 2.5em;' ];
+                                        } elseif($data->projectStatus == 3) {
+                                        return ['style' => 'color: orange; font-weight: bold; text-align: center; line-height: 2.5em;' ];    
                                         } else {
-                                        return ['style' => 'color: #87cd00; font-weight: bold;text-align: center; line-height: 2.5em;' ];
+                                        return ['style' => 'color: #808080; font-weight: bold;text-align: center; line-height: 2.5em;' ];
                                         }
                         }
                     ],
@@ -95,11 +95,11 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                 },
                     ],
                     [
-                        'label' => 'Created By',
+                        'label' => 'Updated By',
                         'headerOptions' => ['style' => 'text-align: center;' ],
-                        'attribute' => 'creUser.username',
-                        'value' => 'creUser.username',
-                        'filter' => Html::activeDropDownList( $searchModel, 'creUser.username', 
+                        'attribute' => 'updUser.username',
+                        'value' => 'updUser.username',
+                        'filter' => Html::activeDropDownList( $searchModel, 'updUser.username', 
                         ProjectData::getCreUserList(), ['class' => 'form-control', 'prompt' => ' ' ] ),
                         'contentOptions' => ['style' => 'text-align: center; line-height: 2.5em;' ],
                     ],

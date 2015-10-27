@@ -104,11 +104,11 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
                     ],
                     [
-                        'label' => 'Created By',
+                        'label' => 'Updated By',
                         'headerOptions' => ['style' => 'text-align: center;' ],
-                        'attribute' => 'creUser.username',
-                        'value' => 'creUser.username',                        
-                        'filter' => Html::activeDropDownList( $searchModel, 'creUser.username', 
+                        'attribute' => 'updUser.username',
+                        'value' => 'updUser.username',                        
+                        'filter' => Html::activeDropDownList( $searchModel, 'updUser.username', 
                         ProjectData::getCreUserList(), ['class' => 'form-control', 'prompt' => ' ' ] ),
                         'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
                     ],
@@ -164,7 +164,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     },
                                             'note' => function ($url, $model)
                                     {
-                                        return Html::button( '<i style="color: blue;" class="fa fa-file-text-o"></i>',
+                                        return Html::button( '<i style="color: #337ab7;" class="fa fa-file-text-o"></i>',
                                         ['value' => $url, 'class' => 'note-button', 'id' => 'modalButton', 'title' => 'new note' ] );
                                     },
                                             'delete' => function($url, $model)

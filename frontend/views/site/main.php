@@ -27,7 +27,7 @@ $this->title = 'TMA Project Manager';
                 ?>
                 
                     <?php
-                    if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) >= 10 )
+                    if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) >= 50 || PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) == 10 || PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) == 15  )
                     {
                         echo '<div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">';
                         echo Html::a( '<div class="mainbox-pm">'
@@ -42,7 +42,7 @@ $this->title = 'TMA Project Manager';
                     ?>
                     
                     <?php
-                    if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 10 )
+                    if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) >=50 || PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) == 40 )
                     {
                         echo '<div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">';
                         echo Html::a( '<div class="mainbox-fm">'
@@ -57,7 +57,7 @@ $this->title = 'TMA Project Manager';
                     ?>
                     
                     <?php
-                    if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 10 )
+                    if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) >= 50 || PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) == 35  )
                     {
                         echo '<div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">';
                         echo Html::a( '<div class="mainbox-treat">'
@@ -72,7 +72,7 @@ $this->title = 'TMA Project Manager';
                     ?>
 
                     <?php
-                    if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) > 0 )
+                    if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) >= 50 || PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) == 10 || PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) == 15  )
                     {
                     echo '<div class="col-lg-4 col-sm-5 col-xs-5" style="min-width: 345px;">';
                     echo Html::a( '<div class="mainbox-cm">'

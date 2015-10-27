@@ -5,6 +5,7 @@ namespace frontend\models;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
+use frontend\models\FileGroup;
 
 /**
  * This is the model class for table "project_assemblies_files_data".
@@ -78,4 +79,6 @@ class ProjectAssembliesFilesData extends \yii\db\ActiveRecord
     {
         return $this->hasOne(ProjectAssembliesFiles::className(), ['id' => 'fileId']);
     }
+    
+    
 }

@@ -187,5 +187,10 @@ class ProjectAssembliesFiles extends \yii\db\ActiveRecord
             return $statusName->statusName;
         }
           
-    }    
+    }
+    
+    public function getFilegroup()
+    {
+        return $this->hasOne(FileGroup::className(), ['fileId' => 'id']);
+    }
 }

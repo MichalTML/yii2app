@@ -2088,9 +2088,9 @@ filter: alpha(opacity=50);
 }*/
 
 .loader {
-	position: fixed;
-	left: 250px;
-	top: 100px;
+	position: absolute;
+	left: 45vh;
+	top: 70vh;
         height: 50px;
         width: 50px;
 	z-index: 9999;
@@ -2101,7 +2101,7 @@ filter: alpha(opacity=50);
 
 .overlay {
     background: url('../images/spin.gif') no-repeat;
-    background-color: rgba(0, 0, 0, 0.19);
+    background-color: #b3b3b3;
     background-size: 256px 25px;
     background-position: center;
     z-index: 200;
@@ -2165,7 +2165,7 @@ filter: alpha(opacity=50);
 
 .mass-action{
     height: 35px;
-    vertical-align: center;
+    vertical-align: middle;
     //width: 50px;
 }
 
@@ -2223,3 +2223,65 @@ filter: alpha(opacity=50);
 .paginations{
     height: 35px;
 }
+
+#filegroup-groupid{
+    min-width: 250px;
+}
+
+#filegroupname-groupname{
+    min-width: 250px;
+}
+
+.group-button{
+    max-width: 150px;
+    min-width: 150px;
+}
+
+.group-mass-action{
+    height: 35px;
+}
+
+.light-on td:nth-child(n+1):nth-child(-n+9){
+    color: white;
+    background-color:rgba(72, 42, 10, 0.34) !important;
+    transition: 1s;
+}
+
+.light-on td:nth-of-type(14){
+     color: white;
+    background-color:rgba(72, 42, 10, 0.34) !important;
+    transition: 1s;
+}
+
+.ticked{
+    background-image: url('/images/tick.png');
+    background-size: 30%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.color-title{
+    color: white;
+    background-color: #808080;
+    width: 100%;
+    border-radius: 5px 5px 0 0;
+}
+
+.treatment-note{
+    background-color: #fef7b9; 
+}
+
+.treatment-row td{
+    transition: 1s;
+}
+
+#pdf-modal .modal-content{
+    height: 80vh;
+    margin-top: 10vh;
+    border-radius: 5px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-position: center;
+}
+

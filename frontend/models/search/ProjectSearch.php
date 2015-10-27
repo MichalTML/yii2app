@@ -17,12 +17,12 @@ class ProjectSearch extends ProjectData
      */
     
     public function attributes() {
-        return array_merge(parent::attributes(), ['projectStatus0.statusName', 'client.abr', 'creUser.username', 'ProjectName']);
+        return array_merge(parent::attributes(), ['projectStatus0.statusName', 'client.abr', 'updUser.username', 'ProjectName']);
     }
     public function rules()
     {
         return [
-            [['projectStart', 'projectName', 'creTime', 'deadline', 'endTime', 'sygnature', 'updTime', 'projectStatus0.statusName', 'client.abr', 'ProjectName','creUser.username'], 'safe'],
+            [['projectStart', 'projectName', 'creTime', 'deadline', 'endTime', 'sygnature', 'updTime', 'projectStatus0.statusName', 'client.abr', 'ProjectName','updUser.username'], 'safe'],
         ];
     }
    
@@ -77,7 +77,7 @@ class ProjectSearch extends ProjectData
                     'asc' => ['client_data.abr' => SORT_ASC],
                     'desc' => ['client_data.abr' => SORT_DESC],
                 ];
-        $dataProvider->sort->attributes['creUser.username'] =
+        $dataProvider->sort->attributes['updUser.username'] =
                 [
                     'asc' => ['user.username' => SORT_ASC],
                     'desc' => ['user.username' => SORT_DESC],
@@ -99,7 +99,7 @@ class ProjectSearch extends ProjectData
             ->andFilterWhere(['like', 'project_data.creTime', $this->creTime])
             ->andFilterWhere(['=', 'project_status.statusName', $this->getAttribute('projectStatus0.statusName')])
             ->andFilterWhere(['like', 'client_data.abr', $this->getAttribute('client.abr')])
-            ->andFilterWhere(['=', 'user.username', $this->getAttribute('creUser.username')]);
+            ->andFilterWhere(['=', 'user.username', $this->getAttribute('updUser.username')]);
         return $dataProvider;
     }
 }

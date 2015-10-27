@@ -141,7 +141,10 @@ class ProjectSaver
                     $result[ $file[ 'name' ] . '.' . $file[ 'ext' ] ] = ['name' => $file[ 'name' ],
                         'path' => $file[ 'path' ], 'ext' => $file[ 'ext' ], 'error' => 'record already in table' ];
                     $this->raport[ $projectId ] = $result;
-                    $file[ 'name' ] = 'skip';
+                    
+                    if($file['ext'] != 'ods' || $file['ext'] != 'xls' || $file['ext'] != 'xlsx'){
+                        $file[ 'name' ] = 'skip';
+                    }
                 }
 
                 if ( $file[ 'name' ] != 'skip' )
@@ -265,6 +268,7 @@ class ProjectSaver
             $projectId = intval( $projectId );
             $fileCount = 0;
             $excelFileCount = 0;
+            $updateCount = 0;
             foreach ( $files as $assemblieId => $file ) {
                 $newAssemblieId = $projectId . $assemblieId;
                 foreach ( $file as $record ) {
@@ -340,6 +344,21 @@ class ProjectSaver
                                 $this->error[ $projectId ][ $newAssemblieId ] = $result;
                                 return false;
                             }
+                        } else {
+                             $stmt = $this->db->prepare( "UPDATE project_assemblies_files SET thickness=:thickness, material=:material, quanity=:quanity WHERE projectId=:projectId, assemblieId=:assemblieId, sygnature=:sygnature, typeId=:typeId, ext=:ext, path=:path" );
+
+                            $stmt->bindparam( ':projectId', $projectId );
+                            $stmt->bindparam( ':assemblieId', $newAssemblieId );
+                            $stmt->bindparam( ':typeId', $typeId );
+                            $stmt->bindparam( ':sygnature', $record[ 'sygnature' ] );
+                            $stmt->bindparam( ':ext', $record[ 'ext' ] );
+                            $stmt->bindparam( ':path', $record[ 'path' ] );
+                            $stmt->bindparam( ':thickness', $this->filterData[ 'thickness' ] );   //ADD THIS AFTER FILTER IS READY
+                            $stmt->bindparam( ':material', $this->filterData[ 'material' ] );
+                            $stmt->bindparam( ':quanity', $this->filterData[ 'quanity' ] );
+                            $stmt->execute();
+                            
+                            $updateCount++;
                         }
                     }
                 }
@@ -349,6 +368,7 @@ class ProjectSaver
                 $this->fileCount['assemblieFiles'] = $countFiles;
                 $this->fileCount['assemblieFilesAdded'] = $fileCount;
                 $this->fileCount['assemblieFilesFiltered'] = $excelFileCount;
+                $this->fileCount['assemblieFilesUpdated'] = $updateCount;
                 
             }
         }

@@ -314,31 +314,39 @@ class ProjectData extends \yii\db\ActiveRecord
                 $resultListFinished = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '0', 'statusId' => '2'])->all();
                 $resultListCount = count($resultList);
                 $resultListFinishedCount = count($resultListFinished);
-                $result = $resultListCount;
+                $allParts = $resultListCount + $resultListFinishedCount;
+                $result = $allParts;
+                $result.= ' | ' .$resultListCount;
                 $result.= ' | ' . $resultListFinishedCount;
-                return $result;  
+                return $result;   
             case ('normal'):
                 $resultList = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '1', 'statusId' => '1'])->all();
                 $resultListFinished = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '1', 'statusId' => '2'])->all();
                 $resultListCount = count($resultList);
                 $resultListFinishedCount = count($resultListFinished);
-                $result = $resultListCount;
+                $allParts = $resultListCount + $resultListFinishedCount;
+                $result = $allParts;
+                $result.= ' | ' .$resultListCount;
                 $result.= ' | ' . $resultListFinishedCount;
                 return $result;     
             case ('high'):
                 $resultList = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '2', 'statusId' => '1'])->all();
                 $resultListFinished = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '2', 'statusId' => '2'])->all();
-                $resultListCount = count($resultList);
+               $resultListCount = count($resultList);
                 $resultListFinishedCount = count($resultListFinished);
-                $result = $resultListCount;
+                $allParts = $resultListCount + $resultListFinishedCount;
+                $result = $allParts;
+                $result.= ' | ' .$resultListCount;
                 $result.= ' | ' . $resultListFinishedCount;
-                return $result;     
+                return $result;      
             default:
                 $resultList = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'statusId' => '1'])->all();
                 $resultListFinished = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'statusId' => '2'])->all();
                 $resultListCount = count($resultList);
                 $resultListFinishedCount = count($resultListFinished);
-                $result = $resultListCount;
+                $allParts = $resultListCount + $resultListFinishedCount;
+                $result = $allParts;
+                $result.= ' | ' .$resultListCount;
                 $result.= ' | ' . $resultListFinishedCount;
                 return $result;  
         }          

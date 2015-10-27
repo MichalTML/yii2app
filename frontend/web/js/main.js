@@ -3,6 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+
 $(document).ready(function(){
         $('.content-box').css('transition', '4s');
         $('.content-box').css('margin-top', '-50px');
@@ -21,6 +23,7 @@ $(document).ajaxStart(function() {
     
 $(document).ajaxStop(function() {
         $('.overlay').fadeOut('slow'); 
+        $('.overlay').remove();
         
 });
  
@@ -89,5 +92,16 @@ $(document).ready(function(){
    });       
 });
 
+$(document).ready(function(){
+   $('.lighted-row').each(function(){
+       $(this).children().last().hover(
+            function() {
+                $(this).parent().addClass('light-on');
+            }, function() {
+                $(this).parent().removeClass('light-on');
+             }
+        );
+   });
+});
 
 

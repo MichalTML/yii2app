@@ -13,6 +13,8 @@ use frontend\models\search\ProjectFileDataSearch;
 use frontend\models\search\ProjectAssembliesDataSearch;
 use frontend\models\search\ProjectAssembliesFilesSearch;
 use frontend\models\ProjectFileData;
+use frontend\models\FilesImages;
+use frontend\models\ProjectAssembliesFiles;
 
 /**
  * ProjectController implements the CRUD actions for ProjectData model.
@@ -106,7 +108,8 @@ class ProjectController extends Controller {
             return $this->render( 'create', [
                         'model' => $model,
                         'projectPermissions' => $projectPermissions,
-                        'freeId' => $freeId
+                        'freeId' => $freeId,
+                        'projectStatus' => 3,
                     ] );
         }
     }
@@ -125,28 +128,38 @@ class ProjectController extends Controller {
         $projectPermissions = new ProjectPermissions();
         //$lastId = $model->find()->select('sygnature')->orderBy(['sygnature' => SORT_DESC])->one();
         $freeId = $model->sygnature;
-        if ( $model->load( Yii::$app->request->post() ) && $model->save() ) {
-            if ( $projectPermissions->load( Yii::$app->request->post() ) ) {
-                $projectPermissions->deleteAll( 'projectId ="' . $id . '"' );
-                $userIds = $projectPermissions->userId;
-                foreach ( $userIds as $user ) {
-                    $projectPermissions->userId = intval( $user );
-                    $projectPermissions->projectId = $id;
-                    $projectPermissions->isNewRecord = true;
-                    $projectPermissions->id = null;
-                    $projectPermissions->save();
-                }
-            }
-                $model->setProjectName( $model->id, $model->projectName );    
-                return $this->redirect( ['index' ] );
-        } else {
-            return $this->render( 'update', [
-                        'model' => $model,
-                        'projectPermissions' => $projectPermissions,
-                        'freeId' => $freeId
-                    ] );
-        }
-    }
+            if ( $model->load( Yii::$app->request->post() )){
+                    $weeks = $model->deadline;
+                    $days = $weeks * 7;
+                    $date = $model->projectStart;
+                    $deadline = date("Y-m-d", strtotime("+".$days." days", strtotime($date)));
+                    $model->deadline = $deadline;
+                    if($model->save() ) {
+                        if ( $projectPermissions->load( Yii::$app->request->post() ) ) {
+                            $projectPermissions->deleteAll( 'projectId ="' . $id . '"' );
+                            $userIds = $projectPermissions->userId;
+                            foreach ( $userIds as $user ) {
+                                $projectPermissions->userId = intval( $user );
+                                $projectPermissions->projectId = $id;
+                                $projectPermissions->isNewRecord = true;
+                                $projectPermissions->id = null;
+                                $projectPermissions->save();
+                            }
+                        }
+                            $model->setProjectName( $model->id, $model->projectName );    
+                            return $this->redirect( ['index' ] );
+                    }
+                        } else {
+                            return $this->render( 'update', [
+                                        'model' => $model,
+                                        'projectPermissions' => $projectPermissions,
+                                        'freeId' => $freeId,
+                                    ] );
+                        }
+           }
+
+                
+    
 
     /**
      * Deletes an existing ProjectData model.
@@ -216,7 +229,29 @@ class ProjectController extends Controller {
                 ] );
     }
     
-    public function actionCtreatment($sygnature, $id, $pagination = 20){        
+    public function actionCtreatment($sygnature, $id, $pagination = 20){     
+        $assemblieFiles = ProjectAssembliesFiles::find()->select(['id', 'path', 'name'])->asArray()->where(['and', ['projectId' => $sygnature, 'ext' => 'pdf']])->all();
+        
+        if($assemblieFiles){
+            
+           foreach($assemblieFiles as $file => $ids){
+               $assemblieFilesImages = FilesImages::find()->select(['imagePath'])->where(['fileId' => $ids['id']])->one();    
+               if(!$assemblieFilesImages){
+                   
+                $imagePath = '/var/www/yii2app/frontend/web/images/files_images/'. $ids['name'] . '.jpg';
+                
+                shell_exec('convert ' . $ids['path'] . ' ' . $imagePath);
+                
+                   $fileImage = new FilesImages;
+                   $fileImage->isNewRecord = true;
+                   $fileImage->fileId = $ids['id'];
+                   $fileImage->imagePath = $imagePath;
+                   $fileImage->save();
+               }
+           } 
+          
+        }
+
         $this->layout = 'action';        
         $searchModel = new ProjectAssembliesFilesSearch();
         $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 'tindex');
@@ -275,9 +310,25 @@ class ProjectController extends Controller {
         $this->layout = 'action';        
         $searchModel = new ProjectAssembliesFilesSearch();
         $order = ['defaultOrder' => ['priorityId' => 'DESC']];
-        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 'treatmanager', $order);
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 'treatmanager-pending', $order);
         $dataProvider->pagination->pageSize = $pagination;
         return $this->render( 'treatmentfiles',
+                            [
+                               'searchModel' => $searchModel,
+                               'dataProvider' => $dataProvider,
+                               'id' => $id,
+                               'sygnature' => $sygnature,
+                            ] 
+                            );
+    }
+    
+    public function actionTreatmentmanagera($sygnature, $id, $pagination = 20){
+        $this->layout = 'action';        
+        $searchModel = new ProjectAssembliesFilesSearch();
+        $order = ['defaultOrder' => ['priorityId' => 'DESC']];
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 'treatmanager-accepted', $order);
+        $dataProvider->pagination->pageSize = $pagination;
+        return $this->render( 'treatmentfilesa',
                             [
                                'searchModel' => $searchModel,
                                'dataProvider' => $dataProvider,

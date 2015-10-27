@@ -12,12 +12,13 @@ use frontend\models\ProjectAssembliesFilesNotes;
 use frontend\models\ProjectAssembliesFiles;
 use frontend\models\ProjectAssembliesFilesData;
 use frontend\models\FileGroup;
+use frontend\models\FilesImages;
 
 $this->title = 'P' . $sygnature .  ' Treatment Files Manager';
 $this->params[ 'breadcrumbs' ][] = ['label' => 'Project list', 'url' => ['treatmentindex' ] ];
-$this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Pending Files';
-$this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted Files', 
-    'url' => ['treatmentmanagera', 'sygnature' => $sygnature, 'id' => $id] ];
+$this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Pending Files', 
+    'url' => ['treatmentmanager', 'sygnature' => $sygnature, 'id' => $id] ];
+$this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
 ?>
 <div class="project-data-index">
 
@@ -34,25 +35,79 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
         'hover' => true,
         'resizableColumns' => false,
         'toolbar' => [
-            [
+             [
             'content'=>
-            Html::button('<i class="fa fa-check-circle-o fa-2x"></i>', [
+            Html::button('<i class="fa fa-code fa-2x"></i>', [
                     'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
-                    'data-action'=>'accept',
+                    'data-action'=>'program',
                     'type'=>'button', 
-                    'title'=> 'accept file', 
+                    'title'=> 'set status programming', 
+                    'class'=>'btn btn-success mass-action'
+                ]). ' '.
+            Html::button('', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'cnc',
+                    'type'=>'button', 
+                    'title'=> 'set status CNC', 
+                    'class'=>'btn btn-success mass-action cnc'
+                ]). ' '.
+            Html::button('', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'ct',
+                    'type'=>'button', 
+                    'title'=> 'set status conventional treatment', 
+                    'class'=>'btn btn-success mass-action ct'
+                ]).' '.
+            Html::button('', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'anodizing',
+                    'type'=>'button', 
+                    'title'=> 'set status anodizing', 
+                    'class'=>'btn btn-success mass-action anod'
+                ]),
+            'options' => ['class' => 'btn-group-sm btn-group', 'style' => 'margin-right: 50px']
+            ],
+                [
+            'content'=>
+            Html::button('<i class="fa fa-plus"></i>', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'add',
+                    'type'=>'button', 
+                    'title'=> '+1 ready file', 
+                    'class'=>'btn btn-success mass-action'
+                ]). ' '.
+            Html::button('<i class="fa fa-minus"></i>', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
+                    'data-action'=>'deduct',
+                    'type'=>'button', 
+                    'title'=> '-1 ready file', 
                     'class'=>'btn btn-success mass-action'
                 ]),
             'options' => ['class' => 'btn-group-sm btn-group', 'style' => 'margin-right: 50px']
             ],
                  [
             'content'=>
+                Html::button('<i class="fa fa-paper-plane"></i>', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction', 'action' => '2'] ),
+                    'data-action'=>'treatfile',
+                    'type'=>'button', 
+                    'title'=> 'finish element', 
+                    'class'=>'btn btn-success mass-action'
+                ]). ' '.
                  Html::button('<i class="fa fa-exclamation-triangle"></i>', [
                     'data-url'=>Url::toRoute( ['project-assemblies-files/massaction', 'action' => '3'] ),
                     'data-action'=>'rejectfile',
                     'type'=>'button', 
                     'title'=> 'reject file', 
                     'class'=>'btn btn-success mass-action'
+                ]). ' '.
+                     Html::button('<i class="fa fa-th-large"></i>', [
+                    'data-url'=>Url::toRoute( ['file-group/create'] ),
+                    'data-action'=>'group',
+                    'data-sygnature'=>$sygnature,
+                    'type'=>'button', 
+                    'title'=> 'Group files', 
+                    'class'=>'btn btn-success group-mass-action'
                 ]). ' '.
                  Html::button('<i class="fa fa-arrow-circle-down"></i>', [
                     'data-url'=>Url::toRoute( ['project-assemblies-files/massaction', 'action' => '2'] ),
@@ -107,7 +162,7 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                                 ->andWhere(['typeId' => 0])
                                 ->all();
             if($notesCheck){
-                return ['class' => 'lighted-row', 'style' => 'background-color: #fef7b9; font-size:10px'];
+                return ['class' => 'treatment-note lighted-row', 'style' => 'font-size:10px'];
             }
             return ['class' => 'lighted-row', 'style' => 'font-size:10px'];
         },
@@ -119,12 +174,20 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                 'class' => 'yii\grid\SerialColumn',
                 'contentOptions' => [ 'style' => 'text-align: center; font-weight: bold; vertical-align: middle;', 'class' => 'serial-col'],
             ],
+             [
+               'label' => 'Gr.',
+               'attribute' => 'filegroup',
+               'value' => 'filegroup.group.groupName',
+               'filter' => Html::activeDropDownList($searchModel, 'filegroup',FileGroup::getStatusListV($sygnature),['class'=>'form-control', 'prompt' => ' ']),
+               'headerOptions' => ['style' => 'text-align: center; min-width: 80px' ],
+               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
+           ],
             [
                'label' => 'File Name',
                'attribute' => 'name',
                'value' => 'name',
                'headerOptions' => ['style' => 'text-align: center; min-width: 240px;' ],
-               'contentOptions' => ['style' => 'padding-left: 10px; text-align: left; vertical-align: middle;' ],
+               'contentOptions' => ['style' => 'padding-left: 10px;text-align: left; vertical-align: middle;' ],
            ],
            [
                'label' => 'Material',
@@ -141,7 +204,7 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                'attribute' => 'thickness',
                'filter' => Html::activeDropDownList($searchModel, 'thickness', 
                        ArrayHelper::map(  ProjectAssembliesFiles::find()
-                               ->where(['projectId' => $sygnature, 'statusId' => '1', 'ext' => 'dft'])
+                               ->where(['projectId' => $sygnature, 'statusId' => '4', 'ext' => 'dft'])
                                ->orderBy(['thickness' => SORT_ASC])->asArray()->all(), 
                                'thickness','thickness'),['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'thickness',
@@ -309,7 +372,7 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                                             ->all();
                                     
                                     if ($result) {
-                                        return Html::button( '<a href=""><i class="fa fa-file-text"></i></a>', ['value' => $url, 'class' => 'seenote-button', 'id' => 'seenote-button', 'title' => 'see notes' , 'data' => $model->id] );
+                                        return Html::button( '<a href=""><i class="fa fa-file-text"></i></a>', ['file-name' => $model->name, 'value' => $url, 'class' => 'seenote-button', 'id' => 'seenote-button', 'title' => 'see notes' , 'data' => $model->id] );
                                     } else {
                                         return '<i class="fa fa-file-o"></i>';
 
@@ -332,6 +395,16 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                                     'downloadpdf' => function($url, $model)
                                     {
                                         if($url){
+                                            $fileId = ProjectAssembliesFiles::find()->select(['id'])->where(['name' => $model->name, 'ext' => 'pdf'])->one();
+                                            $fileImage = FilesImages::find()->select(['imagePath'])->where(['fileId' => $fileId->id])->one();
+                                                if($fileImage){
+                                                    return Html::a( '<span class="fa fa-file-pdf-o"></span>', $url, [
+                                                      'data-method' => 'post',
+                                                      'title' => Yii::t( 'app', 'download PDF' ),
+                                                      'class' => $model->id,
+                                                      'image-path' => $fileImage->imagePath,
+                                                    ] );  
+                                                }
                                         return Html::a( '<span class="fa fa-file-pdf-o"></span>', $url, [
                                                     'data-method' => 'post',
                                                     'title' => Yii::t( 'app', 'download PDF' ),
@@ -412,7 +485,7 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
         
                         Modal::begin( [
                             'id' => 'rmodal',
-                            'header' => '<h4 class="modal-title">New Note</h4>',
+                            'header' => '<h4 class="modal-title"></h4>',
                         ] );
                         echo "<div id='modalContent'></div>";
 
@@ -429,7 +502,7 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                         Modal::begin( [
                             'id' => 'file-notes-modal',
                             'size' => 'lg',
-                            'header' => '<h4 class="modal-title">File Notes</h4>',
+                            'header' => '<h4 class="modal-title">Element: </h4>',
                         ] );
                         echo "<div id='modalContent'></div>";
 
@@ -443,8 +516,19 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                                 //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
                         ] );
                         echo "<div id='modalContent'></div>";
-
-                            Modal::end();
+                        Modal::end();
+                        
+                        Modal::begin( [
+                                'id' => 'pdf-modal',
+                                'closeButton' => false,
+                                'headerOptions' => ['style' => 'display:none' ],
+                            'header' => '<h4 class="modal-title">Project Details</h4>',
+                                //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
+                        ] );
+                        echo "<div id='modalContent'></div>";
+                        Modal::end();
+                        
+                        
                             
 $this->registerJs("
 $(function(){
@@ -466,12 +550,56 @@ $this->registerJs("
                 $('.modal-title').append('<span class=\\'title\\'>' + fileName + '</span>');
                 $('.modal-header').addClass('color-title');
     });
-");   
+    
+    $('.lighted-row').each(function(){  
+        var rowId;
+        var imagePath;
+        $(this).hover(  
+          function() {
+                rowId = $(this).attr('data-key');                
+                $(this).addClass('light-on');
+          }, function() {
+                $(this).removeClass('light-on');
+          }
+        );
+        
+        $(':lt(12)', this).click(function(){
+                
+                imagePath = $('.' + rowId).attr('image-path');
+                    if(typeof imagePath != 'undefined'){
+                        console.log(imagePath);
+                        $('#pdf-modal').modal('show');
+                        $('.modal-content').css('background-image', 'url(' + imagePath + ')');
+                    }
+        });
+        
+    });
+
+"); 
 
 $this->registerJs(
     "$(document).on('hidden.bs.modal', '#cmodal', function () {
      $.pjax.reload('#pjax-data');
-    });                      
+    });  
+    
+    $('.group-mass-action').click(function(){
+       var keys = $('#grid').yiiGridView('getSelectedRows');
+       var url = $(this).data('url');
+       var sygnature = $(this).data('sygnature');
+       var url2 = url + '&sygnature=' + sygnature + '&id=' + keys;
+       $.ajax({
+       url: url2,
+       type: 'post',
+       data: {id: keys, sygnature: sygnature},
+       success: function () {
+          $('#group-modal').modal('show')
+                            .find('#modalContent')
+                            .load(url2);
+       }
+     });
+
+    });
+                    
             
     $('.send-button').click(function(){
     var data = $(this).data('id'); 
@@ -500,7 +628,35 @@ $this->registerJs(
     $(document).on('hidden.bs.modal', '#group-modal', function () {
      $.pjax.reload('#pjax-data');
     }); 
-
+    
+    $('.deduct-button').click(function(){
+    var data = $(this).data('id'); 
+    var url = $(this).data('url');
+     $.ajax({
+       url: url,
+       type: 'post',
+       data: {id: data},
+       success: function (msg) {
+          $.pjax.reload('#pjax-data');
+       }
+    
+    });
+    });
+    
+    $('.add-button').click(function(){
+    var data = $(this).data('id'); 
+    var url = $(this).data('url');
+     $.ajax({
+       url: url,
+       type: 'post',
+       data: {id: data},
+       success: function (msg) {
+          $.pjax.reload('#pjax-data');
+       }
+    
+    });
+    });
+    
     $('.mass-action').click(function(){
        var keys = $('#grid').yiiGridView('getSelectedRows');
        var data = $(this).data('id'); 
@@ -559,8 +715,18 @@ $this->registerJs(
 $this->registerJs('$(document).on("pjax:timeout", function(event) {
   // Prevent default timeout redirection behavior
   event.preventDefault()
-});');   
+});');
+
+
+
+        Pjax::end();
+        
+        Modal::begin( [
+            'id' => 'group-modal',
+            'header' => '<h4 class="modal-title">Group Creation</h4>',
+            ] );
+         echo "<div id='modalContent'></div>";
+        Modal::end();     
 ?>
 
-</div>
 </div>

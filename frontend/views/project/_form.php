@@ -14,8 +14,10 @@ use kartik\label\LabelInPlace;
 <div class="project-data-form">
     
 <?php
+if(isset($projectStatus)){
+   $model->projectStatus = $projectStatus; 
+}
 $model->sygnature = $freeId;
-$model->projectStatus = 3;
 $model->getProjectPermissionsId();
 $checkboxList = json_encode($model->getProjectPermissionsId());
 ?>
