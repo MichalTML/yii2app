@@ -25,17 +25,12 @@ $this->params['breadcrumbs'][] = ['label' => 'Accepted Invoices', 'url' => ['inv
         <?php //Html::a('View Accepted Invoices', ['accepted'], ['class' => 'btn btn-success']) ?>
     </p>
 
+   
+    <?php Pjax::begin(['id' => 'pjax-data']); ?>
     <?= GridView::widget([
         
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'pjax' => true,        
-        'pjaxSettings' =>
-            [
-                'neverTimeout'=>true,
-                'options'=>['id'=>'pjax-data'],
-                'loadingCssClass' => false,
-            ], 
         'export' => FALSE,
         'bootstrap' => true,
         'condensed' => true,
@@ -43,13 +38,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Accepted Invoices', 'url' => ['inv
         'hover' => true,
         'resizableColumns' => false,
         'headerRowOptions' => ['class' => 'header'],
-        'rowOptions' => function($model){
-                            if($model->flag == 0){
-                                return ['class' => 'lighted-row', 'style' => 'font-size: 11px;'];
-                            } else {
-                                return ['class' => 'lighted-row', 'style' => 'font-size: 11px; background-color:#E599A3;'];
-                            }
-        },
+        'rowOptions' => ['style' => 'font-size: 11px'],
         'summary' => '',
         'emptyCell' => '',
         'columns' => [
@@ -70,11 +59,14 @@ $this->params['breadcrumbs'][] = ['label' => 'Accepted Invoices', 'url' => ['inv
                 'attribute' => 'supplierId',
                 'label' => 'Supplier',
                 'headerOptions' => ['style' => 'text-align: center; '],
+//              'filter' => Html::activeDropDownList( $searchModel, 'status.status_name', ArrayHelper::map( Status::find()->asArray()->all(), 'status_name', 'status_name' ), ['class' => 'form-control', 'prompt' => ' ' ] ),
+                //'format' => 'raw',
                 'value' => 'supplierId',
                  'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;'],
                 'editableOptions' => [
                     'header' => ' ',
                     'inputType' => Editable::INPUT_TEXT,
+//                    'data' => 'supplierId',
                     'options' => ['class' => 'form-control' ],
                     'editableValueOptions' => ['class' => 'text-blue' ],
                 ],
@@ -87,63 +79,10 @@ $this->params['breadcrumbs'][] = ['label' => 'Accepted Invoices', 'url' => ['inv
                 'attribute' => 'connection',
                 'label' => 'Connected to',
                 'headerOptions' => ['style' => 'text-align: center;'],
+//              'filter' => Html::activeDropDownList( $searchModel, 'status.status_name', ArrayHelper::map( Status::find()->asArray()->all(), 'status_name', 'status_name' ), ['class' => 'form-control', 'prompt' => ' ' ] ),
                 'format' => 'raw',
                 'value' => function($model){
-$data = Invoices::getCategoryList();
-// Using a select2 widget inside a modal dialog
-Modal::begin([
-    'options' => [
-        'id' => 'kartik-modal',
-        'tabindex' => false // important for Select2 to work properly
-    ],
-    'header' => '<h4 style="margin:0; padding:0">Edit Connected to</h4>',
-]);
-echo Select2::widget([
-    'name' => 'connected',
-    'attribute' => 'state_10',
-    'data' => $data,
-    'size' => Select2::MEDIUM,
-    'options' => ['placeholder' => '', 'multiple' => true, 'id' => 'connected', 'hideSearch' => false ],
-    'pluginOptions' => [
-        'allowClear' => true
-    ],
-]); 
-echo Html::button( 'Accept', ['class' => 'btn btn-success change-button', 'id' => 'change-button', 'style' => 'margin-top: 10px;'] );
-Modal::end();
-$this->registerJs("
-        $('.connection-button').click(function(){
-            var tags;
-            var url = $(this).data('url');
-            var id = $(this).data('id');
-            $('#connected').change(function(e){
-                    tags = ($(this).val());
-                });
-            $('#kartik-modal').modal('show');
-            $('#change-button').click(function(){
-                $.ajax({
-                    url: url,
-                    type: 'post',
-                    data: {data:tags, id:id},
-                    success: function (msg) {
-                        $('#kartik-modal').modal('hide');
-                    }
-                })
-            });
-
-        });");
-
-$this->registerJs(
-    "$(document).on('hidden.bs.modal', '#kartik-modal', function () {
-     $.pjax.reload('#pjax-data');
-});");        
-                    $buttonInfo = $model->connection;
-                    if(empty($buttonInfo)){
-                        $buttonInfo = 'not set';
-                    
-                    return Html::button( $buttonInfo, ['class' => 'connection-button text-blue', 'id' => 'connection-button', 'data-id' => $model->id, 'data-url' => Url::toRoute( ['invoices/tagme'] ), 'style' => 'color: red; border-bottom: 1px solid red;' ] );
-                    } else {
-                        return Html::button( $buttonInfo, ['class' => 'connection-button text-blue', 'id' => 'connection-button', 'data-id' => $model->id, 'data-url' => Url::toRoute( ['invoices/tagme'] ), 'style' => 'border-bottom: 1px solid #87cd00;' ] );
-                    }
+                    return Html::button( $model->connection, ['class' => 'connection-button text-blue', 'id' => 'connection-button', 'data-id' => $model->id, 'data-url' => Url::toRoute( ['invoices/tagme'] ), 'style' => 'border-bottom: 1px solid #87cd00;' ] );
                 },                              
                 'contentOptions' => ['style' => 'text-align: center; '],
                 'editableOptions' => [
@@ -198,30 +137,38 @@ $this->registerJs(
               ['class' => 'yii\grid\ActionColumn',
                                 'header' => '',
                                 'headerOptions' => ['style' => 'min-width: 90px; width: 90px;text-align: right; border-bottom-color: transparent;' ],
-                                'contentOptions' => ['style' => 'padding: 10px;text-align:center; vertical-align: center' ],
-                                'template' => '{view} {accept} {flag} {delete}',
+                                'contentOptions' => ['style' => 'padding: 10px;text-align:right; line-height: 2em;' ],
+                                'template' => '{view} <span style="margin-right: 12px;">{accept}</span> {delete}',
                                 'buttons' => [
                                     'accept' => function ($url, $model)
                                     {
-                                        return Html::button( '<a href=""><i class="fa fa-th-list "></i></a>', ['value' => $url, 'class' => 'accept-button', 'id' => 'acceptButton'] );
+                                        return Html::button( '<a href=""><i class="fa fa-th-list"></i></a>', ['value' => $url, 'class' => 'accept-button', 'id' => 'acceptButton'] );
                                     },
                                     'view' => function ($url, $model)
                                     {
+                                        $imageName = $model->name.'.jpg';
+                                        $imagePath = 'assets/'.$imageName;
+                                        if(file_exists('assets/'.$imageName)){
+                                            $imagePath = 'assets/'.$imageName;
+                                        }
+                                       // $imagePath = '@web/assets/'.$imageName;
                                         
-                                        return Html::a('<span class="fa fa-file-pdf-o"></span>', $url,                                        
+                                        return Html::a( 
+                                                '<div class="postImage">
+                                                <span class="fa fa-file-pdf-o"></span>
+                                                <span class="title">'.
+                                                Html::img($imagePath).'</span>'.
+                                                '</div>',$url, 
                                                        [ 
                                                         'target' => '_blank',
-                                                        'class' => $model->id,
-                                                        'imagePath' => '/assets/' . $model->name . '.jpg',
                                                         'data-method' => 'post',
-                                                        'title' => 'download PDF'/*Yii::t( 'app', 'view' )*/,
+                                                        'title' => ''/*Yii::t( 'app', 'view' )*/,
                                                         'data' => [
                                                             'method' => 'post',
                                                         ],
                                                     ] );
                                         },
-//                                        return Html::button( '<a href=""><i class="fa fa-file-pdf-o"></i></a>', 
-//                                        ['value' => $url, 'class' => 'pdff-button', 'id' => 'pdffButton']);
+//                                        return Html::button( '<a href=""><i class="fa fa-file-pdf-o"></i></a>', ['value' => $url, 'class' => 'pdff-button', 'id' => 'pdffButton']);
 //                                    },
                                             'delete' => function($url, $model)
                                     {
@@ -237,15 +184,13 @@ $this->registerJs(
                                                 $name = "Danuta Fiałek";
                                             } 
                                             
-                                        if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) 
-                                        >= 50 || $name == $model->scannedBy )
+                                        if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) >= 50 || $name == $model->scannedBy )
                                         {
                                             return Html::a( '<span class="glyphicon glyphicon-trash" style="margin-left:10px;"></span>', $url, [ 
                                                         'data-method' => 'post',
                                                         'title' => Yii::t( 'app', 'delete' ),
                                                         'data' => [
-                                                            'confirm' => 'You are about to delete file: ' . 
-                                                            $model->name . ' ,are you sure you want to proceed?',
+                                                            'confirm' => 'You are about to delete file: ' . $model->name . ' ,are you sure you want to proceed?',
                                                             'method' => 'post',
                                                         ],
                                                     ] );
@@ -257,91 +202,18 @@ $this->registerJs(
                                             'accept' => function($url, $model)
                                     {
                                            if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) >= 50 ) {
-                                           return Html::a( '<span class="fa fa-thumbs-o-up"></span>', 
-                                                   $url, [ 'data-method' => 'post', 'title' => Yii::t( 'app', 'accept' ),
+                                           return Html::a( '<span class="fa fa-thumbs-o-up"></span>', $url, [ 'data-method' => 'post', 'title' => Yii::t( 'app', 'accept' ),
                                                'data' => [
-                                                            'confirm' => 'You are about to accept file: ' . 
-                                                   $model->name . ' ,are you sure you want to proceed?',
+                                                            'confirm' => 'You are about to accept file: ' . $model->name . ' ,are you sure you want to proceed?',
                                                             'method' => 'post',
                                                         ],] );
                                            } else {
                                                return '<span class="fa fa-thumbs-o-up"></span>';
                                            }
                                     },
-                                            'flag' => function($url, $model)
-                                    {
-                                        $this->registerJs("
-                                        $('.flag-button').click(function(){
-                                            var url = $(this).data('url');
-                                            var id = $(this).data('id');
-                                            var action = $(this).data('action');
-                                            $.ajax({
-                                                url: url,
-                                                type: 'post',
-                                                data: {action:action, id:id},
-                                                success: function (msg) {
-                                                    $.pjax.reload('#pjax-data');
-                                                }
-                                            })
-                                        });");
-                                           if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) >= 50 ) {
-                                               if($model->flag == 0){
-                                           return Html::button( '<a href=""><i class="fa fa-flag"></i></a>', 
-                                           ['value' => $url, 'class' => 'flag-button', 'data-action' => 'flag', 'data-id' => $model->id, 
-                                            'data-url' => $url, 'title' => 'flag' ] );                                               
-                                           } else {
-                                           return Html::button( '<a href=""><i class="fa fa-flag-o"></i></a>', 
-                                           ['value' => $url, 'class' => 'flag-button', 'data-action' => 'unflag', 'data-id' => $model->id, 
-                                            'data-url' => $url, 'title' => 'flag' ] );   
-                                           }
-                                           }
-                                           return '<span class="fa fa-flag-o"></span>';
-                                    },
                                         ],
                                         'urlCreator' => function ($action, $model)
                                 {
-                                         //custom JS for gridView AjaxUse
-                                        Modal::begin( [
-                                                    'id' => 'pdf-modal',
-                                                    'closeButton' => false,
-                                                    'headerOptions' => ['style' => 'display:none' ],
-                                                    'header' => '<h4 class="modal-title">Project Details</h4>',
-                                                    //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
-                                                    ] );
-                                                 echo "<div id='modalContent'></div>";
-                                        Modal::end();
-                        
-                                  $this->registerJs("$('.lighted-row').each(function(){  
-                                        var rowId;
-                                        var imagePath;
-                                        $(this).hover(  
-                                          function() {
-                                                rowId = $(this).attr('data-key');  
-                                                
-                                                $(this).addClass('light-on');
-                                          }, function() {
-                                                $(this).removeClass('light-on');
-                                          }
-                                        );
-
-                                        $(':nth-child(2)', this).click(function(){
-                                            
-                                                imagePath = $('.' + rowId).attr('imagePath');
-                                                console.log(imagePath);
-                                                    if(typeof imagePath != 'undefined'){
-                                                        console.log(imagePath);
-                                                        $('#pdf-modal').modal('show');
-                                                        $('.modal-content').css('background-image', 'url(' + imagePath + ')');
-                                                    }
-                                        });
-
-                                    });");
-                                  
-                                    if ( $action === 'flag' )
-                                    {
-                                        $url = Url::toRoute( ['invoices/flag', 'id' => $model->id ] );
-                                        return $url;
-                                    }
                                     if ( $action === 'delete' )
                                     {
                                         $url = Url::toRoute( ['invoices/delete', 'id' => $model->id ] );
@@ -358,7 +230,7 @@ $this->registerJs(
                                         $url = Url::toRoute( ['invoices/view', 'path' => $model->path, 'name' => $model->name ] );
                                         return $url;
                                     }
-                                 
+                                   
                                     
                                 }
                                     ],
@@ -370,6 +242,60 @@ $this->registerJs(
 
 </div>
 <?php
+$data = Invoices::getCategoryList();
+// Using a select2 widget inside a modal dialog
+Modal::begin([
+    'options' => [
+        'id' => 'kartik-modal',
+        'tabindex' => false // important for Select2 to work properly
+    ],
+    'header' => '<h4 style="margin:0; padding:0">Edit Connected to</h4>',
+]);
+echo Select2::widget([
+    'name' => 'connected',
+    'attribute' => 'state_10',
+    'data' => $data,
+    'size' => Select2::MEDIUM,
+    'options' => ['placeholder' => '', 'multiple' => true, 'id' => 'connected', 'hideSearch' => false ],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]); 
+echo Html::button( 'Accept', ['class' => 'btn btn-success change-button', 'id' => 'change-button', 'style' => 'margin-top: 10px;'] );
+Modal::end();
+$this->registerJs("
+        $('.connection-button').click(function(){
+            var tags;
+            var url = $(this).data('url');
+            var id = $(this).data('id');
+            $('#connected').change(function(e){
+                    tags = ($(this).val());
+                });
+            $('#kartik-modal').modal('show');
+            $('#change-button').click(function(){
+                $.ajax({
+                    url: url,
+                    type: 'post',
+                    data: {data:tags, id:id},
+                    success: function (msg) {
+                        $('#kartik-modal').modal('hide');
+                    }
+                })
+            });
+
+        });");
+
+$this->registerJs(
+    "$(document).on('hidden.bs.modal', '#kartik-modal', function () {
+     $.pjax.reload('#pjax-data');
+});");
+
+$this->registerJs('$(document).on("pjax:timeout", function(event) {
+  // Prevent default timeout redirection behavior
+  event.preventDefault();
+});');
 
 
+
+Pjax::end();
 ?>

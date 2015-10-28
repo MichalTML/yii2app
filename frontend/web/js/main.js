@@ -27,14 +27,7 @@ $(document).ajaxStop(function() {
         
 });
  
-$(function(){
-    // get the click event of the Note button
-    $('.seenote-button').click(function(){
-        $('#file-notes-modal').modal('show')
-                .find('#modalContent')
-                .load($(this).attr('value'));
-    });
-});
+
 
 $(function() {
   $(".pdff-button").click(function() {

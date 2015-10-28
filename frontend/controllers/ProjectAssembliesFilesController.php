@@ -621,6 +621,10 @@ class ProjectAssembliesFilesController extends Controller
                 $data['sygnature'];
                 $data['id'];
                 \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if($target == 'treatmenta'){
+        return $this->redirect(['project/treatmentmanagera', 
+            'sygnature' => $data['sygnature'], 'id' => $data['id'], 'pagination' => $data['pagination']]);
+        }
         if($target){
         return $this->redirect(['project/treatmentmanager', 
             'sygnature' => $data['sygnature'], 'id' => $data['id'], 'pagination' => $data['pagination']]);

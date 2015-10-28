@@ -561,6 +561,6 @@ $this->registerJs('$(document).on("pjax:timeout", function(event) {
   event.preventDefault()
 });');   
 ?>
-
+<?php Pjax::end() ?>
 </div>
 </div>

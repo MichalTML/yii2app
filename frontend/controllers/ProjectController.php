@@ -231,27 +231,30 @@ class ProjectController extends Controller {
     
     public function actionCtreatment($sygnature, $id, $pagination = 20){     
         $assemblieFiles = ProjectAssembliesFiles::find()->select(['id', 'path', 'name'])->asArray()->where(['and', ['projectId' => $sygnature, 'ext' => 'pdf']])->all();
-        
+ 
         if($assemblieFiles){
-            
            foreach($assemblieFiles as $file => $ids){
+               
                $assemblieFilesImages = FilesImages::find()->select(['imagePath'])->where(['fileId' => $ids['id']])->one();    
                if(!$assemblieFilesImages){
-                   
-                $imagePath = '/var/www/yii2app/frontend/web/images/files_images/'. $ids['name'] . '.jpg';
+                $serverpath = '/var/www/yii2app/frontend/web/images/files_images/P_' . $sygnature . '/';
+                $imagePath = $serverpath.$ids['name'] . '.jpg';
+                $viewImagePath = '/images/files_images/P_' . $sygnature . '/'.$ids['name'] . '.jpg';
                 
-                shell_exec('convert ' . $ids['path'] . ' ' . $imagePath);
-                
-                   $fileImage = new FilesImages;
-                   $fileImage->isNewRecord = true;
-                   $fileImage->fileId = $ids['id'];
-                   $fileImage->imagePath = $imagePath;
-                   $fileImage->save();
+                exec('mkdir -p ' . $serverpath);
+                exec('convert "' . $ids['path'].'"[0]'. ' "' . $imagePath.'"', $output, $return);
+                    if (!$return) {
+                        $fileImage = new FilesImages;
+                        $fileImage->isNewRecord = true;
+                        $fileImage->fileId = $ids['id'];
+                        $fileImage->imagePath = $viewImagePath;
+                        $fileImage->save(); 
+                    }
+
                }
            } 
           
         }
-
         $this->layout = 'action';        
         $searchModel = new ProjectAssembliesFilesSearch();
         $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 'tindex');

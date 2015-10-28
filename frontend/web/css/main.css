@@ -2275,6 +2275,16 @@ filter: alpha(opacity=50);
     transition: 1s;
 }
 
+.pdf-view{
+    height: 80vh;
+    margin-top: 10vh;
+    border-radius: 5px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-position: center;
+}
+
 #pdf-modal .modal-content{
     height: 80vh;
     margin-top: 10vh;
@@ -2285,3 +2295,6 @@ filter: alpha(opacity=50);
     background-position: center;
 }
 
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+    vertical-align: middle;
+}

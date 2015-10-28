@@ -2,14 +2,13 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\models\ProjectNotes */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<?php Pjax::begin();
+<?php
 $model->typeId = 3;
 ?>
 
@@ -32,34 +31,15 @@ $model->typeId = 3;
 
 </div>
 
-<?php Pjax::end() ?>
 <?php
     $this->registerJs(
-    '$("#create-note").click(function(event){
+    '$("#create-note").click(function(){
     var $note = $("#projectassembliesfilesnotes-note").val();
     
-    if($note.length > 0){  
-         $("#rmodal").modal("hide");
-         $("#cmodal").modal("hide");
-    }
+        if($note.length > 0){  
+             $("#modal-window").modal("hide");
+        }
     
     });'
     );
 ?>
-<script>
-    function submitForm($form) {
-    $.post(
-        $form.attr("action"), // serialize Yii2 form
-        $form.serialize()
-    )
-        .done(function(result) {
-            $('#modalreference-edit').modal('hide');
-            
-        })
-        .fail(function() {
-            console.log("server error");
-            $form.replaceWith('<button class="newType">Fail</button>').fadeOut();
-        });
-    return false;
-}    
-</script>

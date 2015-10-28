@@ -6,7 +6,6 @@ use yii\helpers\Html;
 use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
-use frontend\models\ProjectAssembliesFilesTypes;
 use frontend\models\FilePriority;
 use frontend\models\ProjectAssembliesFilesNotes;
 use frontend\models\ProjectAssembliesFiles;
@@ -122,7 +121,7 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
             [
                 'content'=>
                 Html::button('10', [
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination', 'target' => 'treatment'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination', 'target' => 'treatmenta'] ),
                     'data-pagination'=>'10',
                     'data-id'=> $id,
                     'data-sygnature'=> $sygnature,
@@ -131,7 +130,7 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                     'class'=>'btn btn-success paginations'
                 ]).' '.
                 Html::button('20', [
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination', 'target' => 'treatment'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination', 'target' => 'treatmenta'] ),
                     'data-pagination'=>'20',
                     'data-id'=> $id,
                     'data-sygnature'=> $sygnature,
@@ -140,7 +139,7 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                     'class'=>'btn btn-success paginations'
                 ]).' '.
                 Html::button('30', [
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination', 'target' => 'treatment'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/pagination', 'target' => 'treatmenta'] ),
                     'data-pagination'=>'30',
                     'data-id'=> $id,
                     'data-sygnature'=> $sygnature,
@@ -337,31 +336,45 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                                 'buttons' => [  
                                     'add' => function ($url, $model)
                                     {
-                                    $fileStatus = ProjectAssembliesFilesData::find()->select(['id'])->where(['fileId' => $model->id, 'statusId' => '1'])->one();
+                                    $fileStatus = ProjectAssembliesFilesData::find()
+                                    ->select(['id'])->where(['fileId' => $model->id, 'statusId' => '1'])->one();
+                                    
                                     if($model->quanityDone == $model->quanity || $fileStatus == null){
                                         return '<i class="fa fa-plus"></i>';
                                     } else {
-                                        return Html::button( '<a href=""><i class="fa fa-plus"></i></a>', ['value' => $url, 'class' => 'add-button', 'id' => 'add', 'data-id' => $model->id, 'data-url' => $url, 'title' => '+1 ready file' ] );
+                                        return Html::button( '<a href=""><i class="fa fa-plus"></i></a>', 
+                                        ['value' => $url, 'class' => 'add-button', 'id' => 'add', 
+                                        'data-id' => $model->id, 'data-url' => $url, 'title' => '+1 ready file' ] );
                                     }},
                                     'deduct' => function ($url, $model){
-                                        $fileStatus = ProjectAssembliesFilesData::find()->select(['id'])->where(['fileId' => $model->id, 'statusId' => '1'])->one();
+                                        $fileStatus = ProjectAssembliesFilesData::find()
+                                         ->select(['id'])->where(['fileId' => $model->id, 'statusId' => '1'])->one();
+                                        
                                     if($model->quanityDone == 0 || $fileStatus == null){
                                         return '<i class="fa fa-minus"></i>';
                                     } else {
-                                        return Html::button( '<a href=""><i class="fa fa-minus"></i></a>', ['value' => $url, 'class' => 'deduct-button', 'id' => 'deduct', 'data-id' => $model->id, 'data-url' => $url, 'title' => '-1 ready file' ] );
+                                        return Html::button( '<a href=""><i class="fa fa-minus"></i></a>', 
+                                        ['value' => $url, 'class' => 'deduct-button', 'id' => 'deduct', 
+                                        'data-id' => $model->id, 'data-url' => $url, 'title' => '-1 ready file' ] );
                                             }},
                                     'sendtreatment' => function ($url, $model)
                                     {
-                                                $fileStatus = ProjectAssembliesFilesData::find()->select(['id'])->where(['fileId' => $model->id, 'statusId' => '1'])->one();
+                                                $fileStatus = ProjectAssembliesFilesData::find()
+                                                ->select(['id'])->where(['fileId' => $model->id, 'statusId' => '1'])->one();
+                                                
                                    if ($model->quanity == $model->quanityDone & $model->destinationId != 0 & $fileStatus != null) {
-                                        return Html::button( '<a href=""><i class="fa fa-paper-plane"></i></a>', ['value' => $url, 'class' => 'send-button', 'id' => 'send', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'finish element' ] );
+                                        return Html::button( '<a href=""><i class="fa fa-paper-plane"></i></a>', 
+                                        ['value' => $url, 'class' => 'send-button', 'id' => 'send', 'data-id' => $model->id, 
+                                        'data-url' => $url, 'title' => 'finish element' ] );
                                     }else{
                                         return '<i class="fa fa-paper-plane-o"></i>';
                                     }
                                     },
                                     'reject' => function ($url, $model)
                                     {                                      
-                                        return Html::button( '<a href=""><i class="fa fa-exclamation-triangle"></i></a>', ['value' => $url, 'class' => 'reject-button-note', 'id' => 'reject', 'data-id' => $model->id, 'data-url' => $url, 'title' => 'reject file' ] );
+                                        return Html::button( '<a href=""><i class="fa fa-exclamation-triangle"></i></a>', 
+                                        ['value' => $url, 'class' => 'reject-button-note', 'id' => 'reject', 
+                                        'data-id' => $model->id, 'data-url' => $url, 'title' => 'reject file' ] );
                                     },                                    
                                     'seenote' => function ($url, $model)
                                     {
@@ -372,7 +385,9 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                                             ->all();
                                     
                                     if ($result) {
-                                        return Html::button( '<a href=""><i class="fa fa-file-text"></i></a>', ['file-name' => $model->name, 'value' => $url, 'class' => 'seenote-button', 'id' => 'seenote-button', 'title' => 'see notes' , 'data' => $model->id] );
+                                        return Html::button( '<a href=""><i class="fa fa-file-text"></i></a>', 
+                                        ['file-name' => $model->name, 'value' => $url, 'class' => 'seenote-button', 
+                                         'id' => 'seenote-button', 'title' => 'see notes' , 'data' => $model->id] );
                                     } else {
                                         return '<i class="fa fa-file-o"></i>';
 
@@ -380,7 +395,8 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                                     },
                                     'note' => function ($url, $model)
                                     {
-                                        return Html::button( '<a href=""><i class="fa fa-file-text-o"></i></a>', ['value' => $url, 'class' => 'cnote-button', 'title' => 'new note' ] );
+                                        return Html::button( '<a href=""><i class="fa fa-file-text-o"></i></a>', 
+                                        ['value' => $url, 'class' => 'cnote-button', 'title' => 'new note' ] );
                                     },
                                     'downloaddxf' => function($url, $model)
                                     {
@@ -395,8 +411,12 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                                     'downloadpdf' => function($url, $model)
                                     {
                                         if($url){
-                                            $fileId = ProjectAssembliesFiles::find()->select(['id'])->where(['name' => $model->name, 'ext' => 'pdf'])->one();
-                                            $fileImage = FilesImages::find()->select(['imagePath'])->where(['fileId' => $fileId->id])->one();
+                                            $fileId = ProjectAssembliesFiles::find()
+                                            ->select(['id'])->where(['name' => $model->name, 'ext' => 'pdf'])->one();
+                                            
+                                            $fileImage = FilesImages::find()->select(['imagePath'])
+                                            ->where(['fileId' => $fileId->id])->one();
+                                            
                                                 if($fileImage){
                                                     return Html::a( '<span class="fa fa-file-pdf-o"></span>', $url, [
                                                       'data-method' => 'post',
@@ -480,77 +500,77 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                                     ],
             ],
                                             
-        ]);
-                             
+        ]);                           
         
-                        Modal::begin( [
-                            'id' => 'rmodal',
-                            'header' => '<h4 class="modal-title"></h4>',
-                        ] );
-                        echo "<div id='modalContent'></div>";
-
-                        Modal::end();
-                        
-                        Modal::begin( [
-                            'id' => 'cmodal',
-                            'header' => '<h4 class="modal-title">New Note</h4>',
-                        ] );
-                        echo "<div id='modalContent'></div>";
-
-                        Modal::end();
-
-                        Modal::begin( [
-                            'id' => 'file-notes-modal',
-                            'size' => 'lg',
-                            'header' => '<h4 class="modal-title">Element: </h4>',
-                        ] );
-                        echo "<div id='modalContent'></div>";
-
-                        Modal::end();
-                        
-                        Modal::begin( [
-                                'id' => 'file-modal',
-                                'closeButton' => false,
-                                'headerOptions' => ['style' => 'display:none' ],
-                            'header' => '<h4 class="modal-title">Project Details</h4>',
-                                //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
-                        ] );
-                        echo "<div id='modalContent'></div>";
-                        Modal::end();
-                        
-                        Modal::begin( [
-                                'id' => 'pdf-modal',
-                                'closeButton' => false,
-                                'headerOptions' => ['style' => 'display:none' ],
-                            'header' => '<h4 class="modal-title">Project Details</h4>',
-                                //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
-                        ] );
-                        echo "<div id='modalContent'></div>";
-                        Modal::end();
-                        
-                        
-                            
+                                                                                           
 $this->registerJs("
-$(function(){
-    // get the click event of the Note button
-    $('.cnote-button').click(function(){
-        $('#cmodal').modal('show')
+    //////////////// MODAL ACTIONS
+    
+    // MASS GROUP ACTION EVENT
+    $('.group-mass-action').click(function(){
+       var keys = $('#grid').yiiGridView('getSelectedRows');
+       var url = $(this).data('url');
+       var sygnature = $(this).data('sygnature');
+       var url2 = url + '&sygnature=' + sygnature + '&id=' + keys;
+            $.ajax({
+            url: url2,
+            type: 'post',
+            data: {id: keys, sygnature: sygnature},
+                success: function () {
+                   $('#modal-window').modal('show')
+                                     .find('#modalContent')
+                                     .load(url2);
+                }
+       });
+    });
+    
+    // Create Note action
+    $(function(){
+    
+        $('.cnote-button').click(function(){
+            $('#modal-window').modal('show')
+                    .find('#modalContent')
+                    .load($(this).attr('value'));
+        });
+    });
+
+    // View Note ACtion / change Note Title    
+    $('.seenote-button').click(function(){
+    
+        var fileName = $(this).attr('file-name');
+        $('.modal-title').empty();
+        $('.modal-title').append('<span class=\\'title\\'>Element: ' + fileName + '</span>');
+        $('.modal-header').addClass('color-title');
+        
+        $('#modal-window').modal('show')
                 .find('#modalContent')
                 .load($(this).attr('value'));
     });
-});");                          
-                            
-$this->registerJs("
-    $('.seenote-button').click(function(){
-        var fileName = $(this).attr('file-name');
-        $('#file-notes-modal').modal('show')
+    
+    //REJECT EVENT
+    $('.reject-button-note').click(function(){
+        $('#modal-window').modal('show')
                 .find('#modalContent')
-                .load($(this).attr('data-url'));
-                $('.modal-title').empty();
-                $('.modal-title').append('<span class=\\'title\\'>' + fileName + '</span>');
-                $('.modal-header').addClass('color-title');
+                .load($(this).attr('value'));
     });
     
+    /////////////// MODAL SETTINGS
+    
+    // Prevent default timeout redirection behavior
+    $(document).on('pjax:timeout', function(event) {
+        event.preventDefault()
+    });
+    
+    // Refresh pjax after modal even
+    $('#modal-window').on('hidden.bs.modal', function () {
+        $('.modal-content').css('background-image', '');
+        $('.modal-content').removeClass('pdf-view');
+        $.pjax.reload('#pjax-data');
+    });  
+    
+    ////////////// OTHER ACTIONS
+    
+    // Add light effect AND PDF view
     $('.lighted-row').each(function(){  
         var rowId;
         var imagePath;
@@ -562,101 +582,65 @@ $this->registerJs("
                 $(this).removeClass('light-on');
           }
         );
-        
+
         $(':lt(12)', this).click(function(){
-                
-                imagePath = $('.' + rowId).attr('image-path');
-                    if(typeof imagePath != 'undefined'){
-                        console.log(imagePath);
-                        $('#pdf-modal').modal('show');
-                        $('.modal-content').css('background-image', 'url(' + imagePath + ')');
-                    }
-        });
-        
-    });
 
-"); 
-
-$this->registerJs(
-    "$(document).on('hidden.bs.modal', '#cmodal', function () {
-     $.pjax.reload('#pjax-data');
-    });  
-    
-    $('.group-mass-action').click(function(){
-       var keys = $('#grid').yiiGridView('getSelectedRows');
-       var url = $(this).data('url');
-       var sygnature = $(this).data('sygnature');
-       var url2 = url + '&sygnature=' + sygnature + '&id=' + keys;
-       $.ajax({
-       url: url2,
-       type: 'post',
-       data: {id: keys, sygnature: sygnature},
-       success: function () {
-          $('#group-modal').modal('show')
-                            .find('#modalContent')
-                            .load(url2);
-       }
-     });
-
-    });
-                    
+            imagePath = $('.' + rowId).attr('image-path');
             
+            if(typeof imagePath != 'undefined'){
+                $('#modal-window').modal('show');
+                $('.modal-content').css('background-image', 'url(' + imagePath + ')');
+                $('.modal-content').addClass('pdf-view');
+            }
+        }); 
+    }); 
+
+    
+                    
+    // READY FILE EVENT        
     $('.send-button').click(function(){
     var data = $(this).data('id'); 
     var url = $(this).data('url');
-     $.ajax({
-       url: url,
-       type: 'post',
-       data: {id: data},
-       success: function (msg) {
-          $.pjax.reload('#pjax-data');
-       }
-    
-    });
-    });
-    
-    $('.reject-button-note').click(function(){
-        $('#rmodal').modal('show')
-                .find('#modalContent')
-                .load($(this).attr('value'));
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: {id: data},
+                success: function (msg) {
+                   $.pjax.reload('#pjax-data');
+                }
+        });
     });
     
-    $(document).on('hidden.bs.modal', '#rmodal', function () {
-     $.pjax.reload('#pjax-data');
-    }); 
-    
-    $(document).on('hidden.bs.modal', '#group-modal', function () {
-     $.pjax.reload('#pjax-data');
-    }); 
-    
+  
+    // DEDUCT EVENT
     $('.deduct-button').click(function(){
     var data = $(this).data('id'); 
     var url = $(this).data('url');
-     $.ajax({
-       url: url,
-       type: 'post',
-       data: {id: data},
-       success: function (msg) {
-          $.pjax.reload('#pjax-data');
-       }
-    
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: {id: data},
+                success: function (msg) {
+                   $.pjax.reload('#pjax-data');
+                }
+       });
     });
-    });
     
+    // ADD EVENT
     $('.add-button').click(function(){
     var data = $(this).data('id'); 
     var url = $(this).data('url');
-     $.ajax({
-       url: url,
-       type: 'post',
-       data: {id: data},
-       success: function (msg) {
-          $.pjax.reload('#pjax-data');
-       }
-    
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: {id: data},
+                success: function (msg) {
+                   $.pjax.reload('#pjax-data');
+                }
+       });
     });
-    });
     
+    // MASS ACTION EVENT
     $('.mass-action').click(function(){
        var keys = $('#grid').yiiGridView('getSelectedRows');
        var data = $(this).data('id'); 
@@ -694,7 +678,8 @@ $this->registerJs(
       });  
      
       });
-      
+    
+    // PAGINATION CHANGE EVENT
     $('.paginations').click(function(){ 
        var pagination = $(this).data('pagination');
        var id = $(this).data('id');
@@ -712,21 +697,19 @@ $this->registerJs(
     
     
 ");
-$this->registerJs('$(document).on("pjax:timeout", function(event) {
-  // Prevent default timeout redirection behavior
-  event.preventDefault()
-});');
 
 
+                        
+    Modal::begin( [
+            'id' => 'modal-window',
+            'header' => '<h4 class="modal-title"></h4>',
+        ] );
+        echo "<div id='modalContent'></div>";
 
-        Pjax::end();
+    Modal::end();
+           
         
-        Modal::begin( [
-            'id' => 'group-modal',
-            'header' => '<h4 class="modal-title">Group Creation</h4>',
-            ] );
-         echo "<div id='modalContent'></div>";
-        Modal::end();     
+    Pjax::end();
 ?>
 
 </div>
