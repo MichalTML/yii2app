@@ -11,7 +11,7 @@ use yii\widgets\Pjax;
 ?>
 
 <div class="project-data-index">
-    <?php Pjax::begin(['timeout' => false, 'enablePushState' => false, 'clientOptions' => ['container' => 'pjax-container']]); ?>
+    <?php Pjax::begin(['id' => 'pjax-data-assemblies-files']); ?>
     <?=
     GridView::widget( [
         'dataProvider' => $dataProvider,
@@ -28,33 +28,26 @@ use yii\widgets\Pjax;
         'columns' => [
             [
                 'class' => 'yii\grid\SerialColumn',
-                'contentOptions' => ['style' => 'text-align: center; font-weight: bold; line-height: 1em;'],
+                'contentOptions' => ['style' => 'text-align: center; font-weight: bold; vertical-align:middle;'],
             ],
            [
                'label' => 'File Name',
                'attribute' => 'name',
                'value' => 'name',
                'headerOptions' => ['style' => 'text-align: center;' ],
-               'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
+               'contentOptions' => ['style' => 'text-align: center; vertical-align:middle;' ],
            ],
-//           [
-//               'label' => 'File Size',
-//               'attribute' => 'size',
-//               'value' => 'size',
-//               'headerOptions' => ['style' => 'text-align: center;' ],
-//               'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
-//           ],
            [
                'label' => 'Ext.',
                'attribute' => 'ext',
                'value' => 'ext',
                'headerOptions' => ['style' => 'text-align: center;' ],
-               'contentOptions' => ['style' => 'text-align: center; line-height: 1em;' ],
+               'contentOptions' => ['style' => 'text-align: center; vertical-align:middle;' ],
            ],
             ['class' => 'yii\grid\ActionColumn',
                                 'header' => '',
-                                'headerOptions' => ['style' => 'min-width: 110px;text-align: center; border-bottom-color: transparent;' ],
-                                'contentOptions' => ['style' => 'text-align:center; line-height: 1em;' ],
+                                'headerOptions' => ['style' => 'text-align: center; border-bottom-color: transparent;' ],
+                                'contentOptions' => ['style' => 'text-align:center; vertical-align:middle;' ],
                                 'template' => '{download} {view} {delete}',
                                 'buttons' => [
                                             'delete' => function($url, $model)
@@ -82,9 +75,11 @@ use yii\widgets\Pjax;
                                                 ] );
                                     },
                                     
-                                            'view' => function($url, $model)
+                                                'view' => function($url, $model)
                                     {
-                                        return Html::button( '<a href=""><i class="glyphicon glyphicon-eye-open"></i></a>', ['value' => $url, 'class' => 'file-button', 'title' => 'file details' ] );
+                                        return Html::button( '<a href=""><i class="glyphicon glyphicon-eye-open"></i></a>', 
+                                               ['value' => $url, 'class' => 'file-details', 'id' => 'file-details', 
+                                                'file-name' => $model->name, 'title' => 'file details' ] );
                                     },
                                         ],
                                         'urlCreator' => function ($action, $model, $key, $index) use ($id) 
@@ -109,6 +104,20 @@ use yii\widgets\Pjax;
                                     ],
             ]
         ]);
-                 
+                                    
+$this->registerJS("    
+    // View File Details
+    $('.file-details').click(function(){
+        action = $(this).attr('id');
+        var fileName = $(this).attr('file-name');
+        $('#modal-window .modal-title').empty();
+        $('#modal-window .modal-title').append('File: ' + fileName);
+        $('#modal-window').modal('show')
+                .find('#modalContent')
+                .load($(this).attr('value'));
+    });
+
+");
+                                    
         Pjax::end();
 

@@ -1973,6 +1973,17 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     padding: 0;
 }
 
+.file-details{
+    border: 0px;
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
 .client-button{
     border: 0px;
     height: auto;
@@ -2253,6 +2264,30 @@ filter: alpha(opacity=50);
     transition: 1s;
 }
 
+.light-on-pending td:nth-child(n+1):nth-child(-n+8){
+    color: white;
+    background-color:rgba(72, 42, 10, 0.34) !important;
+    transition: 1s;
+}
+
+.light-on-pending td:nth-of-type(13){
+     color: white;
+    background-color:rgba(72, 42, 10, 0.34) !important;
+    transition: 1s;
+}
+
+.light-on-treatment td:nth-child(n+1):nth-child(-n+6){
+    color: white;
+    background-color:rgba(72, 42, 10, 0.34) !important;
+    transition: 1s;
+}
+
+.light-on-treatment td:nth-of-type(13){
+     color: white;
+    background-color:rgba(72, 42, 10, 0.34) !important;
+    transition: 1s;
+}
+
 .ticked{
     background-image: url('/images/tick.png');
     background-size: 30%;
@@ -2295,6 +2330,12 @@ filter: alpha(opacity=50);
     background-position: center;
 }
 
-.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
-    vertical-align: middle;
+#modal-window .modal-header{
+    background-color: #808080;
+    color: white;
+    border-radius: 5px 5px 0 0;
+}
+
+#modal-window{
+    font-size: 12px;
 }

@@ -103,8 +103,7 @@ echo GridView::widget( [
                     },
                             'detailAnimationDuration' => 100,
                             'expandIcon' => '<span class="fa fa-angle-right"></span>',
-                            'collapseIcon' => '<span class="fa fa-angle-down"></span>',
-                        //'headerOptions'=>['class'=>'kartik-sheet-style']          
+                            'collapseIcon' => '<span class="fa fa-angle-down"></span>',       
                         ],
                     ]
                 ] );
@@ -154,30 +153,13 @@ echo GridView::widget( [
                                 ],
                             ]
                         ] );
-                        Modal::begin( [
-                            'id' => 'file-modal',
-                            'closeButton' => false,
-                            'headerOptions' => ['style' => 'display:none' ],
-                        ] );
-                        echo "<div id='modalContent'></div>";
-                        Modal::end();
-
-                        Modal::begin( [
-                            'id' => 'modal',
-                            'header' => '<h4 class="modal-title">New Note</h4>',
-                        ] );
-                        echo "<div id='modalContent'></div>";
-
-                        Modal::end();
-
-                        Modal::begin( [
-                            'id' => 'file-notes-modal',
-                            'size' => 'lg',
-                            'header' => '<h4 class="modal-title">File Notes</h4>',
-                        ] );
-                        echo "<div id='modalContent'></div>";
-
-                        Modal::end();
+          
+Modal::begin( [
+    'id' => 'modal-window',
+    'header' => '<h4 class="modal-title"></h4>',
+    ]);
+    echo "<div id='modalContent'></div>";
+Modal::end();
 
 
 

@@ -324,15 +324,13 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                 ],
             ['class' => 'yii\grid\ActionColumn',
                                 'header' => '',
-                                'headerOptions' => ['style' => 'background-color:white; min-width: 70px;text-align: center; border-bottom-color: transparent;' ],
-                                'contentOptions' => function($model){
-                                $fileStatus = ProjectAssembliesFilesData::find()->select(['id'])->where(['fileId' => $model->id, 'statusId' => '1'])->one();
-                                if($fileStatus){
-                                    return ['style' => 'margin-top: 5px; background-color:#e6ffb2;text-align:center;  line-height: 2.0;' ];
-                                }
-                                    return ['style' => 'margin-top: 5px; background-color:#E599A3;text-align:center;  line-height: 2.0;' ];      
-                                },
-                                'template' => '{seenote} {note} | {downloaddxf} {downloadpdf} <br /> {add} {deduct} | {sendtreatment} {reject}',                                          
+                                'headerOptions' => ['style' => 'background-color:white; '
+                                    . 'min-width: 70px;text-align: center; border-bottom-color: transparent;' ],
+                                'contentOptions' => function(){                                
+                                    return ['style' => 'margin-top: 5px; text-align:center; vertical-align:middle' ];      
+                                    },
+                                'template' => '{seenote} {note} | {downloaddxf} {downloadpdf} <br /> '
+                                            . '{add} {deduct} | {sendtreatment} {reject}',                                          
                                 'buttons' => [  
                                     'add' => function ($url, $model)
                                     {
@@ -439,7 +437,8 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                                     {
                                         $path = ProjectAssembliesFiles::getFile($model->sygnature, $model->name, 'pdf');
                                         if($path){
-                                        $url = Url::toRoute( ['project-assemblies-files/download', 'path' => $path, 'name' => $model->name , 'sygnature' => $model->projectId, 'id' => $id ]);
+                                        $url = Url::toRoute( ['project-assemblies-files/download', 
+                                            'path' => $path, 'name' => $model->name , 'sygnature' => $model->projectId, 'id' => $id ]);
                                         return $url;
                                         } else {
                                             $url = '';
@@ -449,7 +448,8 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                                     {
                                         $path = ProjectAssembliesFiles::getFile($model->sygnature, $model->name, 'dxf');
                                         if($path){
-                                        $url = Url::toRoute( ['project-assemblies-files/download', 'path' => $path, 'name' => $model->name , 'sygnature' => $model->projectId, 'id' => $id ]);
+                                        $url = Url::toRoute( ['project-assemblies-files/download',
+                                            'path' => $path, 'name' => $model->name , 'sygnature' => $model->projectId, 'id' => $id ]);
                                         return $url;
                                         } else {
                                             $url = '';
@@ -508,6 +508,7 @@ $this->registerJs("
     
     // MASS GROUP ACTION EVENT
     $('.group-mass-action').click(function(){
+       $('.modal-header').css('border-bottom', '0');
        var keys = $('#grid').yiiGridView('getSelectedRows');
        var url = $(this).data('url');
        var sygnature = $(this).data('sygnature');
@@ -563,15 +564,21 @@ $this->registerJs("
     
     // Refresh pjax after modal even
     $('#modal-window').on('hidden.bs.modal', function () {
-        $('.modal-content').css('background-image', '');
-        $('.modal-content').removeClass('pdf-view');
-        $.pjax.reload('#pjax-data');
+        var classCheck =  $('.modal-content').attr('class');
+            if(classCheck === 'modal-content pdf-view'){
+                $('.modal-content').css('background-image', '');
+                $('.modal-content').removeClass('pdf-view');               
+             } else {
+                 $('.modal-header').css('border-bottom', '1px solid #e5e5e5');
+                 $.pjax.reload('#pjax-data');
+             }   
     });  
     
     ////////////// OTHER ACTIONS
     
     // Add light effect AND PDF view
     $('.lighted-row').each(function(){  
+        $(':lt(12)', this).css('cursor', 'pointer');
         var rowId;
         var imagePath;
         $(this).hover(  
@@ -584,14 +591,14 @@ $this->registerJs("
         );
 
         $(':lt(12)', this).click(function(){
-
-            imagePath = $('.' + rowId).attr('image-path');
             
+            imagePath = $('.' + rowId).attr('image-path');
             if(typeof imagePath != 'undefined'){
                 $('#modal-window').modal('show');
                 $('.modal-content').css('background-image', 'url(' + imagePath + ')');
                 $('.modal-content').addClass('pdf-view');
-            }
+                $('.modal-header').css('border-bottom', '0');
+           }
         }); 
     }); 
 

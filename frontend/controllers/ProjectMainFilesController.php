@@ -48,7 +48,7 @@ class ProjectMainFilesController extends Controller
      */
     public function actionView($id)
     {
-        return $this->renderPartial('view', [
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
     }

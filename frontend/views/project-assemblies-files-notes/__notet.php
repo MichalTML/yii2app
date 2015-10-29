@@ -35,7 +35,6 @@ $model->typeId = 3;
     $this->registerJs(
     '$("#create-note").click(function(){
     var $note = $("#projectassembliesfilesnotes-note").val();
-    
         if($note.length > 0){  
              $("#modal-window").modal("hide");
         }

@@ -1,7 +1,6 @@
 <?php
 
 use kartik\grid\GridView;
-use yii\data\ActiveDataProvider;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\models\ProjectMainFilesNotes */
@@ -28,7 +27,7 @@ use yii\data\ActiveDataProvider;
 [
                 'value' => 'note',
                 'label' => 'Note Content',
-                'contentOptions' => ['style' => 'word-wrap: break-word; overflow: hidden; max-width:400px; font-size: 14px; vertical-align: middle;']
+                'contentOptions' => ['style' => 'word-wrap: break-word; overflow: hidden; max-width:200px; font-size: 14px; vertical-align: middle;']
                 
             ],
             [

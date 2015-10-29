@@ -45,15 +45,20 @@ class ProjectSearch extends ProjectData
     public function search($params, $order = null, $filter = null)
     {        
         $query = ProjectData::find();
-        //var_dump($filter);
-        if($filter){
+        
+        if($filter == 'active'){
+            $query->andFilterWhere(['or',
+                ['projectStatus' => '1'],
+                ['projectStatus' => '3']
+                ]);
+        } elseif (is_array($filter)){
             foreach($filter as $sygnature){
                 $query->orFilterWhere(['sygnature' => $sygnature]);
             }
+        } elseif($filter == 'completed'){
+            $query->andFilterWhere(['projectStatus' => '2']);
         }
-        
-      
-        
+         
         $query->joinWith(['projectStatus0', 'client', 'creUser']);
         if($order){        
             $dataProvider = new ActiveDataProvider([

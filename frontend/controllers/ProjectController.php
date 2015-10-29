@@ -39,7 +39,7 @@ class ProjectController extends Controller {
     public function actionIndex() {
         $this->layout = 'action';
         $searchModel = new ProjectSearch();
-        $order = ['defaultOrder' => ['sygnature' => 'DESC']];
+        $order = ['defaultOrder' => ['sygnature' => 'DESC']];        
         $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $order);
         return $this->render( 'index', [
                     'searchModel' => $searchModel,
@@ -238,6 +238,7 @@ class ProjectController extends Controller {
                $assemblieFilesImages = FilesImages::find()->select(['imagePath'])->where(['fileId' => $ids['id']])->one();    
                if(!$assemblieFilesImages){
                 $serverpath = '/var/www/yii2app/frontend/web/images/files_images/P_' . $sygnature . '/';
+                $ids['name'] = substr($ids['name'], 0, 15);
                 $imagePath = $serverpath.$ids['name'] . '.jpg';
                 $viewImagePath = '/images/files_images/P_' . $sygnature . '/'.$ids['name'] . '.jpg';
                 
@@ -286,8 +287,21 @@ class ProjectController extends Controller {
         $this->layout = 'action';
         $searchModel = new ProjectSearch();
         $order = ['defaultOrder' => ['sygnature' => 'DESC']];
-        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $order );      
+        $filter = 'active';
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $order, $filter );      
         return $this->render( 'fileindex', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,     
+                ] );
+    }
+    
+    public function actionFileindexc(){ // constructuros INDEX
+        $this->layout = 'action';
+        $searchModel = new ProjectSearch();
+        $order = ['defaultOrder' => ['sygnature' => 'DESC']];
+        $filter = 'completed';
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $order, $filter );      
+        return $this->render( 'fileindexc', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,     
                 ] );

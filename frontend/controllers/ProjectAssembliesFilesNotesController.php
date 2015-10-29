@@ -55,7 +55,7 @@ class ProjectAssembliesFilesNotesController extends Controller
          $notesNumber = ProjectAssembliesFilesNotes::find()->select(['id'])->all();
          $pages = count($notesNumber);
          $dataProvider->pagination->pagesize = $pages;
-                            return Yii::$app->controller->renderPartial( 'view', [
+                            return Yii::$app->controller->renderAjax( 'view', [
                                         'searchModel' => $searchModel,
                                         'dataProvider' => $dataProvider,
                                     ] );

@@ -8,25 +8,15 @@ use common\models\PermissionHelpers;
 use frontend\models\Invoices;
 use yii\bootstrap\Modal;
 use kartik\select2\Select2;
-use yii\widgets\Pjax;
-/* @var $this yii\web\View */
-/* @var $searchModel frontend\models\search\InvoicesSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Not Accepted Invoices';
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['breadcrumbs'][] = ['label' => 'Accepted Invoices', 'url' => ['invoices/accept']];
+
 ?>
 <div class="invoices-index">
 
-    
-
-    <p>
-        <?php //Html::a('View Accepted Invoices', ['accepted'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?= GridView::widget([
-        
+    <?= GridView::widget([        
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'pjax' => true,        
@@ -42,7 +32,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Accepted Invoices', 'url' => ['inv
         'responsive' => true,
         'hover' => true,
         'resizableColumns' => false,
-        'headerRowOptions' => ['class' => 'header'],
+        'headerRowOptions' => ['class' => 'header' , 'style' => 'font-size: 11px;'],
         'rowOptions' => function($model){
                             if($model->flag == 0){
                                 return ['class' => 'lighted-row', 'style' => 'font-size: 11px;'];
@@ -71,7 +61,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Accepted Invoices', 'url' => ['inv
                 'label' => 'Supplier',
                 'headerOptions' => ['style' => 'text-align: center; '],
                 'value' => 'supplierId',
-                 'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;'],
+                'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;'],
                 'editableOptions' => [
                     'header' => ' ',
                     'inputType' => Editable::INPUT_TEXT,
@@ -89,67 +79,68 @@ $this->params['breadcrumbs'][] = ['label' => 'Accepted Invoices', 'url' => ['inv
                 'headerOptions' => ['style' => 'text-align: center;'],
                 'format' => 'raw',
                 'value' => function($model){
-$data = Invoices::getCategoryList();
-// Using a select2 widget inside a modal dialog
-Modal::begin([
-    'options' => [
-        'id' => 'kartik-modal',
-        'tabindex' => false // important for Select2 to work properly
-    ],
-    'header' => '<h4 style="margin:0; padding:0">Edit Connected to</h4>',
-]);
-echo Select2::widget([
-    'name' => 'connected',
-    'attribute' => 'state_10',
-    'data' => $data,
-    'size' => Select2::MEDIUM,
-    'options' => ['placeholder' => '', 'multiple' => true, 'id' => 'connected', 'hideSearch' => false ],
-    'pluginOptions' => [
-        'allowClear' => true
-    ],
-]); 
-echo Html::button( 'Accept', ['class' => 'btn btn-success change-button', 'id' => 'change-button', 'style' => 'margin-top: 10px;'] );
-Modal::end();
-$this->registerJs("
-        $('.connection-button').click(function(){
-            var tags;
-            var url = $(this).data('url');
-            var id = $(this).data('id');
-            $('#connected').change(function(e){
-                    tags = ($(this).val());
-                });
-            $('#kartik-modal').modal('show');
-            $('#change-button').click(function(){
-                $.ajax({
-                    url: url,
-                    type: 'post',
-                    data: {data:tags, id:id},
-                    success: function (msg) {
-                        $('#kartik-modal').modal('hide');
-                    }
-                })
-            });
+                $data = Invoices::getCategoryList();
+                // Using a select2 widget inside a modal dialog
+                Modal::begin([
+                    'options' => [
+                        'id' => 'kartik-modal',
+                        'tabindex' => false // important for Select2 to work properly
+                    ],
+                    'header' => '<h4 style="margin:0; padding:0">Edit Connected to</h4>',
+                ]);
+                echo Select2::widget([
+                    'name' => 'connected',
+                    'attribute' => 'state_10',
+                    'data' => $data,
+                    'size' => Select2::MEDIUM,
+                    'options' => ['placeholder' => '', 'multiple' => true, 'id' => 'connected', 'hideSearch' => false ],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]); 
+                echo Html::button( 'Accept', ['class' => 'btn btn-success change-button', 
+                    'id' => 'change-button', 'style' => 'margin-top: 10px;'] );
+                Modal::end();
+                
+                $this->registerJs("
+                        $('.connection-button').click(function(){
+                            var tags;
+                            var url = $(this).data('url');
+                            var id = $(this).data('id');
+                            $('#connected').change(function(e){
+                                    tags = ($(this).val());
+                                });
+                            $('#kartik-modal').modal('show');
+                            $('#change-button').click(function(){
+                                $.ajax({
+                                    url: url,
+                                    type: 'post',
+                                    data: {data:tags, id:id},
+                                    success: function (msg) {
+                                        $('#kartik-modal').modal('hide');
+                                    }
+                                })
+                            });
+                        });");
 
-        });");
-
-$this->registerJs(
-    "$(document).on('hidden.bs.modal', '#kartik-modal', function () {
-     $.pjax.reload('#pjax-data');
-});");        
+       
                     $buttonInfo = $model->connection;
                     if(empty($buttonInfo)){
                         $buttonInfo = 'not set';
                     
-                    return Html::button( $buttonInfo, ['class' => 'connection-button text-blue', 'id' => 'connection-button', 'data-id' => $model->id, 'data-url' => Url::toRoute( ['invoices/tagme'] ), 'style' => 'color: red; border-bottom: 1px solid red;' ] );
+                        return Html::button( $buttonInfo, ['class' => 'connection-button text-blue', 
+                        'id' => 'connection-button', 'data-id' => $model->id, 
+                        'data-url' => Url::toRoute( ['invoices/tagme'] ), 'style' => 'color: red; border-bottom: 1px solid red;' ] );
                     } else {
-                        return Html::button( $buttonInfo, ['class' => 'connection-button text-blue', 'id' => 'connection-button', 'data-id' => $model->id, 'data-url' => Url::toRoute( ['invoices/tagme'] ), 'style' => 'border-bottom: 1px solid #87cd00;' ] );
+                        return Html::button( $buttonInfo, ['class' => 'connection-button text-blue', 
+                        'id' => 'connection-button', 'data-id' => $model->id, 
+                        'data-url' => Url::toRoute( ['invoices/tagme'] ), 'style' => 'border-bottom: 1px solid #87cd00;' ] );
                     }
                 },                              
                 'contentOptions' => ['style' => 'text-align: center; '],
                 'editableOptions' => [
                     'header' => ' ',
                     'inputType' => Editable::INPUT_TEXT,
-//                    'data' => 'supplierId',
                     'options' => ['class' => 'form-control' ],
                     'editableValueOptions' => ['class' => 'text-blue', 'style' => 'margin:0' ],
                 ],
@@ -162,8 +153,8 @@ $this->registerJs(
                 'attribute' => 'signedBy',
                 'label' => 'Signed By',
                 'headerOptions' => ['style' => 'text-align: center;'],
-              'filter' => Html::activeDropDownList( $searchModel, 'signedBy', Invoices::getEmployesList(), ['class' => 'form-control', 'prompt' => ' ' ] ),
-                //'format' => 'raw',
+                'filter' => Html::activeDropDownList( $searchModel, 'signedBy', 
+                            Invoices::getEmployesList(), ['class' => 'form-control', 'prompt' => ' ' ] ),
                 'value' => 'employes.name',
                  'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;'],
                  'editableOptions' => [
@@ -180,7 +171,8 @@ $this->registerJs(
              [
                 'label' => 'Scanned By',
                 'headerOptions' => ['style' => 'text-align: center;'],
-                'filter' => Html::activeDropDownList( $searchModel, 'scannedBy', Invoices::getScannedBy(), ['class' => 'form-control', 'prompt' => ' ' ] ),
+                'filter' => Html::activeDropDownList( $searchModel, 'scannedBy', 
+                            Invoices::getScannedBy(), ['class' => 'form-control', 'prompt' => ' ' ] ),
                 'attribute' => 'scannedBy',
                 'value' => 'scannedBy',
                 'contentOptions' => ['style' => 'text-align: center; width: 100px; vertical-align: middle; white-space: nowrap;'],
@@ -197,13 +189,15 @@ $this->registerJs(
             
               ['class' => 'yii\grid\ActionColumn',
                                 'header' => '',
-                                'headerOptions' => ['style' => 'min-width: 90px; width: 90px;text-align: right; border-bottom-color: transparent;' ],
-                                'contentOptions' => ['style' => 'padding: 10px;text-align:center; vertical-align: center' ],
-                                'template' => '{view} {accept} {flag} {delete}',
+                                'headerOptions' => ['style' => 'min-width: 90px; width: 90px;'
+                                    . 'text-align: right; border-bottom-color: transparent;' ],
+                                'contentOptions' => ['style' => 'text-align:center; vertical-align: middle' ],
+                                'template' => '{view} {accept} {flag} | {delete}',
                                 'buttons' => [
                                     'accept' => function ($url, $model)
                                     {
-                                        return Html::button( '<a href=""><i class="fa fa-th-list "></i></a>', ['value' => $url, 'class' => 'accept-button', 'id' => 'acceptButton'] );
+                                        return Html::button( '<a href=""><i class="fa fa-th-list "></i></a>', 
+                                              ['value' => $url, 'class' => 'accept-button', 'id' => 'acceptButton'] );
                                     },
                                     'view' => function ($url, $model)
                                     {
@@ -214,15 +208,12 @@ $this->registerJs(
                                                         'class' => $model->id,
                                                         'imagePath' => '/assets/' . $model->name . '.jpg',
                                                         'data-method' => 'post',
-                                                        'title' => 'download PDF'/*Yii::t( 'app', 'view' )*/,
+                                                        'title' => 'download PDF',
                                                         'data' => [
                                                             'method' => 'post',
                                                         ],
                                                     ] );
                                         },
-//                                        return Html::button( '<a href=""><i class="fa fa-file-pdf-o"></i></a>', 
-//                                        ['value' => $url, 'class' => 'pdff-button', 'id' => 'pdffButton']);
-//                                    },
                                             'delete' => function($url, $model)
                                     {
                                             $name = 'nope';
@@ -301,37 +292,31 @@ $this->registerJs(
                                         'urlCreator' => function ($action, $model)
                                 {
                                          //custom JS for gridView AjaxUse
-                                        Modal::begin( [
-                                                    'id' => 'pdf-modal',
-                                                    'closeButton' => false,
-                                                    'headerOptions' => ['style' => 'display:none' ],
-                                                    'header' => '<h4 class="modal-title">Project Details</h4>',
-                                                    //'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>',
-                                                    ] );
-                                                 echo "<div id='modalContent'></div>";
-                                        Modal::end();
-                        
-                                  $this->registerJs("$('.lighted-row').each(function(){  
+                                        
+                                        
+                                  $this->registerJs("
+                                        $('#kartik-modal').on('hidden.bs.modal', function () {
+                                                             $.pjax.reload('#pjax-data');
+                                                        });        
+                                                        
+                                        $('.lighted-row').each(function(){  
                                         var rowId;
                                         var imagePath;
                                         $(this).hover(  
                                           function() {
-                                                rowId = $(this).attr('data-key');  
-                                                
+                                                rowId = $(this).attr('data-key');                                                 
                                                 $(this).addClass('light-on');
                                           }, function() {
                                                 $(this).removeClass('light-on');
                                           }
                                         );
-
-                                        $(':nth-child(2)', this).click(function(){
+                                        $('td:eq(1)', this).css('cursor', 'pointer');
+                                        $('td:eq(1)', this).click(function(){
                                             
                                                 imagePath = $('.' + rowId).attr('imagePath');
-                                                console.log(imagePath);
                                                     if(typeof imagePath != 'undefined'){
-                                                        console.log(imagePath);
                                                         $('#pdf-modal').modal('show');
-                                                        $('.modal-content').css('background-image', 'url(' + imagePath + ')');
+                                                        $('#pdf-modal .modal-content').css('background-image', 'url(' + imagePath + ')');
                                                     }
                                         });
 
@@ -364,12 +349,16 @@ $this->registerJs(
                                     ],
                                 ],
                             ] ); ?>
-    
-  
-
-
-</div>
 <?php
-
-
+    Modal::begin( [
+                'id' => 'pdf-modal',
+                'closeButton' => false,
+                'headerOptions' => ['style' => 'display:none' ],
+                'header' => '<h4 class="modal-title"></h4>',
+                ] );
+             echo "<div id='modalContent'></div>";
+    Modal::end();
 ?>
+    
+</div>
+

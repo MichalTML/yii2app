@@ -10,10 +10,6 @@ use frontend\models\ProjectNotes;
 use frontend\models\ProjectFileData;
 use frontend\models\ProjectData;
 
-/* @var $this yii\web\View */
-/* @var $searchModel frontend\models\search\ProjectSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
 $this->title = 'Projects list';
 $this->params[ 'breadcrumbs' ][] = $this->title;
 ?>
@@ -21,7 +17,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
 <div class="project-data-index">
 
     <p>
-        <?= Html::a( 'New project', ['create' ], ['class' => 'btn btn-default login' ] ) ?>
+        <?= Html::a( 'New project', ['create' ], ['class' => 'btn btn-primary' ] ) ?>
     </p>
 
     <?php Pjax::begin(); ?>
@@ -86,7 +82,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                         'value' => function ($data)
                 {
                     return Html::button( $data->getClientName( $data->clientId ) , 
-             ['value' => Url::toRoute( ['client/detail', 'id' => $data->clientId ] ), 'class' => 'client-button', 'id' => 'clientButton' ] );
+                 ['value' => Url::toRoute( ['client/detail', 'id' => $data->clientId ] ), 
+                 'client-name' => $data->getClientName( $data->clientId ),'class' => 'client-button', 'id' => 'clientButton' ] );
                 },
                     ],
                          [
@@ -165,7 +162,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                             'note' => function ($url, $model)
                                     {
                                         return Html::button( '<i style="color: #337ab7;" class="fa fa-file-text-o"></i>',
-                                        ['value' => $url, 'class' => 'note-button', 'id' => 'modalButton', 'title' => 'new note' ] );
+                                        ['value' => $url, 'class' => 'note-button', 'project-name' => $model->projectName, 'id' => 'modalButton', 'title' => 'new note' ] );
                                     },
                                             'delete' => function($url, $model)
                                     {
@@ -198,7 +195,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                         'view' => function($url, $model)
                                     {
                                         return Html::button( '<a href="#"><i class="glyphicon glyphicon-eye-open"></i></a>', 
-                                               ['value' => $url, 'class' => 'view-button', 'id' => 'view-button', 'title' => 'view' ] );
+                                               ['value' => $url, 'class' => 'view-button', 'project-name' => $model->projectName, 
+                                               'id' => 'view-button', 'title' => 'view' ] );
 
                                     }
                                         ],
@@ -237,9 +235,12 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
     
 $this->registerJs("  
 $(function(){
-    // get the click event of the Note button
+    // CREATE NOTE
     $('.note-button').click(function(){
-        $('#modal').modal('show')
+        var projectName = $(this).attr('project-name');
+        $('#modal-window .modal-title').empty();
+        $('#modal-window .modal-title').append('Note to: ' + projectName);
+        $('#modal-window').modal('show')
                 .find('#modalContent')
                 .load($(this).attr('value'));
     });
@@ -247,43 +248,34 @@ $(function(){
 $(function(){
     // get the click event of the Note button
     $('.client-button').click(function(){
-        $('#client-modal').modal('show')
-                .find('#client-view')
+        var clientName = $(this).attr('client-name');
+        $('#modal-window .modal-title').empty();
+        $('#modal-window .modal-title').append('Client: ' + clientName);
+        $('#modal-window').modal('show')
+                .find('#modalContent')
                 .load($(this).attr('value'));
     });
 });
 $(function(){
     // get the click event of the Note button
     $('.view-button').click(function(){
-        $('#view-modal').modal('show')
+        var projectName = $(this).attr('project-name');
+        $('#modal-window .modal-title').empty();
+        $('#modal-window .modal-title').append('Project: ' + projectName);
+        $('#modal-window').modal('show')
                 .find('#modalContent')
                 .load($(this).attr('value'));
     });
 });"
 );
-
-Modal::begin( [
-    'id' => 'modal',
-    'header' => '<h4 class="modal-title">New Note</h4>',
-    ]);
-    echo "<div id='modalContent'></div>";
-Modal::end();
-
-Modal::begin( [
-    'id' => 'client-modal',
-    'header' => '<h4 class="modal-title">Client Detail View</h4>',
-    ]);
-    echo "<div id='client-view'></div>";
-Modal::end();
-
-Modal::begin( [
-    'id' => 'view-modal',
-    'header' => '<h4 class="modal-title">Project Details</h4>',    
-    ]);
-echo "<div id='modalContent'></div>";
-Modal::end();
 ?>
 
 
 </div>
-<?php Pjax::end(); ?>
+<?php Pjax::end(); 
+Modal::begin( [
+    'id' => 'modal-window',
+    'header' => '<h4 class="modal-title"></h4>',
+    ]);
+    echo "<div id='modalContent'></div>";
+Modal::end();

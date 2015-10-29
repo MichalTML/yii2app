@@ -12,12 +12,12 @@ use frontend\models\ProjectData;
 /* @var $searchModel frontend\models\search\ProjectSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Projects list';
+$this->title = 'Project Archive';
+$this->params[ 'breadcrumbs' ][] = ['label' => 'Projects list', 'url' => ['fileindex' ] ];
 $this->params[ 'breadcrumbs' ][] = $this->title;
-$this->params[ 'breadcrumbs' ][] = ['label' => 'Project Archive', 'url' => ['fileindexc' ] ];
 ?>
 
-<div class="project-data-index">
+<div class="project-data-index-archive">
 
     <?php Pjax::begin(); ?>
 
@@ -132,27 +132,8 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'Project Archive', 'url' => ['fil
                                 'header' => '',
                                 'headerOptions' => ['style' => 'min-width: 80px;text-align: center; border-bottom-color: transparent;' ],
                                 'contentOptions' => ['style' => 'text-align:center; vertical-align: middle;' ],
-                                'template' => '{treatment} {parts} {view}',
+                                'template' => '{parts} {view}',
                                 'buttons' => [
-                                    'treatment' => function ($url, $model)
-                                    {
-                                        $filesSearch = ProjectFileData::find()->where(['projectId' => $model->sygnature])->one();
-                                        if(isset($filesSearch->projectId)){
-                                            
-                                        return Html::a( '<span class="fa fa-cogs"></span>', $url, [
-                                                        'data-method' => 'post',
-                                                        'title' => 'Treatment Files',
-                                                        'data' => [                                                         
-                                                            'method' => 'post',
-                                                        ],
-                                                    ] );
-                                        
-                                        
-                                        } else {
-                                            
-                                            return '<i class="fa fa-cogs"></i>';
-                                        }
-                                    },
                                     'parts' => function ($url, $model)
                                     {
                                         $filesSearch = ProjectFileData::find()->where(['projectId' => $model->sygnature])->one();
@@ -191,19 +172,14 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'Project Archive', 'url' => ['fil
                                     {
                                         $url = Url::toRoute( ['project/cparts', 'sygnature' => $model->sygnature, 'id' => $model->id ] );
                                         return $url;
-                                    }
-                                    if ( $action === 'treatment' )
-                                    {
-                                        $url = Url::toRoute( ['project/ctreatment', 'sygnature' => $model->sygnature, 'id' => $model->id ] );
-                                        return $url;
-                                    }
+                                    }                                    
                                 }
                                     ],
                                 ],
                             ] );
                             ?>
+    
 
-                            
 <?php
 $this->registerJs("  
 $(function(){
