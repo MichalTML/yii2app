@@ -118,7 +118,9 @@ FontAwesomeAsset::register($this);
         </div>
     </footer>
 
-    <?php $this->endBody() ?>
+    <?php 
+   
+    $this->endBody() ?>
 </body>
 </html>
 <?php $this->endPage() ?>

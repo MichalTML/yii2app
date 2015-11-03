@@ -10,6 +10,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use frontend\models\ProjectAssembliesFilesData;
+use frontend\models\FileGroup;
+use frontend\models\FileGroupName;
 
 /**
  * ProjectAssembliesFilesController implements the CRUD actions for ProjectAssembliesFiles model.
@@ -132,13 +134,15 @@ class ProjectAssembliesFilesController extends Controller
         
     }
     
-    public function actionDownloadzip()
+    public function actionDownloadzip($fileName)
     {   
-        if(file_exists('/media/data/app_data/project_data/temp.zip')){
-            //die('adasd');
-        return Yii::$app->response->sendFile('/media/data/app_data/project_data/temp.zip');
+            
+        if(file_exists($fileName)){
+            return Yii::$app->response->sendFile($fileName);
         }
-        return Yii::$app->session->setFlash( 'Server acces error, please contact system adnimistrator' );
+ 
+        Yii::$app->session->setFlash( 'Server acces error, please contact system adnimistrator' );
+        return $this->redirect( ['project/parts', 'sygnature' => 'a', 'id' =>'a']);
 
     }
     
@@ -582,27 +586,57 @@ class ProjectAssembliesFilesController extends Controller
                         break;
                         case 'download':
                         foreach($data['id'] as $id){                             
-                            $dft = ProjectAssembliesFiles::find()->select(['name', 'assemblieId' ])->where(['id' => $id])->one();
-                            $files= ProjectAssembliesFiles::find()->select(['path'])
+                            $dft = ProjectAssembliesFiles::find()->select(['name', 'assemblieId', 'projectId' ])->where(['id' => $id])->one();
+                            $files= ProjectAssembliesFiles::find()->select(['path'])                            
                                     ->andWhere(['name' => $dft->name])
                                     ->andWhere( ['assemblieId' => $dft->assemblieId])
                                     ->andFilterWhere(['or', ['ext' => 'dxf'], ['ext' => 'pdf']])
                                     ->all();
+                            $fileGroup = FileGroup::find()->select(['groupId'])->where(['fileId' => $id])->asArray()->one();
+                            if($fileGroup['groupId']){
+                                if(isset($groupId)){
+                                    if($groupId[0] == $fileGroup['groupId']){                                       
+                                    } else {
+                                        $groupId[] = $fileGroup['groupId'];
+                                    }
+                                } else {
+                                $groupId[] = $fileGroup['groupId'];      
+                                }
+                            } else {
+                                $groupId[] = 'none';
+                            }
                                 foreach($files as $file){
                                     $filesList[] = trim($file->path);
                                 }                        
                         }
-                        
-                        if(file_exists('/media/data/app_data/project_data/temp.zip')){
-                            $file = '/media/data/app_data/project_data/temp.zip';
-                            shell_exec('rm /media/data/app_data/project_data/temp.zip');
+                        if(isset($groupId)){
+                            if(count($groupId) > 1){
+                                $fileName = 'P' . $dft['projectId'] . '_' . date("d.m.y_G:i:s") . '.zip';
+                            } else {
+                                $fileGroupName = FileGroupName::find()
+                                                ->select(['groupName'])->where(['groupId' => $groupId[0]])->asArray()->one();
+                                $fileName = 'Pb' . $dft['projectId'] . '_' . $fileGroupName['groupName']. '_' . date("d.m.y_G:i:s") . '.zip';
+                            }
+                        } else {
+                            $fileName = 'Pc' . $dft['projectId'] . '_' . date("d.m.y_G:i:s") . '.zip';
+                        }
+                        if(file_exists('/media/data/app_data/project_data/' . $fileName)){
+                            $file = '/media/data/app_data/project_data/' . $fileName;
+                            shell_exec('rm /media/data/app_data/project_data/' . $fileName);
                         }
                         $projectString = implode(' ', $filesList);
-                        $zipList = 'zip -j /media/data/app_data/project_data/temp.zip '.$projectString;
+                        $zipList = 'zip -j /media/data/app_data/project_data/' . $fileName .' ' . $projectString;
                         shell_exec($zipList);
-                        if(file_exists('/media/data/app_data/project_data/temp.zip')){
-                            $file = '/media/data/app_data/project_data/temp.zip';
-                            return Yii::$app->response->sendFile('/media/data/app_data/project_data/temp.zip');
+                        if(file_exists('/media/data/app_data/project_data/' . $fileName)){
+                            $file = '/media/data/app_data/project_data/' . $fileName;
+                            //return Yii::$app->response->sendFile('/media/data/app_data/project_data/' . $fileName);
+                            
+                            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                            return [
+                                'code' => 200,
+                                'fileLink' => $file,
+                            ];
+                            
                         }
                             Yii::$app->session->setFlash( 'Server acces error, please contact system adnimistrator' );
                             break;
@@ -682,4 +716,15 @@ class ProjectAssembliesFilesController extends Controller
         }
     }
     
+    public function actionUpdateele($sygnature, $id){
+  
+             $element = ProjectAssembliesFiles::find()->where(['id' => $id, 'projectId' => $sygnature])->one();
+               
+             return $this->renderAjax('__update', [
+                    'element' => $element,
+             ]);
+             
+        
+    }
+   
 }

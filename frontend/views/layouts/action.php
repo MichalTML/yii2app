@@ -58,6 +58,10 @@ FontAwesomeAsset::register($this);
                 $menuItems[] = ['label' => '', 'url' => ['site/login'], 'options' => ['title' => 'sign up']];
             } else {
                 $menuItems[] = ['label' => '', 'url' => ['/site/main'], 'options' => ['class' =>'home', 'title' => 'home page' ]];
+                 $menuItems[] =  '<li class="profile">'.Html::button( '', 
+                ['value' => Url::toRoute( ['project/listme']), 'id' => 'project-list', 
+                'title' => 'Projects list' ] ).'</li>';
+                $menuItems[] = ['label' => '', 'url' => ['#'], 'options' => ['class' =>'refresh', 'title' => 'refresh page' ]];
                 $menuItems[] = ['label' => '', 'url' => ['/site/contact'], 'options' => ['class' =>'help', 'title' => 'help form' ],];
                 $menuItems[] = ['label' => '', 'url' =>['profile/view'], 'options' => ['class' =>'profile', 'title' => 'profile settings' ]];
                 if ( PermissionHelpers::requireMinimumPower( Yii::$app->user->identity->id ) >= 40 ){                
@@ -136,5 +140,14 @@ Modal::begin( [
     'headerOptions' => ['style' => 'display:none'],
 ] );
 echo "<div id='modalContent'></div>";
+Modal::end();
+Modal::begin( [
+    'size' => Modal::SIZE_LARGE,
+    'id' => 'project-modal',
+    'closeButton' => false,
+    'headerOptions' => ['style' => 'display:none'],
+] );
+echo "<div id='modalContent'></div>";
+
 Modal::end();
 $this->endPage() ?>

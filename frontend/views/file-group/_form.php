@@ -27,20 +27,20 @@ use yii\widgets\Pjax;
             'label' => 'Group',
              ]);
     ?>
-    <?= Html::submitButton('Create Group', ['class' => 'btn btn-success groupe-create group-button', 'title' => 'Create new group name']); ?>
+    <?= Html::submitButton('Create', ['class' => 'btn btn-success groupe-create group-button', 'title' => 'Create new group']); ?>
     </div>
     <div class="delete-group" style="margin-bottom: 20px;">
     <?=  $form->field( $model, 'groupId', $config )
           ->dropDownList( $droptions, ['prompt' => '' ] )
      ?> 
-    <?= Html::submitButton('Delete Group', ['class' => 'btn btn-success groupe-delete group-button', 'title' => 'Create new group name']); ?>
+    <?= Html::submitButton('Delete', ['class' => 'btn btn-success groupe-delete group-button', 'title' => 'Delete group']); ?>
     </div>
     <div class="add-group">
     <?=  $form->field( $model, 'groupId', $config )
           ->dropDownList( $droptions2, ['prompt' => '' ] )
      ?>
     
-        <?= Html::submitButton('Select Group', ['class' => 'btn btn-success groupe-add group-button', 'title' => 'Select group name']); ?>
+        <?= Html::submitButton('Select', ['class' => 'btn btn-success groupe-add group-button', 'title' => 'Add Files to Group']); ?>
     </div>
     <?php ActiveForm::end(); ?>
     <div class="syg-info" hidden="hidden"><?php echo $sygnature ?></div>

@@ -165,6 +165,8 @@ NAVBAR
     float: left;
 }
 
+
+
 .home a{
     text-align: center;
     vertical-align: middle;
@@ -182,6 +184,26 @@ NAVBAR
     background-size: contain;
     background-size: 40px 35px;
     width: 40px;
+    height: 35px;
+}
+
+.refresh a{
+    text-align: center;
+    vertical-align: middle;
+    background: url("/images/refresh_gray.png") no-repeat;
+    color: transparent;
+    background-size: 35px 35px;
+    width: 35px;
+    height: 35px;
+    
+    //padding: 10px;
+}
+
+.refresh a:hover{
+    background: url("/images/refresh_green.png") no-repeat;
+    background-size: contain;
+    background-size: 35px 35px;
+    width: 35px;
     height: 35px;
 }
 
@@ -222,6 +244,23 @@ NAVBAR
 }
 .profile a:hover{
     background: url("/images/profile_green.png") no-repeat;
+    background-size: contain;
+}
+
+#project-list{
+    text-align: center;
+    vertical-align: bottom;
+    background: url("/images/list_gray.png") no-repeat;
+    color: transparent;
+    background-size: contain;
+    width: 35px;
+    height: 35px;
+    border: 0;
+    margin-top:2px;
+}
+    
+#project-list:hover{
+    background: url("/images/list_green.png") no-repeat;
     background-size: contain;
 }
 
@@ -2316,18 +2355,21 @@ filter: alpha(opacity=50);
     border-radius: 5px;
     background-size: contain;
     background-repeat: no-repeat;
-    background-color: transparent;
+    background-color: #808080;
     background-position: center;
 }
 
 #pdf-modal .modal-content{
-    height: 80vh;
-    margin-top: 10vh;
+    height: 100vh;
     border-radius: 5px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-color: transparent;
-    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;  
+    background-position: top;
+}
+
+#pdf-modal .modal-dialog{
+    margin-top:0;
+    width: 800px;
 }
 
 #modal-window .modal-header{
@@ -2339,3 +2381,4 @@ filter: alpha(opacity=50);
 #modal-window{
     font-size: 12px;
 }
+

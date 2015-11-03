@@ -78,7 +78,7 @@ class FileGroupController extends Controller
                               return [
                                   'code' => 200,
                                   'droptions' => $droptions,
-                                  'droptions2' => $droptions2,
+                                  'droptions2' => $droptions,
                                      ];               
                      } 
             }elseif($data['action'] == 'delete_name'){
@@ -97,7 +97,7 @@ class FileGroupController extends Controller
                             return [
                                 'code' => 200,
                                 'droptions' => $droptions,
-                                'droptions2' => $droptions2,
+                                'droptions2' => $droptions,
                                    ];               
                 }
             }elseif($data['action'] == 'add_group'){
@@ -125,7 +125,7 @@ class FileGroupController extends Controller
                             return [
                                 'code' => 200,
                                 'droptions' => $droptions,
-                                'droptions2' => $droptions2,
+                                'droptions2' => $droptions,
                                    ];               
                 }
             }
@@ -143,7 +143,7 @@ class FileGroupController extends Controller
                 'sygnature' => $sygnature,
                 'id' => $id,
                 'droptions' => $droptions,
-                'droptions2' => $droptions2,
+                'droptions2' => $droptions,
             ]);
     }
 

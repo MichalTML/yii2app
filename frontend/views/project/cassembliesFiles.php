@@ -36,6 +36,18 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         'toolbar' => [
             [            
             'content'=>
+            Html::button('<i class="fa fa-ban"></i>', [
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/updateele'] ),
+                    'data-action'=>'update',
+                    'type'=>'button',
+                    'data-sygnature'=> $sygnature,
+                    'title'=> 'Update Element', 
+                    'class'=>'btn btn-success update-action'
+                ]),
+            'options' => ['class' => 'btn-group-sm btn-group', 'style' => '']
+            ],
+            [            
+            'content'=>
             Html::button('<i class="fa fa-home"></i>', [
                     'data-url'=>Url::toRoute( ['project-assemblies-files/massaction'] ),
                     'data-action'=>'desttma',
@@ -339,14 +351,15 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     'note' => function ($url, $model)
                                     {
                                         return Html::button( '<a href=""><i class="fa fa-file-text-o"></i></a>', 
-                                               ['value' => $url, 'class' => 'cnote-button', 'title' => 'new note' ] );
+                                               ['value' => $url, 'class' => 'cnote-button', 
+                                               'title' => 'new note', 'file-name' => $model->name] );
                                     },
                                             'downloaddxf' => function($url, $model)
                                     {
                                         if($url){
                                         return Html::a( '<span class="fa fa-download"></span>', $url, [
                                                     'data-method' => 'post',
-                                                    'title' => Yii::t( 'app', 'download DXF' ),
+                                                    'title' => Yii::t( 'app', 'download DXF' ),                                               
                                                 ] );
                                         }
                                         return '<span class="fa fa-download"></span>';
@@ -366,6 +379,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                                       'title' => Yii::t( 'app', 'download PDF' ),
                                                       'class' => $model->id,
                                                       'image-path' => $fileImage->imagePath,
+                                                      'file-name' => $model->name,
                                                     ] );  
                                                 }
                                         return Html::a( '<span class="fa fa-file-pdf-o"></span>', $url, [
@@ -451,6 +465,8 @@ $this->registerJs("
     // Refresh pjax after modal event
     $('#modal-window').on('hidden.bs.modal', function () {
         var classCheck =  $('.modal-content').attr('class');
+        $('.modal-title').empty();
+        $('#modalContent').empty();
             if(classCheck === 'modal-content pdf-view'){
                 $('.modal-content').css('background-image', '');
                 $('.modal-content').removeClass('pdf-view');               
@@ -462,10 +478,27 @@ $this->registerJs("
     
     ///////////////// MODAL EVENTS
     
-    // CREATE NOTE EVENT
-    $(function(){
+    // UPDATE ELEMENT ACTION
+    $('.update-action').click(function(){
+           var keys = $('#grid').yiiGridView('getSelectedRows');
+           var fileId = keys[0];
+           var url = $(this).data('url');
+           var sygnature = $(this).data('sygnature');
+           var url2 = url + '&sygnature=' + sygnature + '&id=' + fileId;
+           console.log(url2);
+                if(keys.length > 0){   
+                    $('#modal-window').modal('show')
+                        .find('#modalContent')
+                        .load(url2);                    
+                }
+       
+    });
+    
     // get the click event of the Note button
     $('.cnote-button').click(function(){
+        var fileName = $(this).attr('file-name');
+        $('.modal-title').empty();
+        $('.modal-title').append('Note to: ' + fileName);
         $('#modal-window').modal('show')
                 .find('#modalContent')
                 .load($(this).attr('value'));
@@ -473,10 +506,9 @@ $this->registerJs("
     
     // View Note ACtion / change Note Title    
     $('.seenote-button').click(function(){
-    
         var fileName = $(this).attr('file-name');
         $('.modal-title').empty();
-        $('.modal-title').append('<span class=\\'title\\'>Element: ' + fileName + '</span>');
+        $('.modal-title').append('Notes: ' + fileName);
         $('.modal-header').addClass('color-title');
         
         $('#modal-window').modal('show')
@@ -491,6 +523,7 @@ $this->registerJs("
         $(':lt(12)', this).css('cursor', 'pointer');
         var rowId;
         var imagePath;
+        var fileName;
         $(this).hover(  
           function() {
                 rowId = $(this).attr('data-key');                
@@ -500,11 +533,13 @@ $this->registerJs("
           }
         );
 
-        $(':lt(12)', this).click(function(){
-            
+        $(':lt(11)', this).click(function(){
+            fileName = $('.' + rowId).attr('file-name');
             imagePath = $('.' + rowId).attr('image-path');
             if(typeof imagePath != 'undefined'){
                 $('#modal-window').modal('show');
+                $('.modal-title').empty();
+                $('.modal-title').append('Eelement: ' + fileName);
                 $('.modal-content').css('background-image', 'url(' + imagePath + ')');
                 $('.modal-content').addClass('pdf-view');
                 $('.modal-header').css('border-bottom', '0');
@@ -624,7 +659,7 @@ $this->registerJs("
                     }
             });
     });
-});");                          
+");                          
 
     Pjax::end();
 

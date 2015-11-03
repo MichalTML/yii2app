@@ -59,7 +59,7 @@ $this->title = 'Login';
                 ])->checkbox() ?>
                 
                 <div class="form-group col-xs-6">
-                <?= Html::submitButton( 'Login', ['class' => 'btn btn-default login login-btn', 'name' => 'login-button'] ); ?>
+                <?= Html::submitButton( 'Login', ['class' => 'login login-btn btn btn-primary', 'name' => 'login-button'] ); ?>
                 </div>
                 </div>
                 

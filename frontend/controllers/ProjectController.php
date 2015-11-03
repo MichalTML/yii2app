@@ -46,6 +46,17 @@ class ProjectController extends Controller {
                     'dataProvider' => $dataProvider,     
                 ] );      
     }
+    
+    public function actionListme() {
+        $filter = 'active';
+        $searchModel = new ProjectSearch();
+        $order = ['defaultOrder' => ['projectStatus0.statusName' => SORT_ASC, 'sygnature' => SORT_DESC]];        
+        $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $order, $filter);
+        return $this->renderAjax( 'project-list', [
+                    'projectSearch' => $searchModel,
+                    'projectData' => $dataProvider,     
+                ] );  
+    }
 
     /**
      * Displays a single ProjectData model.
@@ -313,6 +324,9 @@ class ProjectController extends Controller {
         foreach($projectSygs as $project){
             $filter[] = $project['projectId'];
         }
+        if(!isset($filter)){
+            $filter = [0 => 0];
+        }
         $this->layout = 'action';
         $searchModel = new ProjectSearch();
         $order = ['defaultOrder' => ['sygnature' => 'DESC']];
@@ -326,7 +340,7 @@ class ProjectController extends Controller {
     public function actionTreatmentmanager($sygnature, $id, $pagination = 20){
         $this->layout = 'action';        
         $searchModel = new ProjectAssembliesFilesSearch();
-        $order = ['defaultOrder' => ['priorityId' => 'DESC']];
+        $order = ['defaultOrder' => ['priorityId' => 'DESC', 'name' => 'DESC']];
         $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 'treatmanager-pending', $order);
         $dataProvider->pagination->pageSize = $pagination;
         return $this->render( 'treatmentfiles',
@@ -342,7 +356,7 @@ class ProjectController extends Controller {
     public function actionTreatmentmanagera($sygnature, $id, $pagination = 20){
         $this->layout = 'action';        
         $searchModel = new ProjectAssembliesFilesSearch();
-        $order = ['defaultOrder' => ['priorityId' => 'DESC']];
+        $order = ['defaultOrder' => ['priorityId' => 'DESC', 'name' => 'DESC']];
         $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 'treatmanager-accepted', $order);
         $dataProvider->pagination->pageSize = $pagination;
         return $this->render( 'treatmentfilesa',

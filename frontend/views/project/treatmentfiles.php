@@ -285,7 +285,7 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                                     {                                      
                                         return Html::button( '<a href=""><i class="fa fa-exclamation-triangle"></i></a>', 
                                         ['value' => $url, 'class' => 'reject-button-note', 'id' => 'reject', 
-                                        'data-id' => $model->id, 'data-url' => $url, 'title' => 'reject file' ] );
+                                        'data-id' => $model->id, 'data-url' => $url, 'title' => 'reject file', 'file-name' => $model->name ] );
                                     },                                    
                                     'seenote' => function ($url, $model)
                                     {
@@ -307,7 +307,7 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                                     'note' => function ($url, $model)
                                     {
                                         return Html::button( '<a href=""><i class="fa fa-file-text-o"></i></a>', 
-                                        ['value' => $url, 'class' => 'cnote-button', 'title' => 'new note' ] );
+                                        ['value' => $url, 'class' => 'cnote-button', 'title' => 'new note', 'file-name' => $model->name ] );
                                     },
                                     'downloaddxf' => function($url, $model)
                                     {
@@ -419,22 +419,21 @@ $this->registerJs("
     //////////////// MODAL ACTIONS
     
     // Create Note action
-    $(function(){
-    
         $('.cnote-button').click(function(){
+        
+           var fileName = $(this).attr('file-name');  
+           $('.modal-title').append('Note to: ' + fileName); 
+        
             $('#modal-window').modal('show')
                     .find('#modalContent')
                     .load($(this).attr('value'));
         });
-    });
 
     // View Note ACtion / change Note Title    
-    $('.seenote-button').click(function(){
+    $('.seenote-button').click(function(){   
     
-        var fileName = $(this).attr('file-name');
-        $('.modal-title').empty();
-        $('.modal-title').append('<span class=\\'title\\'>Element: ' + fileName + '</span>');
-        $('.modal-header').addClass('color-title');
+        var fileName = $(this).attr('file-name');  
+        $('.modal-title').append('Notes: ' + fileName);
         
         $('#modal-window').modal('show')
                 .find('#modalContent')
@@ -443,6 +442,10 @@ $this->registerJs("
     
     //REJECT EVENT
     $('.reject-button-note').click(function(){
+    
+        var fileName = $(this).attr('file-name');
+        $('.modal-title').append('Reject element: ' + fileName);  
+        
         $('#modal-window').modal('show')
                 .find('#modalContent')
                 .load($(this).attr('value'));
@@ -457,6 +460,8 @@ $this->registerJs("
     
     // Refresh pjax after modal even
     $('#modal-window').on('hidden.bs.modal', function () {
+        $('.modal-title').empty();
+        $('#modalContent').empty();
         var classCheck =  $('.modal-content').attr('class');
             if(classCheck === 'modal-content pdf-view'){
                 $('.modal-content').css('background-image', '');
@@ -547,26 +552,22 @@ $this->registerJs("
        var action = $(this).data('action');
        var url = $(this).data('url');
        var url2 = $(this).data('url2');
-               if(keys.length > 0){
-               $.ajax({
-               url: url,
-               type: 'post',
-               data: {id: keys, action: action},
-               success: function () {
-                  if(action === 'download'){
-                  $.ajax({
-                    url: url2,
-                    type: 'POST',
-                    success: function() {
-                    window.location = url2;
-                    }
-                  });
-                  } else {
-                  $.pjax.reload('#pjax-data');  
-                  }
-                }
-                });
-                }
+           if(keys.length > 0){
+                $.ajax({
+                    url: url,
+                    type: 'post',
+                    data: {id: keys, action: action},
+                        success: function (data) {
+
+                           if(action === 'download'){
+                             var fileLink = data.fileLink;
+                             window.location = url2 + '&fileName=' + fileLink;
+                           } else {
+                             $.pjax.reload('#pjax-data');  
+                           }
+                        }
+                 });
+             }
 
       $(document).one('ajaxStop', function() {
           if(keys.length > 0){

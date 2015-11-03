@@ -4,6 +4,12 @@
  * and open the template in the editor.
  */
 
+$(document).ready(function(){
+    $('.refresh').click(function(event) {
+        event.preventDefault();
+        location.reload(true);
+    });
+});
 
 $(document).ready(function(){
         $('.content-box').css('transition', '4s');
@@ -63,8 +69,7 @@ $(document).ready(function(){
        $('#upload-modal').modal('show')
                 .find('#modalContent')
                 .load($(this).attr('value'));
-   });
-    
+   });  
 });
 
 $(document).ready(function(){
@@ -94,6 +99,14 @@ $(document).ready(function(){
                 $(this).parent().removeClass('light-on');
              }
         );
+   });
+});
+
+$(document).ready(function(){
+    $('#project-list').click(function(){
+       $('#project-modal').modal('show')
+                .find('#modalContent')
+                .load($(this).attr('value'));
    });
 });
 
