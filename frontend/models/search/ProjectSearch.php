@@ -59,7 +59,7 @@ class ProjectSearch extends ProjectData
             $query->andFilterWhere(['projectStatus' => '2']);
         }
          
-        $query->joinWith(['projectStatus0', 'client', 'creUser']);
+        $query->joinWith(['projectStatus0', 'client', 'updUser']);
         if($order){        
             $dataProvider = new ActiveDataProvider([
                 'query' => $query,

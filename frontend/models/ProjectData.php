@@ -68,21 +68,21 @@ class ProjectData extends \yii\db\ActiveRecord
         return [
 
             'id' => 'ID',
-            'sygnature' => 'Porject Number',
+            'sygnature' => 'Number',
             'clientId' => 'Client Name',
-            'projectName' => 'Project Name',
+            'projectName' => 'Name',
             'ClientName' => 'Client',
             'creTime' => 'Created at',
             'deadline' => 'Deadline',
             'projectStart' => 'Started at',
-            'endTime' => 'End Time',
+            'endTime' => 'Completed at',
             'creUser.username' => 'Created by',
             'updTime' => 'Updated at',
             'updUser.username' => 'Updated by',
             'client.name' => 'Client',
             'projectStatus' => 'Status',
             'projectStatus0.statusName' => 'Status',
-            'projectPermissionsUsers' => 'Project Constructors',
+            'projectPermissionsUsers' => 'Constructors',
         ];
     }
 
@@ -310,18 +310,31 @@ class ProjectData extends \yii\db\ActiveRecord
 
         switch ( $priority) {
             case ('low'):
-                $resultList = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '0', 'statusId' => '1'])->all();
-                $resultListFinished = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '0', 'statusId' => '2'])->all();
+                $resultList = ProjectAssembliesFiles::find()
+                ->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '0'])
+                ->andFilterWhere(['or', ['statusId' => 1], ['statusId' => 2], ['statusId' => 4]])
+                    ->all();
+                
+                $resultListFinished = ProjectAssembliesFiles::find()
+                        ->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '0', 'statusId' => '2'])
+                        ->all();
                 $resultListCount = count($resultList);
                 $resultListFinishedCount = count($resultListFinished);
                 $allParts = $resultListCount + $resultListFinishedCount;
                 $result = $allParts;
                 $result.= ' | ' .$resultListCount;
                 $result.= ' | ' . $resultListFinishedCount;
-                return $result;   
+                return $result;  
+                
             case ('normal'):
-                $resultList = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '1', 'statusId' => '1'])->all();
-                $resultListFinished = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '1', 'statusId' => '2'])->all();
+                $resultList = ProjectAssembliesFiles::find()
+                    ->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '1'])
+                    ->andFilterWhere(['or', ['statusId' => 1], ['statusId' => 2], ['statusId' => 4]])
+                    ->all();
+                
+                $resultListFinished = ProjectAssembliesFiles::find()
+                        ->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '1', 'statusId' => '2'])
+                        ->all();
                 $resultListCount = count($resultList);
                 $resultListFinishedCount = count($resultListFinished);
                 $allParts = $resultListCount + $resultListFinishedCount;
@@ -330,9 +343,15 @@ class ProjectData extends \yii\db\ActiveRecord
                 $result.= ' | ' . $resultListFinishedCount;
                 return $result;     
             case ('high'):
-                $resultList = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '2', 'statusId' => '1'])->all();
-                $resultListFinished = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '2', 'statusId' => '2'])->all();
-               $resultListCount = count($resultList);
+                $resultList = ProjectAssembliesFiles::find()
+                    ->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '2'])
+                    ->andFilterWhere(['or', ['statusId' => 1], ['statusId' => 2], ['statusId' => 4]])
+                    ->all();
+                $resultListFinished = ProjectAssembliesFiles::find()
+                                     ->where(['projectId' => $sygnature, 'ext' => 'dft', 'priorityId' => '2', 'statusId' => '2'])
+                                     ->all();
+                
+                $resultListCount = count($resultList);
                 $resultListFinishedCount = count($resultListFinished);
                 $allParts = $resultListCount + $resultListFinishedCount;
                 $result = $allParts;
@@ -340,16 +359,42 @@ class ProjectData extends \yii\db\ActiveRecord
                 $result.= ' | ' . $resultListFinishedCount;
                 return $result;      
             default:
-                $resultList = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'statusId' => '1'])->all();
-                $resultListFinished = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft', 'statusId' => '2'])->all();
-                $resultListCount = count($resultList);
+                
+                $resultList = ProjectAssembliesFiles::find()->where(['projectId' => $sygnature, 'ext' => 'dft'])
+                              ->andFilterWhere(['or', ['statusId' => 1], ['statusId' => 2], ['statusId' => 4]])
+                              ->all();
+                
+                $resultListFinished = ProjectAssembliesFiles::find()
+                                      ->where(['projectId' => $sygnature, 'ext' => 'dft', 'statusId' => '2'])
+                                      ->all();
+                
                 $resultListFinishedCount = count($resultListFinished);
-                $allParts = $resultListCount + $resultListFinishedCount;
+                
+                $allParts = count($resultList);
+                
+                $pendingParts = $allParts - $resultListFinishedCount;
+                
+                // all parts / 
                 $result = $allParts;
-                $result.= ' | ' .$resultListCount;
+                $result.= ' | ' .$pendingParts;
                 $result.= ' | ' . $resultListFinishedCount;
                 return $result;  
         }          
+        
+    }
+    
+    public static function getProjectDuration($id){
+        $project = ProjectData::find()->select(['projectStart', 'deadline'])->where(['id' => $id])->asArray()->one();
+        
+            if($project['deadline']){
+               
+               $projectStart = new \DateTime($project['projectStart']);
+               $projectEnd = new \Datetime($project['deadline']);
+               $duration = $projectStart->diff($projectEnd);
+               $durationWeeks = $duration->days / 7;
+               
+               return $durationWeeks; 
+            }
         
     }
 

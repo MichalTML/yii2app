@@ -201,7 +201,14 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                            ->where(['projectId' => $sygnature])
                            ->orderBy(['thickness' => SORT_ASC])->asArray()->all(), 'thickness','thickness'),
                           ['class'=>'form-control', 'prompt' => ' ']),
-               'value' => 'thickness',
+               'format' => 'raw',
+               'value' => function($model){
+                                if($model->typeId == 5){
+                                    return '&#8709;'.$model->thickness;  
+                                } else {
+                                    return $model->thickness;  
+                                }            
+                          },
                'headerOptions' => ['style' => 'text-align: center; min-width: 70px;' ],
                'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
            ],
@@ -221,7 +228,11 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                 }elseif($model->statusId == 3){
                                     return ['style' => 'vertical-align: middle; text-align: center; background-color: #E599A3;'];
                                 }elseif($model->statusId == 4){
-                                    return ['style' => 'vertical-align: middle; text-align: center; background-color: #aac0ee;'];  
+                                    return ['style' => 'vertical-align: middle; text-align: center; background-color: #aac0ee;']; 
+                                }elseif($model->statusId == 0){
+                                    return ['style' => 'vertical-align: middle; text-align: center; background-color: white;']; 
+                                }elseif($model->statusId == 8){
+                                    return ['style' => 'color: white; vertical-align: middle; text-align: center; background-color: #394b58;']; 
                                 }},
             ],
             [
@@ -288,7 +299,10 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
             ],
             ['class' => '\kartik\grid\CheckboxColumn',
                    'rowSelectedClass' => 'row-selected',
-                    'contentOptions' => ['style' => 'background-color: white;'],
+                    'contentOptions' => function($model){
+                                        return ['style' => 'background-color: white;', 
+                                                'file-status' => $model->statusId, 'class' => $model->id];
+                                        }
                 ],
             ['class' => 'yii\grid\ActionColumn',
                                 'header' => '',
@@ -354,7 +368,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                                ['value' => $url, 'class' => 'cnote-button', 
                                                'title' => 'new note', 'file-name' => $model->name] );
                                     },
-                                            'downloaddxf' => function($url, $model)
+                                    'downloaddxf' => function($url, $model)
                                     {
                                         if($url){
                                         return Html::a( '<span class="fa fa-download"></span>', $url, [
@@ -364,24 +378,31 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                         }
                                         return '<span class="fa fa-download"></span>';
                                     },
-                                            'downloadpdf' => function($url, $model)
+                                    'downloadpdf' => function($url, $model)
                                     {
                                         if($url){
+                                            $fileImagePath = '';
                                             $fileId = ProjectAssembliesFiles::find()
-                                            ->select(['id'])->where(['name' => $model->name, 'ext' => 'pdf'])->one();
-                                            
-                                            $fileImage = FilesImages::find()->select(['imagePath'])
-                                            ->where(['fileId' => $fileId->id])->one();
-                                            
+                                            ->select(['id'])->where(['projectId' => $model->projectId, 
+                                             'sygnature' => $model->sygnature, 'ext' => 'pdf'])->one();
+                            
+                                           if($fileId){
+                                                $fileImage = FilesImages::find()
+                                                            ->select(['imagePath'])->where(['fileId' => $fileId->id])->one();
                                                 if($fileImage){
+                                                  $fileImagePath = $fileImage->imagePath;  
+                                                }           
+                                           } 
+                                                if($fileId){
                                                     return Html::a( '<span class="fa fa-file-pdf-o"></span>', $url, [
                                                       'data-method' => 'post',
                                                       'title' => Yii::t( 'app', 'download PDF' ),
                                                       'class' => $model->id,
-                                                      'image-path' => $fileImage->imagePath,
+                                                      'image-path' => $fileImagePath,
                                                       'file-name' => $model->name,
                                                     ] );  
                                                 }
+                                                
                                         return Html::a( '<span class="fa fa-file-pdf-o"></span>', $url, [
                                                     'data-method' => 'post',
                                                     'title' => Yii::t( 'app', 'download PDF' ),
@@ -394,10 +415,21 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                 {
                                     if ( $action === 'downloadpdf' )
                                     {
-                                        $path = ProjectAssembliesFiles::getFile($model->sygnature, $model->name, 'pdf');
-                                        if($path){
-                                        $url = Url::toRoute( ['project-assemblies-files/download', 'path' => $path, 
-                                               'name' => $model->name , 'sygnature' => $model->projectId, 'id' => $id ]);
+                                        
+                                        $files = ProjectAssembliesFiles::find()
+                                                ->andFilterWhere(['and',
+                                                 ['=','projectId', $model->projectId],
+                                                 ['=','sygnature', $model->sygnature],
+                                                 ['=','ext', 'pdf'],      
+                                                 ['!=','statusId', '8']
+                                                 ])
+                                                ->asArray()
+                                                ->all();
+                                        
+                                        if($files){
+                                        $url = Url::toRoute( ['project-assemblies-files/download',
+                                              'sygnature' => $model->projectId, 'id' => $id, 
+                                              'fileSygnature' => $model->sygnature, 'extension' => 'pdf', 'fileName' => $model->name ]);
                                         return $url;
                                         } else {
                                             $url = '';
@@ -405,10 +437,21 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     }
                                     if ( $action === 'downloaddxf' )
                                     {
-                                        $path = ProjectAssembliesFiles::getFile($model->sygnature, $model->name, 'dxf');
-                                        if($path){
-                                        $url = Url::toRoute( ['project-assemblies-files/download', 'path' => $path, 
-                                               'name' => $model->name , 'sygnature' => $model->projectId, 'id' => $id ]);
+                                        
+                                        $files = ProjectAssembliesFiles::find()
+                                                ->andFilterWhere(['and',
+                                                 ['=','projectId', $model->projectId],
+                                                 ['=','sygnature', $model->sygnature],
+                                                 ['=','ext', 'dxf'],      
+                                                 ['!=','statusId', '8']
+                                                 ])
+                                                ->asArray()
+                                                ->all();
+                                        
+                                        if($files){
+                                        $url = Url::toRoute( ['project-assemblies-files/download',
+                                              'sygnature' => $model->projectId, 'id' => $id, 
+                                              'fileSygnature' => $model->sygnature, 'extension' => 'dxf', 'fileName' => $model->name ]);
                                         return $url;
                                         } else {
                                             $url = '';
@@ -464,6 +507,7 @@ $this->registerJs("
 
     // Refresh pjax after modal event
     $('#modal-window').on('hidden.bs.modal', function () {
+        var keys = $('#grid').yiiGridView('getSelectedRows');
         var classCheck =  $('.modal-content').attr('class');
         $('.modal-title').empty();
         $('#modalContent').empty();
@@ -473,8 +517,40 @@ $this->registerJs("
              } else {
                  $('.modal-header').css('border-bottom', '1px solid #e5e5e5');
                  $.pjax.reload('#pjax-data');
-             }   
+                 $(document).one('ajaxStop', function() {
+                    if(keys.length > 0){
+
+                       for( var x = 0; x < keys.length; x++){
+                           $('input[value=' + keys[x] + ']').prop('checked', false);
+                           $('input[value=' + keys[x] + ']').prop('checked', true);  
+                       }
+                    }
+                });
+            }   
     });  
+    
+    $('#update-modal-window').on('hidden.bs.modal', function () {
+        var keys = $('#grid').yiiGridView('getSelectedRows');
+        var classCheck =  $('.modal-content').attr('class');
+        $('.modal-title').empty();
+        $('#modalContent').empty();
+            if(classCheck === 'modal-content pdf-view'){
+                $('.modal-content').css('background-image', '');
+                $('.modal-content').removeClass('pdf-view');               
+             } else {
+                 $('.modal-header').css('border-bottom', '1px solid #e5e5e5');
+                 $.pjax.reload('#pjax-data');
+                 $(document).one('ajaxStop', function() {
+                    if(keys.length > 0){
+
+                       for( var x = 0; x < keys.length; x++){
+                           $('input[value=' + keys[x] + ']').prop('checked', false);
+                           $('input[value=' + keys[x] + ']').prop('checked', true);  
+                       }
+                    }
+                });
+            }   
+    }); 
     
     ///////////////// MODAL EVENTS
     
@@ -482,15 +558,25 @@ $this->registerJs("
     $('.update-action').click(function(){
            var keys = $('#grid').yiiGridView('getSelectedRows');
            var fileId = keys[0];
-           var url = $(this).data('url');
-           var sygnature = $(this).data('sygnature');
-           var url2 = url + '&sygnature=' + sygnature + '&id=' + fileId;
-           console.log(url2);
-                if(keys.length > 0){   
-                    $('#modal-window').modal('show')
-                        .find('#modalContent')
-                        .load(url2);                    
-                }
+           var statusId = $('.' + keys[0]).attr('file-status');
+           console.log(statusId);
+           
+           if(statusId == 0 || statusId == 3){
+                var fileName = $('tr[data-key=\\'' + fileId + '\\'] .cnote-button').attr('file-name');  
+                var url = $(this).data('url');
+                var sygnature = $(this).data('sygnature');
+                var url2 = url + '&sygnature=' + sygnature + '&id=' + fileId;
+                     if(keys.length > 0){   
+                         $('#update-modal-window').modal('show')
+                             .find('#modalContent')
+                             .load(url2);      
+                         $('.modal-title').empty();
+                         $('.modal-title').append('Element: ' + fileName);  
+
+                     }
+            }
+                
+              
        
     });
     
@@ -536,6 +622,7 @@ $this->registerJs("
         $(':lt(11)', this).click(function(){
             fileName = $('.' + rowId).attr('file-name');
             imagePath = $('.' + rowId).attr('image-path');
+            console.log(imagePath);
             if(typeof imagePath != 'undefined'){
                 $('#modal-window').modal('show');
                 $('.modal-title').empty();
@@ -665,7 +752,17 @@ $this->registerJs("
 
     Modal::begin( [
             'id' => 'modal-window',
-            'header' => '<h4 class="modal-title">New Note</h4>',
+            'header' => '<h4 class="modal-title"></h4>',
+    ] );
+        
+    echo "<div id='modalContent'></div>";
+
+   Modal::end();
+   
+   Modal::begin( [
+            'id' => 'update-modal-window',
+            'size' => Modal::SIZE_LARGE,
+            'header' => '<h4 class="modal-title"></h4>',
     ] );
         
     echo "<div id='modalContent'></div>";

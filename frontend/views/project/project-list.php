@@ -88,11 +88,8 @@ use yii\widgets\Pjax;
 <?php pjax::end(); 
 $this->registerJs("
     $(document).ready(function(){
-                var currentUrl = $(location).attr('href');
-                console.log(currentUrl);
-            
+                var currentUrl = $(location).attr('href');            
             $('#project-modal').on('hidden.bs.modal', function () {
-                console.log(currentUrl);
                 window.location.href  = currentUrl;
             });  
 

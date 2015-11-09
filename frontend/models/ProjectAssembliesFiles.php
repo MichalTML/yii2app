@@ -48,7 +48,8 @@ class ProjectAssembliesFiles extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['projectId', 'assemblieId', 'typeId', 'flag', 'thickness', 'quanity', 'quanityDone'], 'integer'],
+            [['projectId', 'assemblieId', 'typeId', 'flag', 'quanity', 'quanityDone'], 'integer'],
+            //[['thickness'], 'float'],
             [['createdAt', 'updatedAt'], 'safe'],
             [['sygnature'], 'string', 'max' => 8],
             [['name', 'path', 'feedback'], 'string', 'max' => 255],

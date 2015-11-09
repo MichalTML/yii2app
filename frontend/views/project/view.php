@@ -1,6 +1,7 @@
 <?php
 
 use yii\widgets\DetailView;
+use frontend\models\ProjectData;
 
 ?>
 
@@ -8,16 +9,22 @@ use yii\widgets\DetailView;
         'model' => $model,
         'attributes' => [
             'sygnature',
-            'projectName',            
-            'deadline',
+            'projectName',  
             'projectStatus0.statusName',
             'client.name', 
-            'creUser.username',
             'projectPermissionsUsers',
+            'projectStart',
+            [
+                'attribute' => 'deadline',               
+                'label' => 'Durations (weeks)',
+                'value' => ProjectData::getProjectDuration($id),
+            ],
+            'deadline',
+            'endTime', 
+            'creUser.username',
             'creTime',            
             'updUser.username',
-            'updTime',                 
-            'endTime',            
+            'updTime',                                
         ],
     ]) ?>
 

@@ -10,8 +10,8 @@ use frontend\models\ProjectSaver;
 if (isset($_POST['name'])){
    $projectName = $_POST['name'];
    
-   //shell_exec("cp -Ru /media/data/NAS/TMA/TMA_KONST_TEMP/$projectName /media/data/app_data/project_data");
-   //shell_exec("rsync -avh --no-compress --progress /media/data/NAS/TMA/TMA_KONST_TEMP/$projectName /media/data/app_data/project_data");
+   //shell_exec("cp -R /media/data/NAS/TMA/TMA_KONST_TEMP/$projectName /media/data/app_data/project_data");
+   shell_exec("rsync -avh --no-compress --progress /media/data/NAS/TMA/TMA_KONST_TEMP/$projectName /media/data/app_data/project_data");
    /* ProjectImporter class
     * purpose: scanning dest folder and getting all info into mylti dim. arrrays
     */
@@ -24,6 +24,9 @@ if (isset($_POST['name'])){
     * purpose: saving data to mySql
     */
    $saveProject = new ProjectSaver(DB::getConnection(), $excelImporter->files);
+   
+//   $saveProject->delete(57);
+//   die('deleted');
    $saveProject->importProjecteData( $projectImporter->projectsDatas, $projectImporter->filesCount);
    $saveProject->importAssembliesData( $projectImporter->projectsDatas);
    $saveProject->importProjectMainFiles( $projectImporter->mainProjectFiles, $projectImporter->filesCount );

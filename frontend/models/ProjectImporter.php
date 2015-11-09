@@ -35,6 +35,7 @@ class ProjectImporter
         }
         $this->projects = array_values($this->projects);
         
+        
         if(count($this->projects) < 1 ){
                 $error = 'Check if '. $projectName .' data exists and are valid, then try again.';
                 $this->summary['error'] = $error;

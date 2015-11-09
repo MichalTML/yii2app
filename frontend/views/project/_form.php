@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use yii\jui\DatePicker;
 use kartik\label\LabelInPlace;
+use frontend\models\ProjectData;
 
 
 /* @var $this yii\web\View */
@@ -19,9 +20,10 @@ if(isset($projectStatus)){
 }
 $model->sygnature = $freeId;
 $model->getProjectPermissionsId();
+$model->deadline = ProjectData::getProjectDuration($model->id);
 $checkboxList = json_encode($model->getProjectPermissionsId());
 ?>
-    <span id="checkboxList" style="position: absolute; display: hidden;"><?php echo $checkboxList ?></span>;
+    <span id="checkboxList" style="position: absolute; display: none;"><?php echo $checkboxList ?></span>
     
 <div class ="create-form col-lg-10" style="font-size: 12px">
     <?php
@@ -131,7 +133,32 @@ $checkboxList = json_encode($model->getProjectPermissionsId());
 </div>
 
 <?php
-$this->registerJs("$('#projectdata-deadline').on('change', function(){  
+$this->registerJs(" $(document).ready(function(){
+                        var value = $('#projectdata-deadline').val() * 7;
+                            if(Math.floor(value) == value && $.isNumeric(value)){ 
+                                var startDate = $('#projectdata-projectstart').val();
+                                var value = $('#projectdata-deadline').val() * 7;
+                                var data = new Date(startDate);
+                                var day = data.getDate() + value;
+                                data.setDate(day);
+                                var month = data.getMonth() + 1;
+                                
+                                    if(data.getMonth() < 8){
+                                        var deadline = data.getFullYear() + '-0' + month;
+                                    } else {
+                                        var deadline = data.getFullYear() + '-' + month;
+                                    }
+                                    
+                                    if(data.getDate() < 9){
+                                        var deadline = deadline + '-0' + data.getDate();
+                                    } else {
+                                        var deadline = deadline + '-' + data.getDate();
+                                    }
+                                    
+                                $('#deadline-field').attr('value', deadline);
+                        }
+                    });
+                    $('#projectdata-deadline').on('change', function(){  
                     var startDate = $('#projectdata-projectstart').val();
                     var value = $('#projectdata-deadline').val() * 7;
                     if(Math.floor(value) == value && $.isNumeric(value) && startDate.length > 1){ 
@@ -179,9 +206,10 @@ $this->registerJs("$('#projectdata-deadline').on('change', function(){
                     $(document).ready(function(){
                     var userList = $('#checkboxList').html();
                     var parsedList = jQuery.parseJSON(userList);
-                    for(var x = 0; x < parsedList.length; x++){
-                    $('.checkbox > label > input[value=' + parsedList[x] + ']').prop('checked', true);
-                    console.log(parsedList[0]);
-                    }
+                        if( parsedList != null) {
+                            for(var x = 0; x < parsedList.length; x++){
+                                $('.checkbox > label > input[value=' + parsedList[x] + ']').prop('checked', true);
+                            }
+                        }
                     });
                     ");

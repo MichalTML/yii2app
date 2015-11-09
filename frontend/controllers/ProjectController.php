@@ -66,6 +66,7 @@ class ProjectController extends Controller {
     public function actionView( $id ) {
         return $this->renderPartial( 'view', [
                     'model' => $this->findModel( $id ),
+                    'id' => $id,
                 ] );
     }
     

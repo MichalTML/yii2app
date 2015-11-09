@@ -264,11 +264,12 @@ class ProjectSaver
     }
 
     public function importAssembliesFiles( $data, $count ) {
+        $updateCount = 0;
         foreach ( $data as $projectId => $files ) {
             $projectId = intval( $projectId );
             $fileCount = 0;
             $excelFileCount = 0;
-            $updateCount = 0;
+            
             foreach ( $files as $assemblieId => $file ) {
                 $newAssemblieId = $projectId . $assemblieId;
                 foreach ( $file as $record ) {
@@ -288,21 +289,23 @@ class ProjectSaver
                         }
                         
                         
-                        $check = $this->db->prepare( "SELECT * FROM project_assemblies_files WHERE (path=:path AND projectId=:projectId AND name=:name AND ext=:ext AND assemblieId=:assemblieId AND size=:size)" );
-                        $check->bindparam( ':path', $record[ 'path' ] );
+                        $check = $this->db->prepare( "SELECT * FROM project_assemblies_files WHERE (projectId=:projectId AND name=:name AND ext=:ext)" );
+ //                       $check->bindparam( ':sygnature', $record[ 'sygnature'] );
                         $check->bindparam( ':projectId', $projectId );
+//                        $check->bindparam( ':path', $record[ 'path' ]);
                         $check->bindparam( ':name', $record[ 'name' ] );
                         $check->bindparam( ':ext', $record[ 'ext' ] );
-                        $check->bindparam( ':assemblieId', $newAssemblieId );
+//                        $check->bindparam( ':assemblieId', $newAssemblieId );
                         //$check->bindparam( ':sygnature', $file['sygnature'] );
-                        $check->bindparam( ':size', $record[ 'size' ] );
-
-                        if ( $check->execute() & count( $check->fetchAll() ) > 0 )
-                        {                         
+//                        $check->bindparam( ':size', $record[ 'size' ] );
+                        $check->execute();
+                        if ( count( $check->fetchAll() ) > 0 )
+                        {          
                             $result[ $record[ 'name' ] . '.' . $record[ 'ext' ] ] = ['name' => $record[ 'name' ],
                                 'path' => $record[ 'path' ], 'ext' => $record[ 'ext' ], 'error' => 'record already in table' ];
                             $this->raport[ $projectId ][ $newAssemblieId ][ 'assmblieFiles' ] = $result;
                             $record[ 'name' ] = 'skip';
+                            
                         }
                         if ( $record[ 'name' ] != 'skip' )
                         {
@@ -345,20 +348,27 @@ class ProjectSaver
                                 return false;
                             }
                         } else {
-                             $stmt = $this->db->prepare( "UPDATE project_assemblies_files SET thickness=:thickness, material=:material, quanity=:quanity WHERE projectId=:projectId, assemblieId=:assemblieId, sygnature=:sygnature, typeId=:typeId, ext=:ext, path=:path" );
-
-                            $stmt->bindparam( ':projectId', $projectId );
-                            $stmt->bindparam( ':assemblieId', $newAssemblieId );
-                            $stmt->bindparam( ':typeId', $typeId );
-                            $stmt->bindparam( ':sygnature', $record[ 'sygnature' ] );
-                            $stmt->bindparam( ':ext', $record[ 'ext' ] );
+                            
+                             $stmt = $this->db->prepare( "UPDATE project_assemblies_files SET thickness=:thickness, material=:material, quanity=:quanity  WHERE path=:path" );
+                            
+//                            $stmt->bindparam( ':fileId', $check->id );
+//                            $stmt->bindparam( ':projectId', $projectId );
+//                           $stmt->bindparam( ':assemblieId', $newAssemblieId );
+//                            $stmt->bindparam( ':typeId', $typeId );
+//                            $stmt->bindparam( ':sygnature', $record[ 'sygnature' ] );
+//                            $stmt->bindparam( ':ext', $record[ 'ext' ] );
+//                            //$stmt->bindparam( ':name', $record[ 'name' ] );
                             $stmt->bindparam( ':path', $record[ 'path' ] );
                             $stmt->bindparam( ':thickness', $this->filterData[ 'thickness' ] );   //ADD THIS AFTER FILTER IS READY
                             $stmt->bindparam( ':material', $this->filterData[ 'material' ] );
                             $stmt->bindparam( ':quanity', $this->filterData[ 'quanity' ] );
+                             //die($check->id . ' | ' . $record['ext'] . ' | ' . $record['path'] . ' | ' . $this->filterData[ 'thickness' ]);
                             $stmt->execute();
-                            
+                            //var_dump($record[ 'path' ] );
+                            //die();
                             $updateCount++;
+                            
+                            
                         }
                     }
                 }
@@ -377,28 +387,41 @@ class ProjectSaver
     }
 
     public function filterFile( $filterFile, $data ) {
-        foreach ( $filterFile as $filter ) {
-  
-            if (isset($filter['name']) && $data == $filter[ 'name' ] )
-            {
-                if ( !isset( $filter[ 'thickness' ] ) )
-                {
-                    $filter[ 'thickness' ] = '';
+        foreach ( $filterFile as $filter ) {              
+                   
+            if (isset($filter['name'])){
+                $patternPatrs = explode('_', $filter['name']);
+                $pattern = $patternPatrs[0];
+                
+                    if(  preg_match('/^'.$pattern.'/', $data))
+                    {
+                        if ( !isset( $filter[ 'thickness' ] ) )
+                        {
+                            $filter[ 'thickness' ] = 0;
+                        } else {
+                           $needle = ['fi', 'm', 'M', 'Fi', 'fI'];
+                           $filter[ 'thickness' ] = str_replace( ',', '.', $filter['thickness']);
+                           $filter[ 'thickness' ] = str_replace( $needle, '', $filter['thickness']);
+                        }
+                        
+                        if ( !isset( $filter[ 'quanity' ] ) )
+                        {
+                            $filter[ 'quanity' ] = 1;
+                        }
+                        
+                        if ( !isset( $filter[ 'material' ] ) )
+                        {
+                            $filter[ 'material' ] = 'not applicable';
+                        }
+                        
+                        $result = [
+                            'quanity' => $filter[ 'quanity' ],
+                            'thickness' => $filter[ 'thickness' ],
+                            'material' => $filter[ 'material' ],
+                        ];
+                        
+                        return $this->filterData = $result;
                 }
-                if ( !isset( $filter[ 'quanity' ] ) )
-                {
-                    $filter[ 'quanity' ] = '1';
-                }
-                if ( !isset( $filter[ 'material' ] ) )
-                {
-                    $filter[ 'material' ] = 'not applicable';
-                }
-                $result = [
-                    'quanity' => $filter[ 'quanity' ],
-                    'thickness' => $filter[ 'thickness' ],
-                    'material' => $filter[ 'material' ],
-                ];
-                return $this->filterData = $result;
             }
         }    
         return false;
@@ -422,11 +445,11 @@ class ProjectSaver
         $this->raport = [];
     }
     
-    public function finalize($option, $sygnature = null) {
+    public function finalize($option, $sygnature = null, $projectName) {
      if($option === 'yes'){
          $stmt = $this->db->prepare("TRUNCATE TABLE project_files_transfer_temp");
          $stmt->execute();
-         $this->status['status'] = 'Project Data Saved';     
+         return $this->status['status'] = 'Project Data Saved';     
      } else {
         $check = $this->db->prepare( "SELECT fileId, tableName FROM project_files_transfer_temp");
         $check->execute();
@@ -459,11 +482,13 @@ class ProjectSaver
                     $stmt->execute();
                     break;
             endswitch;
-        }            
+        }     
+            shell_exec("rm -R /media/data/app_data/project_data/$projectName");
             $stmt = $this->db->prepare("TRUNCATE TABLE project_files_transfer_temp");
             $stmt->execute();
-            $this->status['status'] = 'Project Import process has been reverted.';
+            return $this->status['status'] = 'Project Import process has been reverted.';
      }
+     
     }
     
     public function statusChange($sygnature){

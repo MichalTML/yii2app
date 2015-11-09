@@ -12,6 +12,8 @@ use yii\filters\VerbFilter;
 use frontend\models\ProjectAssembliesFilesData;
 use frontend\models\FileGroup;
 use frontend\models\FileGroupName;
+use yii\web\UploadedFile;
+use frontend\models\ProjectAssembliesMainFiles;
 
 /**
  * ProjectAssembliesFilesController implements the CRUD actions for ProjectAssembliesFiles model.
@@ -123,13 +125,36 @@ class ProjectAssembliesFilesController extends Controller
         }
     }
     
-     public function actionDownload($path, $name, $sygnature, $id)
+     public function actionDownload($sygnature, $id, $fileSygnature, $extension, $fileName)
     {   
-        if(file_exists($path)){
-            //die('adasd');
-        return Yii::$app->response->sendFile($path);
+        // get all files
+        $filesPathContainer = '';
+        $files = ProjectAssembliesFiles::find()
+                ->andFilterWhere(['and',
+                 ['=','projectId',$sygnature],
+                 ['=','sygnature',$fileSygnature],
+                 ['=','ext', $extension],      
+                 ['!=','statusId', '8']
+                 ])
+                ->asArray()
+                ->all();
+        
+        // check if u have single file to download
+        if(count($files) == 1){                
+            return Yii::$app->response->sendFile($files[0]['path']);
+        } elseif(count($files) > 1){
+            foreach($files as $file){
+                $filesPathContainer.= ' "'.$file['path'].'"';
+            }
+            $zipPath = '/media/data/app_data/project_data/' . $fileName .'.zip';
+            $zipList = 'zip -j ' . $zipPath . $filesPathContainer;
+//            var_dump($zipList);
+//            die();
+            shell_exec($zipList);
+            return Yii::$app->response->sendFile($zipPath);
         }
-        Yii::$app->session->setFlash( 'error', 'File: ' . $name . ' not found.' );
+        
+        Yii::$app->session->setFlash( 'error', 'File not found.' );
         return $this->redirect( ['project/parts', 'sygnature' => $sygnature, 'id' => $id]);
         
     }
@@ -586,10 +611,11 @@ class ProjectAssembliesFilesController extends Controller
                         break;
                         case 'download':
                         foreach($data['id'] as $id){                             
-                            $dft = ProjectAssembliesFiles::find()->select(['name', 'assemblieId', 'projectId' ])->where(['id' => $id])->one();
+                            $dft = ProjectAssembliesFiles::find()
+                                   ->select(['sygnature', 'name', 'assemblieId', 'projectId' ])->where(['id' => $id])->one();
                             $files= ProjectAssembliesFiles::find()->select(['path'])                            
-                                    ->andWhere(['name' => $dft->name])
-                                    ->andWhere( ['assemblieId' => $dft->assemblieId])
+                                    ->andWhere(['sygnature' => $dft->sygnature])
+                                    ->andWhere(['assemblieId' => $dft->assemblieId])
                                     ->andFilterWhere(['or', ['ext' => 'dxf'], ['ext' => 'pdf']])
                                     ->all();
                             $fileGroup = FileGroup::find()->select(['groupId'])->where(['fileId' => $id])->asArray()->one();
@@ -615,18 +641,20 @@ class ProjectAssembliesFilesController extends Controller
                             } else {
                                 $fileGroupName = FileGroupName::find()
                                                 ->select(['groupName'])->where(['groupId' => $groupId[0]])->asArray()->one();
-                                $fileName = 'Pb' . $dft['projectId'] . '_' . $fileGroupName['groupName']. '_' . date("d.m.y_G:i:s") . '.zip';
+                                $fileName = 'P' . $dft['projectId'] . '_' . $fileGroupName['groupName']. '_' . date("d.m.y_G:i:s") . '.zip';
                             }
                         } else {
-                            $fileName = 'Pc' . $dft['projectId'] . '_' . date("d.m.y_G:i:s") . '.zip';
+                            $fileName = 'P' . $dft['projectId'] . '_' . date("d.m.y_G:i:s") . '.zip';
                         }
                         if(file_exists('/media/data/app_data/project_data/' . $fileName)){
                             $file = '/media/data/app_data/project_data/' . $fileName;
                             shell_exec('rm /media/data/app_data/project_data/' . $fileName);
                         }
+                        
                         $projectString = implode(' ', $filesList);
-                        $zipList = 'zip -j /media/data/app_data/project_data/' . $fileName .' ' . $projectString;
+                        $zipList = 'zip -j /media/data/app_data/project_data/' . '"' . $fileName .'" ' . $projectString;
                         shell_exec($zipList);
+                        //die($zipList);
                         if(file_exists('/media/data/app_data/project_data/' . $fileName)){
                             $file = '/media/data/app_data/project_data/' . $fileName;
                             //return Yii::$app->response->sendFile('/media/data/app_data/project_data/' . $fileName);
@@ -643,7 +671,7 @@ class ProjectAssembliesFilesController extends Controller
                 }
                 \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return [
-            'code' => 200,
+            'code' => 100,
         ];
     }
     }
@@ -717,14 +745,198 @@ class ProjectAssembliesFilesController extends Controller
     }
     
     public function actionUpdateele($sygnature, $id){
-  
+            
              $element = ProjectAssembliesFiles::find()->where(['id' => $id, 'projectId' => $sygnature])->one();
-               
+             
+             $elementsList = ProjectAssembliesFiles::find()
+                     ->select(['ext', 'path', 'createdAt', 'name'])
+                     ->where(['sygnature' => $element->sygnature, 'projectId' => $sygnature])
+                     ->asArray()
+                     ->all();
+             
+             $asmList = \frontend\models\ProjectAssembliesMainFiles::find()
+                     ->select(['ext', 'path', 'createdAt', 'name'])
+                     ->where(['assemblieId' => $element->assemblieId, 'projectId' => $sygnature, 'ext' => 'asm'])
+                     ->andFilterWhere(['!=', 'statusId', 0])
+                     ->asArray()
+                     ->all();
+             
              return $this->renderAjax('__update', [
                     'element' => $element,
+                    'elementsList' => $elementsList,
+                    'fileId' => $id,
+                    'projectId' => $sygnature,
+                    'asmList' => $asmList,
              ]);
              
         
+    }
+    
+    public function actionUpload(){
+        
+        // gathering data
+        $file = UploadedFile::getInstancesByName('attachment_48');
+        
+        if($file){
+            
+            $data = Yii::$app->request->post();
+            $fileId = $data['fileId'];
+            $projectId = $data['projectId'];
+            $nameParts = explode('.', $file[0]->name);
+            $fileName = $nameParts[0];
+            $fileExt = $nameParts[1];
+
+            // validating file
+            $FileCheck = ProjectAssembliesFiles::find()
+                    ->select(['sygnature', 'assemblieId'])
+                    ->where(['id' => $fileId ])
+                    ->one();
+            
+            $checkFile = ProjectAssembliesFiles::find()
+                    ->where(['projectId' => $projectId, 'name' => $fileName, 'ext' => $fileExt])
+                    ->one();
+            $asmSygnature = explode('_', $fileName);
+            $checkAsm = ProjectAssembliesMainFiles::find()
+                        ->where(['projectId' => $projectId, 'assemblieId' => $FileCheck->assemblieId, 
+                        'sygnature' => $asmSygnature[0], 'ext' => $fileExt])
+                        ->one();
+        
+                if(!empty($checkFile)){
+                    
+                    if($FileCheck->sygnature == $checkFile->sygnature){  
+                     
+
+                        // clonning old file into new one
+                        $fileClone = $checkFile;
+
+                        // setting all needed data for backup purpose
+                        $newFileName = 'RJ(' . date('YmdHis') . ')_' . $fileName;
+                        $oldPath = $checkFile->path;
+                        $oldId = $checkFile->id;
+                        $newPathParts = explode('/', $oldPath); // '\\' for testing
+                        $newPathParts[count($newPathParts) - 1] = $newFileName . '.' . $fileExt;
+                        $newPath = implode('/', $newPathParts); // '\\' for testing
+                        // check if new Id is already taken if so generating new on
+                        $id = 0;
+                        $newFileId = $checkFile->id . '0' . $id;
+                        $idCheck = ProjectAssembliesFiles::find()
+                        ->where(['id' => $newFileId ])
+                        ->one();
+
+                            while($idCheck){
+                                $id++;
+                                $newFileId = $checkFile->id . '0' . $id;
+
+                                $idCheck = ProjectAssembliesFiles::find()
+                                ->where(['id' => $newFileId ])
+                                ->one();
+                            }
+                            
+                            
+                        // backuping file
+                        rename($oldPath, $newPath);
+                        $checkFile->name = $newFileName;
+                        $checkFile->path = $newPath;
+                        $checkFile->id = $newFileId;
+                        $checkFile->updatedAt = date('Y-m-d H:i:s');
+                        $checkFile->statusId = 8;
+
+                            if($checkFile->save()){
+                                // passing all attributes from old to new file
+                                move_uploaded_file($file[0]->tempName, $oldPath);
+                                $fileClone->isNewRecord = true;
+                                $fileClone->id = $oldId;
+                                $fileClone->name = $fileName;
+                                $fileClone->path = $oldPath;
+                                $fileClone->updatedAt = date('Y-m-d H:i:s');
+                                $fileClone->statusId = 0;
+
+                                $fileClone->save();
+
+                                // whole package status
+                                $statusChange = new ProjectAssembliesFiles;
+                                $statusChange->find()
+                                ->where(['id' => $fileId ])
+                                ->one();
+                                $statusChange->statusId = '0';
+                                $statusChange->save();
+
+
+                                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                                return [
+                                    'code' => 200,
+                                    'name' => $file[0]->name,
+                                ];
+                            }
+                    }
+                }
+                
+                if(!empty($checkAsm)){
+                    // clonning old file into new one
+                        $fileClone = $checkAsm;
+
+                        // setting all needed data for backup purpose
+                        $newFileName = 'RJ(' . date('YmdHis') . ')_' . $fileName;
+                        $oldPath = $checkAsm->path;
+                        $oldId = $checkAsm->id;
+                        $oldFileName = $checkAsm->name;
+                        $newPathParts = explode('/', $oldPath); // '\\' for testing
+                        $newPathParts[count($newPathParts) - 1] = $newFileName . '.' . $fileExt;
+                        $newPath = implode('/', $newPathParts); // '\\' for testing
+                        // check if new Id is already taken if so generating new on
+                        $id = 0;
+                        $newFileId = $checkAsm->id . '0' . $id;
+                        $idCheck = ProjectAssembliesMainFiles::find()
+                        ->where(['id' => $newFileId ])
+                        ->one();
+
+                            while($idCheck){
+                                $id++;
+                                $newFileId = $checkAsm->id . '0' . $id;
+
+                                $idCheck = ProjectAssembliesFiles::find()
+                                ->where(['id' => $newFileId ])
+                                ->one();
+                            }
+                            
+                        // backuping file
+                        rename($oldPath, $newPath);
+                        $checkAsm->name = $newFileName;
+                        $checkAsm->path = $newPath;
+                        $checkAsm->id = $newFileId;
+                        $checkAsm->statusId = 0;
+                        $checkAsm->updatedAt = date('Y-m-d H:i:s');
+                    
+                        if($checkAsm->save()){
+                                // passing all attributes from old to new file
+                                move_uploaded_file($file[0]->tempName, $oldPath);
+                                $fileClone->isNewRecord = true;
+                                $fileClone->id = $oldId;
+                                $fileClone->name = $oldFileName;
+                                $fileClone->path = $oldPath;
+                                $fileClone->statusId = 1;
+                                $fileClone->updatedAt = date('Y-m-d H:i:s');
+
+                                $fileClone->save();
+
+                                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                                return [
+                                    'code' => 200,
+                                    'name' => $file[0]->name,
+                                ];
+                            }
+                }
+
+           \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+           return [
+                  'code' => 100,
+                  ];     
+        }
+        
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+           return [
+                  'code' => 100,
+                  ];  
     }
    
 }

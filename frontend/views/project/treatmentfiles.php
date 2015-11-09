@@ -141,7 +141,14 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                                ->where(['projectId' => $sygnature, 'statusId' => '1', 'ext' => 'dft'])
                                ->orderBy(['thickness' => SORT_ASC])->asArray()->all(), 
                                'thickness','thickness'),['class'=>'form-control', 'prompt' => ' ']),
-               'value' => 'thickness',
+               'format' => 'raw',
+               'value' => function($model){
+                                if($model->typeId == 5){
+                                    return '&#8709;'.$model->thickness;  
+                                } else {
+                                    return $model->thickness;  
+                                }            
+                          },
                'headerOptions' => ['style' => 'text-align: center; min-width: 70px;' ],
                'contentOptions' => ['style' => 'background-color: white; text-align: center; vertical-align: middle;' ],
            ],
@@ -314,7 +321,7 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                                         if($url){
                                         return Html::a( '<span class="fa fa-download"></span>', $url, [
                                                     'data-method' => 'post',
-                                                    'title' => Yii::t( 'app', 'download DXF' ),
+                                                    'title' => Yii::t( 'app', 'download DXF' ),                                               
                                                 ] );
                                         }
                                         return '<span class="fa fa-download"></span>';
@@ -322,8 +329,10 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                                     'downloadpdf' => function($url, $model)
                                     {
                                         if($url){
+                                            
                                             $fileId = ProjectAssembliesFiles::find()
-                                            ->select(['id'])->where(['name' => $model->name, 'ext' => 'pdf'])->one();
+                                            ->select(['id'])->where(['projectId' => $model->projectId, 
+                                            'name' => $model->name, 'ext' => 'pdf'])->one();
                                             
                                             $fileImage = FilesImages::find()->select(['imagePath'])
                                             ->where(['fileId' => $fileId->id])->one();
@@ -334,24 +343,37 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                                                       'title' => Yii::t( 'app', 'download PDF' ),
                                                       'class' => $model->id,
                                                       'image-path' => $fileImage->imagePath,
+                                                      'file-name' => $model->name,
                                                     ] );  
                                                 }
+                                                
                                         return Html::a( '<span class="fa fa-file-pdf-o"></span>', $url, [
                                                     'data-method' => 'post',
                                                     'title' => Yii::t( 'app', 'download PDF' ),
                                                 ] );
                                         }
                                         return '<span class="fa fa-file-pdf-o"></span>';
-                                    },
+                                    }, 
                                         ],
                                     'urlCreator' => function ($action, $model, $key, $index) use ($id) 
                                 {
-                                    if ( $action === 'downloadpdf' )
+                                   if ( $action === 'downloadpdf' )
                                     {
-                                        $path = ProjectAssembliesFiles::getFile($model->sygnature, $model->name, 'pdf');
-                                        if($path){
-                                        $url = Url::toRoute( ['project-assemblies-files/download', 
-                                            'path' => $path, 'name' => $model->name , 'sygnature' => $model->projectId, 'id' => $id ]);
+                                        
+                                        $files = ProjectAssembliesFiles::find()
+                                                ->andFilterWhere(['and',
+                                                 ['=','projectId', $model->projectId],
+                                                 ['=','sygnature', $model->sygnature],
+                                                 ['=','ext', 'pdf'],      
+                                                 ['!=','statusId', '8']
+                                                 ])
+                                                ->asArray()
+                                                ->all();
+                                        
+                                        if($files){
+                                        $url = Url::toRoute( ['project-assemblies-files/download',
+                                              'sygnature' => $model->projectId, 'id' => $id, 
+                                              'fileSygnature' => $model->sygnature, 'extension' => 'pdf', 'fileName' => $model->name ]);
                                         return $url;
                                         } else {
                                             $url = '';
@@ -359,10 +381,21 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                                     }
                                     if ( $action === 'downloaddxf' )
                                     {
-                                        $path = ProjectAssembliesFiles::getFile($model->sygnature, $model->name, 'dxf');
-                                        if($path){
-                                        $url = Url::toRoute( ['project-assemblies-files/download', 
-                                            'path' => $path, 'name' => $model->name , 'sygnature' => $model->projectId, 'id' => $id ]);
+                                        
+                                        $files = ProjectAssembliesFiles::find()
+                                                ->andFilterWhere(['and',
+                                                 ['=','projectId', $model->projectId],
+                                                 ['=','sygnature', $model->sygnature],
+                                                 ['=','ext', 'dxf'],      
+                                                 ['!=','statusId', '8']
+                                                 ])
+                                                ->asArray()
+                                                ->all();
+                                        
+                                        if($files){
+                                        $url = Url::toRoute( ['project-assemblies-files/download',
+                                              'sygnature' => $model->projectId, 'id' => $id, 
+                                              'fileSygnature' => $model->sygnature, 'extension' => 'dxf', 'fileName' => $model->name ]);
                                         return $url;
                                         } else {
                                             $url = '';
