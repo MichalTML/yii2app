@@ -4,6 +4,7 @@ namespace frontend\models;
 
 use frontend\models\ProjectAssembliesFilesData;
 use frontend\models\ProjectAssembliesFilesStatus;
+use frontend\models\FileGroupName;
 
 /**
  * This is the model class for table "project_assemblies_files".
@@ -122,7 +123,7 @@ class ProjectAssembliesFiles extends \yii\db\ActiveRecord
     
     public function getStatus()
     {
-       return $this->hasOne(FileStatus::className(), ['id' => 'statusId']);
+       return $this->hasOne(  ProjectAssembliesFilesStatus::className(), ['statusId' => 'statusId']);
     }
     
     public function getStatusName()
@@ -192,6 +193,7 @@ class ProjectAssembliesFiles extends \yii\db\ActiveRecord
     
     public function getFilegroup()
     {
-        return $this->hasOne(FileGroup::className(), ['fileId' => 'id']);
+        return $this->hasOne(FileGroupName::className(), ['groupId' => 'groupId']);
     }
+    
 }

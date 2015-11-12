@@ -101,11 +101,10 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
         ],
         'rowOptions' => function ($model) {
             $notesCheck = ProjectAssembliesFilesNotes::find()
-                                ->andWhere(['fileId' => $model->id] )
-                                ->andWhere(['typeId' => 0])
+                                ->Where(['fileId' => $model->id, 'typeId' => 0] )
                                 ->all();
             if($notesCheck){
-                return ['class' => 'lighted-row', 'style' => 'background-color: #fef7b9; font-size:10px'];
+                return ['class' => 'treatment-note lighted-row', 'style' => 'font-size:10px'];
             }
             return ['class' => 'lighted-row', 'style' => 'font-size:10px'];
         },
@@ -264,15 +263,33 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
            ],
             ['class' => '\kartik\grid\CheckboxColumn',
                    'rowSelectedClass' => 'row-selected',
-                   'contentOptions' => ['style' => 'background-color:white; text-align: center; vertical-align: middle;' ],
+                   'contentOptions' => function($model){
+                                            $notesCheck = ProjectAssembliesFilesNotes::find()
+                                                     ->Where(['fileId' => $model->id, 'typeId' => 0, 'statusId' => 0] )
+                                                     ->all();
+                                            
+                                            if($notesCheck){
+                                                return ['style' => 'background-color:rgb(251, 45, 45); text-align: center; vertical-align: middle;' ];
+                                            } 
+                                            return ['style' => 'background-color:white; text-align: center; vertical-align: middle;' ];
+                                       }                    
+
                 ],
             ['class' => 'yii\grid\ActionColumn',
                                 'header' => '',
                                 'headerOptions' => ['style' => 'background-color:white; '
                                     . 'min-width: 70px;text-align: center; border-bottom-color: transparent;' ],
-                                'contentOptions' => function(){
-                                    return ['style' => 'margin-top: 5px; text-align:center; vartical-align:middle;'];      
-                                },
+                                  'contentOptions' => function($model){   
+                                                    $notesCheck = ProjectAssembliesFilesNotes::find()
+                                                                ->select(['id'])
+                                                                ->where(['fileId' => $model->id, 
+                                                                 'typeId' => 2, 'creUserId' => Yii::$app->user->id])
+                                                                ->all();
+                                                    if($notesCheck){
+                                                        return ['style' => 'background-color: #b9c9fe;margin-top: 5px; text-align:center; vertical-align:middle' ];     
+                                                    }
+                                                    return ['style' => 'margin-top: 5px; text-align:center; vertical-align:middle' ];      
+                                    },
                                 'template' => '{seenote} {note} | {downloaddxf} {downloadpdf} <br /> '
                                         . '{add} {deduct} | {sendtreatment} {reject}',                                          
                                 'buttons' => [  
@@ -296,25 +313,15 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                                     },                                    
                                     'seenote' => function ($url, $model)
                                     {
-                                    $searchModel = new ProjectAssembliesFilesNotes;
-                                    $result = $searchModel->find()
-                                            ->andFilterWhere(['fileId' => $model->id])
-                                            ->andFilterWhere(['typeId' => 0])
-                                            ->all();
-                                    
-                                    if ($result) {
-                                        return Html::button( '<a href=""><i class="fa fa-file-text"></i></a>', 
-                                        ['value' => $url, 'class' => 'seenote-button', 'id' => 'seenote-button', 
-                                         'file-name' => $model->name, 'title' => 'see notes' , 'data' => $model->id] );
-                                    } else {
-                                        return '<i class="fa fa-file-o"></i>';
-
-                                    }
+                                            return Html::button( '<a href=""><i class="fa fa-file-text"></i></a>', 
+                                                   ['file-name' => $model->name, 'value' => $url, 'class' => 'seenote-button', 
+                                                   'id' => 'seenote-button', 'title' => 'new personal note' , 'data' => $model->id] );
                                     },
                                     'note' => function ($url, $model)
                                     {
                                         return Html::button( '<a href=""><i class="fa fa-file-text-o"></i></a>', 
-                                        ['value' => $url, 'class' => 'cnote-button', 'title' => 'new note', 'file-name' => $model->name ] );
+                                               ['value' => $url, 'class' => 'cnote-button', 
+                                               'title' => 'new note', 'file-name' => $model->name] );
                                     },
                                     'downloaddxf' => function($url, $model)
                                     {
@@ -330,19 +337,32 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                                     {
                                         if($url){
                                             
+                                            $fileImagePath = '';
+                                            
                                             $fileId = ProjectAssembliesFiles::find()
                                             ->select(['id'])->where(['projectId' => $model->projectId, 
-                                            'name' => $model->name, 'ext' => 'pdf'])->one();
+                                                'sygnature' => $model->sygnature, 'ext' => 'pdf'])->one();
+                                            if($fileId){
+                                                $fileImage = FilesImages::find()->select(['imagePath'])
+                                                ->where(['fileId' => $fileId->id])->one();
+                                                    if($fileImage){
+                                                        $fileImagePath = $fileImage->imagePath;
+                                                    }
+                                            }
                                             
-                                            $fileImage = FilesImages::find()->select(['imagePath'])
-                                            ->where(['fileId' => $fileId->id])->one();
+                                             if($fileImage){
+                                                $fileImagePath = $fileImage->imagePath;
+                                            } else {
+                                                $fileImagePath = '';
+                                            }
+                                            
                                             
                                                 if($fileImage){
                                                     return Html::a( '<span class="fa fa-file-pdf-o"></span>', $url, [
                                                       'data-method' => 'post',
                                                       'title' => Yii::t( 'app', 'download PDF' ),
                                                       'class' => $model->id,
-                                                      'image-path' => $fileImage->imagePath,
+                                                      'image-path' => $fileImagePath,
                                                       'file-name' => $model->name,
                                                     ] );  
                                                 }
@@ -403,12 +423,14 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                                     }
                                     if ( $action === 'note' )
                                     {
-                                        $url = Url::toRoute( ['project-assemblies-files-notes/tnote', 'id' => $model->id ] );
+                                        $url = Url::toRoute( ['project-assemblies-files-notes/note',
+                                                   'id' => $model->id, 'filter' => 'constructor', 'data' => 'treatment' ] );
                                         return $url;
                                     }
                                      if ( $action === 'seenote' )
                                     {
-                                        $url = Url::toRoute( ['project-assemblies-files-notes/view', 'id' => $model->id, 'filter' => 0 ] );
+                                        $url = Url::toRoute( ['project-assemblies-files-notes/privnote', 
+                                            'id' => $model->id, 'filter' => 'privnote' ] );
                                         return $url;
                                     }
                                     if ( $action === 'reject' )
@@ -451,22 +473,24 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
 $this->registerJs("
     //////////////// MODAL ACTIONS
     
-    // Create Note action
-        $('.cnote-button').click(function(){
+    // get the click event of the Note button
+    $('.cnote-button').click(function(){
+        var fileName = $(this).attr('file-name');
+        $('.modal-title').empty();
+        $('.modal-title').append('Note to: ' + fileName);
         
-           var fileName = $(this).attr('file-name');  
-           $('.modal-title').append('Note to: ' + fileName); 
-        
-            $('#modal-window').modal('show')
-                    .find('#modalContent')
-                    .load($(this).attr('value'));
-        });
-
-    // View Note ACtion / change Note Title    
-    $('.seenote-button').click(function(){   
+        $('#modal-window').modal('show')
+                .find('#modalContent')
+                .load($(this).attr('value'));
+                
+    });
     
-        var fileName = $(this).attr('file-name');  
+    // View Note ACtion / change Note Title    
+    $('.seenote-button').click(function(){
+        var fileName = $(this).attr('file-name');
+        $('.modal-title').empty();
         $('.modal-title').append('Notes: ' + fileName);
+        $('.modal-header').addClass('color-title');
         
         $('#modal-window').modal('show')
                 .find('#modalContent')
@@ -498,7 +522,7 @@ $this->registerJs("
         var classCheck =  $('.modal-content').attr('class');
             if(classCheck === 'modal-content pdf-view'){
                 $('.modal-content').css('background-image', '');
-                $('.modal-content').removeClass('pdf-view');               
+                $('.modal-content').removeClass('pdf-view');            
              } else {
                  $('.modal-header').css('border-bottom', '1px solid #e5e5e5');
                  $.pjax.reload('#pjax-data');
@@ -522,10 +546,12 @@ $this->registerJs("
         );
 
         $(':lt(11)', this).click(function(){
-
-            imagePath = $('.' + rowId).attr('image-path');
+            fileName = $('a.' + rowId).attr('file-name');
+            imagePath = $('a.' + rowId).attr('image-path');
             if(typeof imagePath != 'undefined'){
                 $('#modal-window').modal('show');
+                $('.modal-title').empty();
+                $('.modal-title').append('Eelement: ' + fileName);
                 $('.modal-content').css('background-image', 'url(' + imagePath + ')');
                 $('.modal-content').addClass('pdf-view');
                 $('.modal-header').css('border-bottom', '0');

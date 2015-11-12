@@ -106,18 +106,17 @@ class FileGroup extends \yii\db\ActiveRecord
     
     public static function getStatusListV($projectId)
     {
-            $model = FileGroupName::find()->where(['projectId' => $projectId])->select(['groupName', 'groupId'])->asArray()->all();
-            $model = ArrayHelper::map( $model, 'groupId', 'groupName' );
-            foreach($model as $key => $value){
-                
-                $filter = FileGroup::find()->where(['groupId' => $key])->one();
-                if($filter){
-                    $dropList[$key] = $value;
-                }                   
-            }
-            if(!isset($dropList)){
-                $dropList = [];
-            }
-            return $dropList;
+            $model = FileGroupName::find()
+                    ->andFilterWhere(['or', 
+                            ['=', 'projectId', $projectId],
+                            ['=', 'projectId', 0]
+                            ])
+                    ->select(['groupName', 'groupId'])
+                    ->asArray()
+                    ->all();
+            
+            $droptions = ArrayHelper::map( $model, 'groupName', 'groupName' );
+
+            return $droptions;
     }
 }

@@ -355,6 +355,7 @@ class ProjectController extends Controller {
     }
     
     public function actionTreatmentmanagera($sygnature, $id, $pagination = 20){
+       
         $this->layout = 'action';        
         $searchModel = new ProjectAssembliesFilesSearch();
         $order = ['defaultOrder' => ['priorityId' => 'DESC', 'name' => 'DESC']];

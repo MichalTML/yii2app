@@ -126,26 +126,96 @@ class ProjectAssembliesFilesNotesController extends Controller
         }
     }
     
-    public function actionNote($id)
-{
-    $model = new ProjectAssembliesFilesNotes();
-    if ($model->load(Yii::$app->request->post())) {
+    public function actionNote($id, $filter = null, $data = null)
+    {
+        $model = new ProjectAssembliesFilesNotes();
         
-        $model->fileId = intval($id);
-        
-     if ( $model->save() )
-            {
-            }
-        } else
-        {
+        if ($model->load(Yii::$app->request->post())) {
             
+            $findNote = ProjectAssembliesFilesNotes::find()
+                ->where(['statusId' => 0, 'fileId' => $id])
+                ->andFilterWhere(['or', 
+                ['typeId' => 0],
+                ['typeId' => 3], 
+                        ])
+                ->one(); 
+
+            while($findNote){
+                $findNote->statusId = 1;
+                $findNote->save();
+
+                $findNote = ProjectAssembliesFilesNotes::find()
+                        ->where(['statusId' => 0, 'fileId' => $id])
+                        ->andFilterWhere(['or', 
+                        ['typeId' => 0],
+                        ['typeId' => 3], 
+                                ])
+                        ->one(); 
+            }
+            
+            $model->fileId = intval($id);
+            $model->save();
+            return;
+        }
+
+    $order = ['defaultOrder' => ['creTime' => SORT_DESC]];   
+    $searchModel = new ProjectAssembliesFilesNotesSearch;
+    $searchModel->fileId = $id;
+    $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $filter, $order);
+    $notesNumber = ProjectAssembliesFilesNotes::find()->select(['id'])->all();
+    
+    $pages = count($notesNumber);
+    $dataProvider->pagination->pagesize = $pages;   
+    
+        if($data == 'treatment'){
             return $this->renderAjax( '__note', [
+                            'model' => $model,
+                            'projectId' => $id,
+                            'searchModel' => $searchModel,
+                            'dataProvider' => $dataProvider,
+                            'option' => $data,
+                ] );
+        }
+        
+    return $this->renderAjax( '__note', [
                         'model' => $model,
                         'projectId' => $id,
+                        'searchModel' => $searchModel,
+                        'dataProvider' => $dataProvider,
             ] );
-        }
+     
+    }
     
-}
+    public function actionPrivnote($id, $filter = null)
+    {
+        $model = new ProjectAssembliesFilesNotes();
+        
+        if ($model->load(Yii::$app->request->post())) {
+
+            $model->fileId = intval($id);
+            $model->save();
+            
+            return;
+        }
+
+    $order = ['defaultOrder' => ['creTime' => SORT_DESC]];   
+    $searchModel = new ProjectAssembliesFilesNotesSearch;
+    $searchModel->fileId = $id;
+    $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $filter, $order);
+    $notesNumber = ProjectAssembliesFilesNotes::find()->select(['id'])->all();
+    
+    $pages = count($notesNumber);
+    $dataProvider->pagination->pagesize = $pages;   
+    
+    return $this->renderAjax( '__note', [
+                        'model' => $model,
+                        'projectId' => $id,
+                        'searchModel' => $searchModel,
+                        'dataProvider' => $dataProvider,
+                        'privnote' => true,
+            ] );
+     
+    }
 
     public function actionTnote($id)
     {

@@ -151,12 +151,14 @@ class ProjectAssembliesFilesController extends Controller
 //            var_dump($zipList);
 //            die();
             shell_exec($zipList);
-            return Yii::$app->response->sendFile($zipPath);
+            if(file_exists($zipPath)){
+                
+                return Yii::$app->response->sendFile($zipPath);
+            } else {
+                Yii::$app->session->setFlash( 'error', 'File not found.' );
+                return $this->redirect( ['project/parts', 'sygnature' => $sygnature, 'id' => $id]);
+            }
         }
-        
-        Yii::$app->session->setFlash( 'error', 'File not found.' );
-        return $this->redirect( ['project/parts', 'sygnature' => $sygnature, 'id' => $id]);
-        
     }
     
     public function actionDownloadzip($fileName)
@@ -165,9 +167,8 @@ class ProjectAssembliesFilesController extends Controller
         if(file_exists($fileName)){
             return Yii::$app->response->sendFile($fileName);
         }
- 
         Yii::$app->session->setFlash( 'Server acces error, please contact system adnimistrator' );
-        return $this->redirect( ['project/parts', 'sygnature' => 'a', 'id' =>'a']);
+        //return $this->redirect( ['project/parts', 'sygnature' => 'a', 'id' =>'a']);
 
     }
     
@@ -176,33 +177,24 @@ class ProjectAssembliesFilesController extends Controller
            if (Yii::$app->request->isAjax) {
            $data = Yii::$app->request->post();
            $model = $this->findModel($data['id']);
-           if($action == 1 & $model->destinationId != 0 & $model->statusId != 2){
-              $model->statusId = $action;
-           }
-           if($action == 2 ){
-               $model->statusId = $action;
-           }
-           if($action == 3 ){
-               $notesCheck = ProjectAssembliesFilesNotes::find()
-                                ->andWhere(['fileId' => $data['id']] )
-                                ->andWhere(['typeId' => 3])
-                                ->all();
-                        if($notesCheck){
-               $model->statusId = $action;
-                        }
-           }
-           }
-           if($model->save()){
-           \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return [
-            'code' => 200,
-        ];
-           } else {
-               \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return [
-            'code' => 100,
-        ];
-           }
+                if($model->quanity == $model->quanityDone){
+
+                    $model->statusId = 8;
+
+                    if($model->save()){
+                    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                 return [
+                     'code' => 200,
+                 ];
+                    } 
+                }
+                    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                    
+             return [
+                 'code' => 100,
+             ];
+           
+            }
     }
            
     
@@ -210,44 +202,57 @@ class ProjectAssembliesFilesController extends Controller
     {
            if (Yii::$app->request->isAjax) {
            $data = Yii::$app->request->post();
-           $model = $this->findModel($data['id']);
-           $model->priorityId += 1;
-           $model->save();
-           if($model->save()){
-           \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return [
-            'code' => 200,
-        ];
+           $model = ProjectAssembliesFiles::find()->select(['id'])
+                                          ->where( ['id' => $data['id']])
+                                          ->andFilterWhere(['or', 
+                                                         ['!=', 'statusId', 8], // ready
+                                                         ['!=', 'statusId', 9], // reject
+                                                         ['!=', 'statusId', 10], // backup                                              
+                                              ])->one();
+           if($model){
+                    $model = $this->findModel($data['id']);
+                    $model->priorityId += 1;
+                    $model->save();
+                    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                    return [
+                        'code' => 200,
+                    ];
            } else {
                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return [
-            'code' => 100,
-        ];
+                    return [
+                        'code' => 100,
+                    ];
            }
-    }
+        }
            
     }
     
     public function actionPriordown()
     {
            if (Yii::$app->request->isAjax) {
-           $data = Yii::$app->request->post();
-           $model = $this->findModel($data['id']);
-           $model->priorityId -= 1;
-           $model->save();
-           if($model->save()){
-           \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return [
-            'code' => 200,
-        ];
-           } else {
-               \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return [
-            'code' => 100,
-        ];
+                $data = Yii::$app->request->post();
+                $model = ProjectAssembliesFiles::find()->select(['id'])
+                                               ->where( ['id' => $data['id']])
+                                               ->andFilterWhere(['or', 
+                                                              ['!=', 'statusId', 8], // ready
+                                                              ['!=', 'statusId', 9], // reject
+                                                              ['!=', 'statusId', 10], // backup                                              
+                                                   ])->one();
+                if($model){
+                         $model = $this->findModel($data['id']);
+                         $model->priorityId -= 1;
+                         $model->save();
+                         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                      return [
+                          'code' => 200,
+                      ];
+                } else {
+                         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                  return [
+                      'code' => 100,
+                  ];
+                }
            }
-    }
-           
     }
     
     public function actionDesttma()
@@ -255,13 +260,15 @@ class ProjectAssembliesFilesController extends Controller
            if (Yii::$app->request->isAjax) {
            $data = Yii::$app->request->post();
            $model = $this->findModel($data['id']);
-           $model->destinationId = 1;
-           $model->save();
-           if($model->save()){
-           \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return [
-            'code' => 200,
-        ];
+                if($model->statusId == 7){
+                    $model->destinationId = 1;
+                    $model->save();
+                    if($model->save()){
+                    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                 return [
+                     'code' => 200,
+                 ];
+                    }
            } else {
                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return [
@@ -273,17 +280,18 @@ class ProjectAssembliesFilesController extends Controller
     }
     
     public function actionDestout()
-    {
-           if (Yii::$app->request->isAjax) {
+    {if (Yii::$app->request->isAjax) {
            $data = Yii::$app->request->post();
            $model = $this->findModel($data['id']);
-           $model->destinationId = 2;
-           $model->save();
-           if($model->save()){
-           \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return [
-            'code' => 200,
-        ];
+                if($model->statusId == 7){
+                    $model->destinationId = 2;
+                    $model->save();
+                    if($model->save()){
+                    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                 return [
+                     'code' => 200,
+                 ];
+                    }
            } else {
                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return [
@@ -405,22 +413,46 @@ class ProjectAssembliesFilesController extends Controller
                 switch ($data['action']){
                     case 'program':
                         foreach($data['id'] as $id){
-                            $fileStatus = ProjectAssembliesFilesData::find()->select(['id']
-                                    )->where(['fileId' => $id, 'statusId' => '1'])->one();
+                            $fileStatus = ProjectAssembliesFiles::find()->select(['id'])
+                                          ->where( ['id' => $id])
+                                          ->andFilterWhere(['or', 
+                                                         ['!=', 'statusId', 7], // pending
+                                                         ['!=', 'statusId', 8], // ready
+                                                         ['!=', 'statusId', 9], // reject
+                                                         ['!=', 'statusId', 10], // backup
+                                              
+                                              ])->one();
                             if($fileStatus){
+                                
+                                $fileStatus = $this->findModel($id); // find file 
+                                $fileStatus->statusId = 2; // change file status
+                                $fileStatus->save();
+                                
                                 $model = new ProjectAssembliesFilesData;
                                 $model->isNewRecord = 1;
                                 $model->fileId = $id;
                                 $model->statusId = 2;
-                                $model->save();
+                                $model->save(); // stamp changing file status
                             }
                         }
                         break;
                         case 'cnc':
                         foreach($data['id'] as $id){
-                            $fileStatus = ProjectAssembliesFilesData::find()->select(['id']
-                                    )->where(['fileId' => $id, 'statusId' => '1'])->one();
+                             $fileStatus = ProjectAssembliesFiles::find()->select(['id'])
+                                          ->where( ['id' => $id])
+                                          ->andFilterWhere(['or', 
+                                                         ['!=', 'statusId', 7], // pending
+                                                         ['!=', 'statusId', 8], // ready
+                                                         ['!=', 'statusId', 9], // reject
+                                                         ['!=', 'statusId', 10], // backup
+                                              
+                                              ])->one();
                             if($fileStatus){
+                                
+                                $fileStatus = $this->findModel($id); // find file 
+                                $fileStatus->statusId = 3; // change file status
+                                $fileStatus->save();
+                                
                                 $model = new ProjectAssembliesFilesData;
                                 $model->isNewRecord = 1;
                                 $model->fileId = $id;
@@ -431,9 +463,22 @@ class ProjectAssembliesFilesController extends Controller
                         break;
                         case 'ct':
                         foreach($data['id'] as $id){
-                            $fileStatus = ProjectAssembliesFilesData::find()->select(['id']
-                                    )->where(['fileId' => $id, 'statusId' => '1'])->one();
+                            
+                             $fileStatus = ProjectAssembliesFiles::find()->select(['id'])
+                                          ->where( ['id' => $id])
+                                          ->andFilterWhere(['or', 
+                                                         ['!=', 'statusId', 7], // pending
+                                                         ['!=', 'statusId', 8], // ready
+                                                         ['!=', 'statusId', 9], // reject
+                                                         ['!=', 'statusId', 10], // backup
+                                              
+                                              ])->one();
                             if($fileStatus){
+                                
+                                $fileStatus = $this->findModel($id); // find file 
+                                $fileStatus->statusId = 4; // change file status
+                                $fileStatus->save();
+                                
                                 $model = new ProjectAssembliesFilesData;
                                 $model->isNewRecord = 1;
                                 $model->fileId = $id;
@@ -444,9 +489,22 @@ class ProjectAssembliesFilesController extends Controller
                         break;
                         case 'anodizing':
                         foreach($data['id'] as $id){
-                            $fileStatus = ProjectAssembliesFilesData::find()->select(['id']
-                                    )->where(['fileId' => $id, 'statusId' => '1'])->one();
+                            
+                             $fileStatus = ProjectAssembliesFiles::find()->select(['id'])
+                                          ->where( ['id' => $id])
+                                          ->andFilterWhere(['or', 
+                                                         ['!=', 'statusId', 7], // pending
+                                                         ['!=', 'statusId', 8], // ready
+                                                         ['!=', 'statusId', 9], // reject
+                                                         ['!=', 'statusId', 10], // backup
+                                              
+                                              ])->one();
                             if($fileStatus){
+                                
+                                $fileStatus = $this->findModel($id); // find file 
+                                $fileStatus->statusId = 5; // change file status
+                                $fileStatus->save();
+                                
                                 $model = new ProjectAssembliesFilesData;
                                 $model->isNewRecord = 1;
                                 $model->fileId = $id;
@@ -457,30 +515,44 @@ class ProjectAssembliesFilesController extends Controller
                         break;
                         case 'accept':
                         foreach($data['id'] as $id){
+                            
+                            $fileStatus = ProjectAssembliesFiles::find()->select(['id'])
+                                          ->Where(['statusId' => 6, 'id' => $id]) // treatment (TMA)
+                                          ->one();
+                            if($fileStatus){
+                                
+                                $model = $this->findModel($id);
+                                $model->statusId = 1;
+                                $model->save();
+                            
                                 $model = new ProjectAssembliesFilesData;
                                 $model->isNewRecord = 1;
                                 $model->fileId = $id;
                                 $model->statusId = 1;
                                 $model->save();
                                 
-                                $model = $this->findModel($id);
-                                $model->statusId = 4;
-                                $model->save();
+                                
+                            }
                         }
                         break;
                     case 'desttma':
                         foreach($data['id'] as $id){
+                        
                         $model = $this->findModel($id);
-                            if($model->statusId == 0){                                
+                        
+                            if($model->statusId == 7){   // pending                             
                                 $model->destinationId = 1;
                                 $model->save();
                             }
                         }
+                        
                         break;
                     case 'destout':
                         foreach($data['id'] as $id){
+                        
                         $model = $this->findModel($id);
-                            if($model->statusId == 0){                                
+                        
+                            if($model->statusId == 7){  // pending                              
                                 $model->destinationId = 2;
                                 $model->save();
                             }
@@ -488,9 +560,11 @@ class ProjectAssembliesFilesController extends Controller
                         break;
                     case 'lowprio':
                         foreach($data['id'] as $id){  
+                        
                         $model = $this->findModel($id);
                         $fileStatus = $model->statusId;
-                            if($fileStatus != '3'){
+                        
+                            if($fileStatus != 8 || $fileStatus != 10){ // ready || backup (old)
                                 $model->priorityId = 0;
                                 $model->save();
                             }
@@ -500,7 +574,8 @@ class ProjectAssembliesFilesController extends Controller
                         foreach($data['id'] as $id){   
                         $model = $this->findModel($id);
                         $fileStatus = $model->statusId;
-                            if($fileStatus != '3'){
+                        
+                            if($fileStatus != 8 || $fileStatus != 10){ // ready || backup (old) 
                                 $model->priorityId = 1;
                                 $model->save();
                             }
@@ -510,7 +585,8 @@ class ProjectAssembliesFilesController extends Controller
                         foreach($data['id'] as $id){      
                         $model = $this->findModel($id);
                         $fileStatus = $model->statusId;
-                            if($fileStatus != '3'){
+                        
+                            if($fileStatus != 8 || $fileStatus != 10){ // ready || backup (old)
                                 $model->priorityId = 2;
                                 $model->save();
                             }
@@ -518,28 +594,27 @@ class ProjectAssembliesFilesController extends Controller
                         break;
                     case 'treatfile':
                         foreach($data['id'] as $id){
-                        $fileStatus = ProjectAssembliesFilesData::find()->select(['id']
-                                    )->where(['fileId' => $id, 'statusId' => '1'])->one();
+                          $fileStatus = ProjectAssembliesFiles::find()->select(['id'])
+                                          ->where( ['id' => $id])
+                                          ->andFilterWhere(['or', 
+                                                         ['!=', 'statusId', 7], // pending
+                                                         ['!=', 'statusId', 8], // ready
+                                                         ['!=', 'statusId', 9], // reject
+                                                         ['!=', 'statusId', 10], // backup
+                                              
+                                              ])->one();
+                          
                             if($fileStatus){
                                 $model = $this->findModel($id);
 
-                                if($action == 1 & $model->destinationId != 0 & $model->statusId != 2){
-                                    $model->statusId = $action;
-                                    $model->save();
-
-                                    $model = new ProjectAssembliesFilesData;
-                                    $model->isNewRecord = 1;
-                                    $model->fileId = $id;
-                                    $model->statusId = 6;
-                                    $model->save();
-                                } elseif($action == 2 & $model->quanity == $model->quanityDone){
-                                        $model->statusId = $action;
+                                if($model->quanity == $model->quanityDone){
+                                        $model->statusId = 8;
                                         $model->save();
 
                                         $model = new ProjectAssembliesFilesData;
                                         $model->isNewRecord = 1;
                                         $model->fileId = $id;
-                                         $model->statusId = 8;
+                                        $model->statusId = 8;
                                         $model->save();
                                 }
                             }
@@ -548,8 +623,8 @@ class ProjectAssembliesFilesController extends Controller
                         case 'sendtotreatment':
                         foreach($data['id'] as $id){
                                 $model = $this->findModel($id);
-                                if($model->destinationId != 0 & $model->statusId != 2 & $model->statusId != 4){
-                                    $model->statusId = $action;
+                                if($model->destinationId != 0 & $model->statusId == 7 & $model->statusId == 9 ){
+                                    $model->statusId = 6;
                                     $model->save();
 
                                     $model = new ProjectAssembliesFilesData;
@@ -562,8 +637,15 @@ class ProjectAssembliesFilesController extends Controller
                         break;
                     case 'add':
                         foreach($data['id'] as $id){ 
-                        $fileStatus = ProjectAssembliesFilesData::find()->select(['id']
-                                    )->where(['fileId' => $id, 'statusId' => '1'])->one();
+                       $fileStatus = ProjectAssembliesFiles::find()->select(['id'])
+                                          ->where( ['id' => $id])
+                                          ->andFilterWhere(['or', 
+                                                         ['!=', 'statusId', 7], // pending
+                                                         ['!=', 'statusId', 8], // ready
+                                                         ['!=', 'statusId', 9], // reject
+                                                         ['!=', 'statusId', 10], // backup
+                                              
+                                              ])->one();
                             if($fileStatus){
                             $model = $this->findModel($id);
                                 if($model->quanity != $model->quanityDone){
@@ -575,8 +657,15 @@ class ProjectAssembliesFilesController extends Controller
                         break;
                     case 'deduct':
                         foreach($data['id'] as $id){   
-                        $fileStatus = ProjectAssembliesFilesData::find()->select(['id']
-                                    )->where(['fileId' => $id, 'statusId' => '1'])->one();
+                        $fileStatus = ProjectAssembliesFiles::find()->select(['id'])
+                                          ->where( ['id' => $id])
+                                          ->andFilterWhere(['or', 
+                                                         ['!=', 'statusId', 7], // pending
+                                                         ['!=', 'statusId', 8], // ready
+                                                         ['!=', 'statusId', 9], // reject
+                                                         ['!=', 'statusId', 10], // backup
+                                              
+                                              ])->one();
                             if($fileStatus){
                             $model = $this->findModel($id);
                                 if($model->quanityDone != 0){
@@ -599,7 +688,7 @@ class ProjectAssembliesFilesController extends Controller
                             $model->save();
                         if($notesCheck){
                             $model = $this->findModel($id);
-                            $model->statusId = 3;
+                            $model->statusId = 9;
                             $model->save();    
                             $model = new ProjectAssembliesFilesData;
                             $model->isNewRecord = 1;
@@ -632,7 +721,7 @@ class ProjectAssembliesFilesController extends Controller
                                 $groupId[] = 'none';
                             }
                                 foreach($files as $file){
-                                    $filesList[] = trim($file->path);
+                                    $filesList[] = '"'.trim($file->path).'"';
                                 }                        
                         }
                         if(isset($groupId)){
@@ -646,18 +735,18 @@ class ProjectAssembliesFilesController extends Controller
                         } else {
                             $fileName = 'P' . $dft['projectId'] . '_' . date("d.m.y_G:i:s") . '.zip';
                         }
-                        if(file_exists('/media/data/app_data/project_data/' . $fileName)){
-                            $file = '/media/data/app_data/project_data/' . $fileName;
+                        
+                        $file = '/media/data/app_data/project_data/' . $fileName;
+                        
+                        if(file_exists($file)){
                             shell_exec('rm /media/data/app_data/project_data/' . $fileName);
                         }
                         
                         $projectString = implode(' ', $filesList);
                         $zipList = 'zip -j /media/data/app_data/project_data/' . '"' . $fileName .'" ' . $projectString;
                         shell_exec($zipList);
-                        //die($zipList);
-                        if(file_exists('/media/data/app_data/project_data/' . $fileName)){
-                            $file = '/media/data/app_data/project_data/' . $fileName;
-                            //return Yii::$app->response->sendFile('/media/data/app_data/project_data/' . $fileName);
+ 
+                        if(file_exists($file)){
                             
                             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
                             return [

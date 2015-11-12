@@ -7,10 +7,9 @@ use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
 use frontend\models\ProjectAssembliesData;
-use frontend\models\FileStatus;
+use frontend\models\ProjectAssembliesFilesStatus;
 use frontend\models\ProjectAssembliesFilesTypes;
 use frontend\models\FilePriority;
-use frontend\models\search\ProjectAssembliesFilesNotesSearch;
 use frontend\models\ProjectAssembliesFiles;
 use frontend\models\FileDestination;
 use frontend\models\ProjectAssembliesFilesNotes;
@@ -92,7 +91,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                  [
             'content'=>
                 Html::button('<i class="fa fa-paper-plane"></i>', [
-                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction', 'action' => '1'] ),
+                    'data-url'=>Url::toRoute( ['project-assemblies-files/massaction', 'action' => '6'] ),
                     'data-action'=>'sendtotreatment',
                     'type'=>'button', 
                     'title'=> 'send to treatment', 
@@ -140,7 +139,7 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         ],
          'rowOptions' => function ($model) {
             $notesCheck = ProjectAssembliesFilesNotes::find()
-                                ->Where(['fileId' => $model->id] )
+                                ->Where(['fileId' => $model->id, 'typeId' => 3] )
                                 ->all();
             if($notesCheck){
                 return ['class' => 'treatment-note lighted-row', 'style' => 'font-size:10px'];
@@ -216,24 +215,26 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                'label' => 'Status',
                'attribute' => 'status.statusName',
                'filter' => Html::activeDropDownList($searchModel, 'status.statusName',
-                           ArrayHelper::map(FileStatus::find()->asArray()->all(), 'statusName','statusName'),
+                           ArrayHelper::map(  ProjectAssembliesFilesStatus::find()->asArray()->all(), 'statusName','statusName'),
                            ['class'=>'form-control', 'prompt' => ' ']),
                'value' => 'status.statusName',
                'headerOptions' => ['style' => 'text-align: center; min-width: 90px;' ],
                'contentOptions' => function ($model) {
-                                if($model->statusId == 1){
-                                    return ['style' => 'vertical-align: middle; text-align: center; background-color: #CCF3FF;'];
-                                }elseif ( $model->statusId == 2){
-                                    return ['style' => 'vertical-align: middle; text-align: center; background-color: #E6FFB2;'];
-                                }elseif($model->statusId == 3){
-                                    return ['style' => 'vertical-align: middle; text-align: center; background-color: #E599A3;'];
-                                }elseif($model->statusId == 4){
-                                    return ['style' => 'vertical-align: middle; text-align: center; background-color: #aac0ee;']; 
-                                }elseif($model->statusId == 0){
-                                    return ['style' => 'vertical-align: middle; text-align: center; background-color: white;']; 
-                                }elseif($model->statusId == 8){
-                                    return ['style' => 'color: white; vertical-align: middle; text-align: center; background-color: #394b58;']; 
-                                }},
+                                    if($model->statusId == 6){
+                                        return ['style' => 'vertical-align: middle; text-align: center; background-color: #CCF3FF;'];
+                                    }elseif ( $model->statusId == 8){
+                                        return ['style' => 'vertical-align: middle; text-align: center; background-color: #E6FFB2;'];
+                                    }elseif($model->statusId == 9){
+                                        return ['style' => 'vertical-align: middle; text-align: center; background-color: #E599A3;'];
+                                    }elseif($model->statusId == 1 || $model->statusId == 2 || $model->statusId == 3 || $model->statusId == 4 
+                                            || $model->statusId == 5){
+                                        return ['style' => 'color: white; vertical-align: middle; text-align: center; background-color: #aac0ee;']; 
+                                    }elseif($model->statusId == 10){
+                                        return ['style' => 'color: white; vertical-align: middle; text-align: center; background-color: #394b58;'];
+                                    }else{
+                                        return ['style' => 'vertical-align: middle; text-align: center; background-color: white;']; 
+                                    }               
+                                },
             ],
             [
                'label' => 'Dest.',
@@ -300,6 +301,13 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
             ['class' => '\kartik\grid\CheckboxColumn',
                    'rowSelectedClass' => 'row-selected',
                     'contentOptions' => function($model){
+                                        $notesCheck = ProjectAssembliesFilesNotes::find()
+                                                     ->Where(['fileId' => $model->id, 'typeId' => 3, 'statusId' => 0] )
+                                                     ->all();
+                                        if($notesCheck){
+                                           return ['style' => 'background-color: #fb2d2d;', 
+                                                'file-status' => $model->statusId, 'class' => $model->id]; 
+                                        }
                                         return ['style' => 'background-color: white;', 
                                                 'file-status' => $model->statusId, 'class' => $model->id];
                                         }
@@ -307,9 +315,17 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
             ['class' => 'yii\grid\ActionColumn',
                                 'header' => '',
                                 'headerOptions' => ['style' => 'background-color:white; min-width: 70px; text-align: center; border-bottom-color: transparent;' ],
-                                'contentOptions' => function(){                                
-                                    return ['style' => 'margin-top: 5px; background-color:text-align:center; vartical-align:middle;' ];
-                                },
+                                'contentOptions' => function($model){   
+                                                    $notesCheck = ProjectAssembliesFilesNotes::find()
+                                                                ->select(['id'])
+                                                                ->where(['fileId' => $model->id, 
+                                                                 'typeId' => 2, 'creUserId' => Yii::$app->user->id])
+                                                                ->all();
+                                                    if($notesCheck){
+                                                        return ['style' => 'background-color: #b9c9fe;margin-top: 5px; text-align:center; vertical-align:middle' ];     
+                                                    }
+                                                    return ['style' => 'margin-top: 5px; text-align:center; vertical-align:middle' ];      
+                                    },
                                 'template' => '{desttma} {destout} | {priorup} {priordown} {seenote} {note} | {downloaddxf} {downloadpdf}',
                                 'buttons' => [  
                                     'destout' => function ($url, $model)
@@ -349,18 +365,9 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                             }},
                                     'seenote' => function ($url, $model)
                                     {
-                                                
-                                    $searchModel = new ProjectAssembliesFilesNotesSearch();
-                                    $searchModel->fileId = $model->id;
-                                    $dataProvider = $searchModel->search( Yii::$app->request->queryParams );
-
-                                        if ($dataProvider->totalCount > 0) {
                                             return Html::button( '<a href=""><i class="fa fa-file-text"></i></a>', 
                                                    ['file-name' => $model->name, 'value' => $url, 'class' => 'seenote-button', 
-                                                   'id' => 'seenote-button', 'title' => 'see notes' , 'data' => $model->id] );
-                                        } else {
-                                            return '<i class="fa fa-file-o"></i>';
-                                        }
+                                                   'id' => 'seenote-button', 'title' => 'new personal note' , 'data' => $model->id] );
                                     },
                                     'note' => function ($url, $model)
                                     {
@@ -459,12 +466,14 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                     }
                                     if ( $action === 'note' )
                                     {
-                                        $url = Url::toRoute( ['project-assemblies-files-notes/note', 'id' => $model->id ] );
+                                        $url = Url::toRoute( ['project-assemblies-files-notes/note',
+                                                   'id' => $model->id, 'filter' => 'constructor' ] );
                                         return $url;
                                     }
                                      if ( $action === 'seenote' )
                                     {
-                                        $url = Url::toRoute( ['project-assemblies-files-notes/view', 'id' => $model->id ] );
+                                        $url = Url::toRoute( ['project-assemblies-files-notes/privnote', 
+                                            'id' => $model->id, 'filter' => 'privnote' ] );
                                         return $url;
                                     }
                                     if ( $action === 'priorup' )
@@ -508,12 +517,12 @@ $this->registerJs("
     // Refresh pjax after modal event
     $('#modal-window').on('hidden.bs.modal', function () {
         var keys = $('#grid').yiiGridView('getSelectedRows');
-        var classCheck =  $('.modal-content').attr('class');
+        var classCheck =  $('.modal-content', this).attr('class');
         $('.modal-title').empty();
         $('#modalContent').empty();
             if(classCheck === 'modal-content pdf-view'){
                 $('.modal-content').css('background-image', '');
-                $('.modal-content').removeClass('pdf-view');               
+                $('.modal-content').removeClass('pdf-view'); 
              } else {
                  $('.modal-header').css('border-bottom', '1px solid #e5e5e5');
                  $.pjax.reload('#pjax-data');
@@ -531,12 +540,13 @@ $this->registerJs("
     
     $('#update-modal-window').on('hidden.bs.modal', function () {
         var keys = $('#grid').yiiGridView('getSelectedRows');
-        var classCheck =  $('.modal-content').attr('class');
+        var classCheck =  $('.modal-content', this).attr('class');
         $('.modal-title').empty();
         $('#modalContent').empty();
             if(classCheck === 'modal-content pdf-view'){
                 $('.modal-content').css('background-image', '');
-                $('.modal-content').removeClass('pdf-view');               
+                $('.modal-content').removeClass('pdf-view');  
+                
              } else {
                  $('.modal-header').css('border-bottom', '1px solid #e5e5e5');
                  $.pjax.reload('#pjax-data');
@@ -585,9 +595,11 @@ $this->registerJs("
         var fileName = $(this).attr('file-name');
         $('.modal-title').empty();
         $('.modal-title').append('Note to: ' + fileName);
+        
         $('#modal-window').modal('show')
                 .find('#modalContent')
                 .load($(this).attr('value'));
+                
     });
     
     // View Note ACtion / change Note Title    
@@ -620,9 +632,8 @@ $this->registerJs("
         );
 
         $(':lt(11)', this).click(function(){
-            fileName = $('.' + rowId).attr('file-name');
-            imagePath = $('.' + rowId).attr('image-path');
-            console.log(imagePath);
+            fileName = $('a.' + rowId).attr('file-name');
+            imagePath = $('a.' + rowId).attr('image-path');
             if(typeof imagePath != 'undefined'){
                 $('#modal-window').modal('show');
                 $('.modal-title').empty();

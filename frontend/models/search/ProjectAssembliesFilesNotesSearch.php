@@ -39,17 +39,35 @@ class ProjectAssembliesFilesNotesSearch extends ProjectAssembliesFilesNotes
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $filter = null)
+    public function search($params, $filter = null, $order = null)
     {
         $query = ProjectAssembliesFilesNotes::find();
         
-        if($filter){
-            $query = ProjectAssembliesFilesNotes::find()->where( ['typeId' => $filter]);
+        if($filter == 'constructor'){
+            $query = ProjectAssembliesFilesNotes::find()
+                    ->andFilterWhere(['or',
+                        ['typeId' => 3],
+                        ['typeId' => 0],
+                            ]);
+                    
         }
         
-        $dataProvider = new ActiveDataProvider([
+        if($filter == 'privnote'){
+            $query = ProjectAssembliesFilesNotes::find()
+                    ->where(['typeId' => 2, 'creUserId' => yii::$app->user->id]);           
+        }
+        
+        if($order){
+            $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => $order,
         ]);
+        } else {
+          $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);  
+        }
+        
         
         $this->load($params);
 
