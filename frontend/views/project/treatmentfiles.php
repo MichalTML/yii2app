@@ -47,7 +47,7 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
             'content'=>
                  Html::button('<i class="fa fa-exclamation-triangle"></i>', [
                     'data-url'=>Url::toRoute( ['project-assemblies-files/massaction', 'action' => '3'] ),
-                    'data-action'=>'rejectfile',
+                    'data-action'=>'stopfile',
                     'type'=>'button', 
                     'title'=> 'reject file', 
                     'class'=>'btn btn-success mass-action'
@@ -100,8 +100,13 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
             'type'=>'default',
         ],
         'rowOptions' => function ($model) {
-            $notesCheck = ProjectAssembliesFilesNotes::find()
-                                ->Where(['fileId' => $model->id, 'typeId' => 0] )
+           $notesCheck = ProjectAssembliesFilesNotes::find()
+                                ->Where(['fileId' => $model->id] )
+                                ->andFilterWhere(['or',
+                                            ['=', 'typeId', 0],
+                                            ['=', 'typeId', 3],
+                                               ])
+                    
                                 ->all();
             if($notesCheck){
                 return ['class' => 'treatment-note lighted-row', 'style' => 'font-size:10px'];
@@ -114,6 +119,16 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
             [
                 'class' => 'yii\grid\SerialColumn',
                 'contentOptions' => [ 'style' => 'text-align: center; font-weight: bold; vertical-align: middle;', 'class' => 'serial-col'],
+            ],
+            [
+               'label' => 'Added at',
+               'attribute' => 'date',
+               'value' => function($model){
+                        $projectAssembliesFiles = new ProjectAssembliesFiles;
+                        return $projectAssembliesFiles->getStatusDate($model->id, '6');
+                         },
+               'headerOptions' => ['style' => 'text-align: center;' ],
+               'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;' ],
             ],
             [
                'label' => 'File Name',
@@ -137,7 +152,7 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                'attribute' => 'thickness',
                'filter' => Html::activeDropDownList($searchModel, 'thickness', 
                        ArrayHelper::map(  ProjectAssembliesFiles::find()
-                               ->where(['projectId' => $sygnature, 'statusId' => '1', 'ext' => 'dft'])
+                               ->where(['projectId' => $sygnature, 'statusId' => 6, 'ext' => 'dft'])
                                ->orderBy(['thickness' => SORT_ASC])->asArray()->all(), 
                                'thickness','thickness'),['class'=>'form-control', 'prompt' => ' ']),
                'format' => 'raw',
@@ -206,7 +221,7 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                'filter' => Html::activeDropDownList($searchModel, 'Anodizing', 
                            [5 => 'on'],['class'=>'form-control', 'prompt' => ' ']),
                'headerOptions' => ['class' => 'annod-label', 'style' => 'text-align: center;', 'title' => 'status anodizing'  ],
-                'contentOptions' => function($model){
+               'contentOptions' => function($model){
                    $projectAssembliesFiles = new ProjectAssembliesFiles;
                    if($projectAssembliesFiles->getFileStatus($model->id, '5')){
                         return ['class' => 'ticked', 'style' => 'text-align: center; vertical-align: middle; white-space: nowrap;' ];
@@ -260,7 +275,7 @@ $this->params[ 'breadcrumbs' ][] = ['label' => 'P' . $sygnature . ' - Accepted F
                    return['style' => 'background-color:white; text-align: center; vertical-align: middle;' ];
                }
                }
-           ],
+           ],                   
             ['class' => '\kartik\grid\CheckboxColumn',
                    'rowSelectedClass' => 'row-selected',
                    'contentOptions' => function($model){

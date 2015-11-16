@@ -2226,6 +2226,11 @@ filter: alpha(opacity=50);
     width: 50px;
 }
 
+.stop-file{
+    height: 35px;
+    vertical-align: middle;
+    width: 50px;
+}
 
 .cnc{
     background-image: url('/images/icon_laser_cutting.png');

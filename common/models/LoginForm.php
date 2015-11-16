@@ -67,7 +67,7 @@ class LoginForm extends Model {
             $UserAtt = new UserAttendance;
             $UserAtt->stampAttendance($user->id);
             if($user->save()){
-            return Yii::$app->user->login( $this->getUser(), $this->rememberMe ? 3600 : 0 );
+            return Yii::$app->user->login( $this->getUser(), $this->rememberMe ? 60 * 60 * 24 : 0 );
             } else {
                 return false;
             }

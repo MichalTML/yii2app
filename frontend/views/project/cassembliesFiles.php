@@ -33,8 +33,8 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
         'hover' => true,
         'resizableColumns' => false,
         'toolbar' => [
-            [            
-            'content'=>
+             [            
+             'content'=>
             Html::button('<i class="fa fa-ban"></i>', [
                     'data-url'=>Url::toRoute( ['project-assemblies-files/updateele'] ),
                     'data-action'=>'update',
@@ -44,6 +44,15 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                     'class'=>'btn btn-success update-action'
                 ]),
             'options' => ['class' => 'btn-group-sm btn-group', 'style' => '']
+            ],
+            [            
+            'content'=>
+                 Html::button('<i class="fa fa-exclamation-triangle"></i>', [
+                     'class' => 'btn btn-success stop-file', 
+                     'id' => 'reject', 
+                     'data-url' => Url::toRoute(['project-assemblies-files-notes/stopnote']), 
+                     'title' => 'stop file']),
+                     'options' => ['class' => 'btn-group-sm btn-group', 'style' => '']
             ],
             [            
             'content'=>
@@ -137,10 +146,19 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
             'contentOptions' => ['style' => 'width: 100%'],
             'type'=>'default',
         ],
-         'rowOptions' => function ($model) {
+         'rowOptions' => function ($model ) {
             $notesCheck = ProjectAssembliesFilesNotes::find()
-                                ->Where(['fileId' => $model->id, 'typeId' => 3] )
+                                ->Where(['fileId' => $model->id] )
+                                ->andFilterWhere(['or',
+                                            ['=', 'typeId', 0],
+                                            ['=', 'typeId', 3],
+                                               ])
+                    
                                 ->all();
+            if($model->statusId == 11){
+                return ['class' => 'treatment-note lighted-row', 'style' => 'background-color: black; font-size:10px'];
+            }
+
             if($notesCheck){
                 return ['class' => 'treatment-note lighted-row', 'style' => 'font-size:10px'];
             }
@@ -231,6 +249,10 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
                                         return ['style' => 'color: white; vertical-align: middle; text-align: center; background-color: #aac0ee;']; 
                                     }elseif($model->statusId == 10){
                                         return ['style' => 'color: white; vertical-align: middle; text-align: center; background-color: #394b58;'];
+                                        }elseif($model->statusId == 11){
+                                        return ['style' => 'color: white; vertical-align: middle; text-align: center; background-color: red;'];
+                                        }elseif($model->statusId == 12){
+                                        return ['style' => 'color: white; vertical-align: middle; text-align: center; background-color: green;'];
                                     }else{
                                         return ['style' => 'vertical-align: middle; text-align: center; background-color: white;']; 
                                     }               
@@ -564,14 +586,29 @@ $this->registerJs("
     
     ///////////////// MODAL EVENTS
     
+    //STOP EVENT
+    $('.stop-file').click(function(){
+        var keys = $('#grid').yiiGridView('getSelectedRows');
+        var fileId = keys[0];
+        var url = $(this).attr('data-url');
+        var newUrl = url + '&id=' + fileId;
+        var fileName = $('.seenote-button[data=' + fileId +']').attr('file-name');
+        console.log(fileName);   
+        
+        $('#modal-window').modal('show')
+                .find('#modalContent')
+                .load(newUrl);
+            $('.modal-title').empty();
+            $('.modal-title').append('STOP! Element: ' + fileName);  
+    });
+    
     // UPDATE ELEMENT ACTION
     $('.update-action').click(function(){
            var keys = $('#grid').yiiGridView('getSelectedRows');
            var fileId = keys[0];
            var statusId = $('.' + keys[0]).attr('file-status');
-           console.log(statusId);
            
-           if(statusId == 0 || statusId == 3){
+           if(statusId == 7 || statusId == 9 || statusId == 11){
                 var fileName = $('tr[data-key=\\'' + fileId + '\\'] .cnote-button').attr('file-name');  
                 var url = $(this).data('url');
                 var sygnature = $(this).data('sygnature');

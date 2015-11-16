@@ -175,6 +175,10 @@ class ProjectAssembliesFiles extends \yii\db\ActiveRecord
         return $this->hasMany(ProjectAssembliesFilesData::classname(), ['fileId' => 'id'])->from(['anod' => ProjectAssembliesFilesData::tableName()]);    
     }
     
+    public function getDate(){
+        return $this->hasMany(ProjectAssembliesFilesData::classname(), ['fileId' => 'id'])->from(['date' => ProjectAssembliesFilesData::tableName()]);    
+    }
+    
     public function getFileStatus($id, $statusId){
         $model = ProjectAssembliesFilesData::find()
                 ->andWhere(['fileId' => $id])
@@ -189,6 +193,21 @@ class ProjectAssembliesFiles extends \yii\db\ActiveRecord
             return $statusName->statusName;
         }
           
+    }
+    
+    
+    public function getStatusDate($id, $statusId){
+        $model = ProjectAssembliesFilesData::find()
+                
+                ->andWhere(['fileId' => $id])
+                ->andWhere(['statusId' => $statusId])
+                ->select(['timeStamp'])
+                ->orderBy( ['timeStamp' => SORT_DESC])
+                ->one();
+        if($model){
+            return $model->timeStamp;
+        } 
+        return false;
     }
     
     public function getFilegroup()

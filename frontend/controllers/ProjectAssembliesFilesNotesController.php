@@ -4,8 +4,12 @@ namespace frontend\controllers;
 
 use Yii;
 use frontend\models\ProjectAssembliesFilesNotes;
+use frontend\models\ProjectAssembliesFilesData;
 use frontend\models\search\ProjectAssembliesFilesNotesSearch;
 use frontend\models\ProjectAssembliesFiles;
+use frontend\models\ProjectData;
+use frontend\models\ProjectAssembliesFilesNotesLabels;
+use common\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -68,8 +72,8 @@ class ProjectAssembliesFilesNotesController extends Controller
     public function actionCreate()
     {
         $model = new ProjectAssembliesFilesNotes();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        
+        if ($data = $model->load(Yii::$app->request->post()) && $data['note-me'] == 'save-note' && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -129,33 +133,84 @@ class ProjectAssembliesFilesNotesController extends Controller
     public function actionNote($id, $filter = null, $data = null)
     {
         $model = new ProjectAssembliesFilesNotes();
-        
+   
         if ($model->load(Yii::$app->request->post())) {
             
-            $findNote = ProjectAssembliesFilesNotes::find()
-                ->where(['statusId' => 0, 'fileId' => $id])
-                ->andFilterWhere(['or', 
-                ['typeId' => 0],
-                ['typeId' => 3], 
-                        ])
-                ->one(); 
-
-            while($findNote){
-                $findNote->statusId = 1;
-                $findNote->save();
-
                 $findNote = ProjectAssembliesFilesNotes::find()
-                        ->where(['statusId' => 0, 'fileId' => $id])
-                        ->andFilterWhere(['or', 
-                        ['typeId' => 0],
-                        ['typeId' => 3], 
-                                ])
-                        ->one(); 
-            }
+                    ->where(['statusId' => 0, 'fileId' => $id])
+                    ->andFilterWhere(['or', 
+                    ['typeId' => 0],
+                    ['typeId' => 3], 
+                            ])
+                    ->one(); 
+
+                while($findNote){
+                    $findNote->statusId = 1;
+                    $findNote->save();
+
+                    $findNote = ProjectAssembliesFilesNotes::find()
+                            ->where(['statusId' => 0, 'fileId' => $id])
+                            ->andFilterWhere(['or', 
+                            ['typeId' => 0],
+                            ['typeId' => 3], 
+                                    ])
+                            ->one(); 
+                }
+
+                $model->fileId = intval($id);
+                if(!empty(Yii::$app->request->post('noteMe'))){
+                        $model->save();   
+                        
+                        $fileData = ProjectAssembliesFiles::find()->where(['id' => $id])->one();
+                        $noteData = ProjectAssembliesFilesNotes::find()->where(['fileId' => $id])->one();
+                        $userData = User::find()->select(['role_id', 'username'])->where(['id' => $noteData->creUserId])->one();
+                        $projectData = ProjectData::find()->select(['id', 'sygnature'])->where(['sygnature' => $fileData->projectId])->one();
+                        
+                        if($userData->role_id == 8) {
+                            
+                            $constructorsMails = User::find()->select(['email'])->where(['role_id' => 2])->asArray()->all();
+                                
+                            $link = 'https://pm.tma-automation.com/index.php?ProjectAssembliesFilesSearch[name]=' . $fileData->name . '&ProjectAssembliesFilesSearch[assemblie.name]=&ProjectAssembliesFilesSearch[type.name]=&ProjectAssembliesFilesSearch[material]=&ProjectAssembliesFilesSearch[thickness]=&ProjectAssembliesFilesSearch[status.statusName]=&ProjectAssembliesFilesSearch[destination.destination]=&ProjectAssembliesFilesSearch[priority.name]=&r=project%2Fctreatment&sygnature='. $projectData->sygnature .'&id='. $fileData->projectId .'0&_pjax=%23pjax-data';
+                                foreach($constructorsMails as $mail){                                
+                                    Yii::$app->mailer->compose(
+                                             ['html' => 'note-html', 'text' => 'note-text'],
+                                             ['fileData' => $fileData, 'noteData'=> $noteData, 'userData' => $userData, 'link' => $link])
+                                     ->setFrom('pm@tma-automation.com')
+                                     ->setTo($mail['email'])
+                                     ->setSubject('New comment for element: ' . $fileData->name)
+                                     ->send();
+                                }
+                                
+                                
+                        }
+                        
+                        if($userData->role_id == 2) {
+                        $treatmentMails = User::find()->select(['email'])->where(['role_id' => 8])->asArray()->all();
+                        
+                        if($fileData->statusId == 6){
+                            
+                            $link = "https://pm.tma-automation.com/index.php?ProjectAssembliesFilesSearch[date]=&ProjectAssembliesFilesSearch[name]=$fileData->name&ProjectAssembliesFilesSearch[material]=&ProjectAssembliesFilesSearch[thickness]=&ProjectAssembliesFilesSearch[Programming]=&ProjectAssembliesFilesSearch[CNC]=&ProjectAssembliesFilesSearch[ConvTreat]=&ProjectAssembliesFilesSearch[Anodizing]=&ProjectAssembliesFilesSearch[priority.name]=&r=project%2Ftreatmentmanager&sygnature=$projectData->sygnature&id=$fileData->projectId";
+                            
+                        } elseif($fileData->statusId == 1 || $fileData->statusId == 2 || $fileData->statusId == 3 || $fileData->statusId == 4 || $fileData->statusId == 5) {
+                            $link = "https://pm.tma-automation.com/index.php?ProjectAssembliesFilesSearch[filegroup.groupName]=&ProjectAssembliesFilesSearch[name]=$fileData->name&ProjectAssembliesFilesSearch[material]=&ProjectAssembliesFilesSearch[thickness]=&ProjectAssembliesFilesSearch[Programming]=&ProjectAssembliesFilesSearch[CNC]=&ProjectAssembliesFilesSearch[ConvTreat]=&ProjectAssembliesFilesSearch[Anodizing]=&ProjectAssembliesFilesSearch[priority.name]=&r=project%2Ftreatmentmanagera&sygnature=$projectData->sygnature&id=$fileData->projectId"; 
+                        }
+                       
+                        if($link){
+                            foreach($treatmentMails as $mail){                                
+                                    Yii::$app->mailer->compose(
+                                             ['html' => 'note-html', 'text' => 'note-text'],
+                                             ['fileData' => $fileData, 'noteData'=> $noteData, 'userData' => $userData, 'link' => $link])
+                                     ->setFrom('pm@tma-automation.com')
+                                     ->setTo($mail['email'])
+                                     ->setSubject('New comment for element: ' . $fileData->name)
+                                     ->send();
+                                }
+                            }
+                        }
+                    }
+                    
+                return;
             
-            $model->fileId = intval($id);
-            $model->save();
-            return;
         }
 
     $order = ['defaultOrder' => ['creTime' => SORT_DESC]];   
@@ -168,12 +223,15 @@ class ProjectAssembliesFilesNotesController extends Controller
     $dataProvider->pagination->pagesize = $pages;   
     
         if($data == 'treatment'){
+        
+        $noteLabel = new ProjectAssembliesFilesNotesLabels();
             return $this->renderAjax( '__note', [
                             'model' => $model,
                             'projectId' => $id,
                             'searchModel' => $searchModel,
                             'dataProvider' => $dataProvider,
                             'option' => $data,
+                            'noteLabel' => $noteLabel,
                 ] );
         }
         
@@ -191,11 +249,12 @@ class ProjectAssembliesFilesNotesController extends Controller
         $model = new ProjectAssembliesFilesNotes();
         
         if ($model->load(Yii::$app->request->post())) {
-
-            $model->fileId = intval($id);
-            $model->save();
-            
-            return;
+                $model->fileId = intval($id);
+                    if(!empty(Yii::$app->request->post('noteMe'))){
+                        $model->save();
+                    }
+                    
+                return;
         }
 
     $order = ['defaultOrder' => ['creTime' => SORT_DESC]];   
@@ -240,24 +299,62 @@ class ProjectAssembliesFilesNotesController extends Controller
 
     public function actionRnote($id)
     {   
-    $model = new ProjectAssembliesFilesNotes();
-    if ($model->load(Yii::$app->request->post())) {
-        
-        $model->fileId = intval($id);
-        
-     if ( $model->save() )
-            {
-     $file = ProjectAssembliesFiles::find()->where(['id' => $id])->one();
-     $file->statusId = 3;
-     $file->save();
+        $model = new ProjectAssembliesFilesNotes();
+        if ($model->load(Yii::$app->request->post())) {
+
+            $model->fileId = intval($id);
+
+            if ( $model->save() ){
+                
+               $file = ProjectAssembliesFiles::find()->where(['id' => $id])->one();
+               $file->statusId = 9;
+               $file->save();
+               
+               $model = new ProjectAssembliesFilesData;
+               $model->isNewRecord = 1;
+               $model->fileId = $id;
+               $model->statusId = 9;
+               $model->save();
             }
-        } else
-        {
             
-            return $this->renderAjax( '__notet', [
-                        'model' => $model,
-                        'projectId' => $id,
-            ] );
+        } else{
+
+                return $this->renderAjax( '__notet', [
+                            'model' => $model,
+                            'projectId' => $id,
+                ] );
+        }
+    
+    }
+    
+     public function actionStopnote($id)
+    {   
+        $model = new ProjectAssembliesFilesNotes();
+        if ($model->load(Yii::$app->request->post())) {
+
+            $model->fileId = intval($id);
+            
+            $file = ProjectAssembliesFiles::find()->where(['id' => $id])->one();
+            if($file->statusId < 9 || $file->statusId == 12) {
+                if ( $model->save() ){
+
+
+                   $file->statusId = 11; // stopped
+                   $file->save();
+
+                   $model = new ProjectAssembliesFilesData;
+                   $model->isNewRecord = 1;
+                   $model->fileId = $id;
+                   $model->statusId = 11; // stopped
+                   $model->save();
+                }
+            }
+            
+        } else {
+
+                return $this->renderAjax( '__notes', [
+                            'model' => $model,
+                ] );
         }
     
     }

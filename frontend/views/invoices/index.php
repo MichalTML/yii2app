@@ -8,6 +8,9 @@ use common\models\PermissionHelpers;
 use frontend\models\Invoices;
 use yii\bootstrap\Modal;
 use kartik\select2\Select2;
+use frontend\models\InvoicesCategories;
+use kartik\label\LabelInPlace;
+use kartik\form\ActiveForm;
 
 $this->title = 'Not Accepted Invoices';
 $this->params['breadcrumbs'][] = $this->title;
@@ -80,6 +83,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Accepted Invoices', 'url' => ['inv
                 'format' => 'raw',
                 'value' => function($model){
                 $data = Invoices::getCategoryList();
+                $groupModel = new InvoicesCategories;
                 // Using a select2 widget inside a modal dialog
                 Modal::begin([
                     'options' => [
@@ -88,12 +92,31 @@ $this->params['breadcrumbs'][] = ['label' => 'Accepted Invoices', 'url' => ['inv
                     ],
                     'header' => '<h4 style="margin:0; padding:0">Edit Connected to</h4>',
                 ]);
+                 $config = ['template'=>"{input}{error}"];
+                 $form = ActiveForm::begin([
+                        'id' => 'login-form-horizontal', 
+                        'type' => ActiveForm::TYPE_INLINE,
+                        'formConfig' => ['labelSpan' => 2, 'deviceSize' => ActiveForm::SIZE_SMALL]
+                 ]);  
+                  ?>
+                    <div style="margin-bottom: 20px;">
+                    <?= $form->field($groupModel, 'category', $config)->widget(LabelInPlace::classname(),[
+                            'label' => 'Group Name',
+                             ]);
+                    ?>
+                    <?= Html::submitButton('Create', 
+                        ['data-url' => Url::toRoute( ['invoices/creategroup'] )
+                        ,'class' => 'btn btn-success groupe-create group-button', 'title' => 'Create new group']);                    ?>
+                    </div>
+                    
+                <?php
+                     ActiveForm::end();
                 echo Select2::widget([
                     'name' => 'connected',
                     'attribute' => 'state_10',
                     'data' => $data,
                     'size' => Select2::MEDIUM,
-                    'options' => ['placeholder' => '', 'multiple' => true, 'id' => 'connected', 'hideSearch' => false ],
+                    'options' =>['placeholder' => '', 'multiple' => true, 'id' => 'connected', 'hideSearch' => false ],
                     'pluginOptions' => [
                         'allowClear' => true
                     ],
@@ -103,6 +126,27 @@ $this->params['breadcrumbs'][] = ['label' => 'Accepted Invoices', 'url' => ['inv
                 Modal::end();
                 
                 $this->registerJs("
+                        $('.form-group .col-sm-10').removeClass();
+                        
+                        $('.group-button').click(function(event){
+                            event.preventDefault();
+                            var url = $(this).data('url');
+                            var newName = $('#invoicescategories-category').val();
+                                if(newName.length > 0){                                      
+                                       $.ajax({
+                                              url: url,
+                                              type: 'post',
+                                              data: {data:newName},
+                                              success: function () {
+                                                    $('#kartik-modal').modal('hide');
+                                              },
+                                              complete: function () {
+                                              console.log('sdasdas');
+                                              },
+                                        });
+                              }
+                        });
+                        
                         $('.connection-button').click(function(){
                             var tags;
                             var url = $(this).data('url');

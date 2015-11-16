@@ -273,8 +273,14 @@ class ProjectSaver
             foreach ( $files as $assemblieId => $file ) {
                 $newAssemblieId = $projectId . $assemblieId;
                 foreach ( $file as $record ) {
+                    
                     if ( $this->filterFile( $this->filterDatas, $record['name'] ) )
                    {
+                        
+//                               if($this->filterData[ 'material' ] == "Aluminium"){
+//                                                 die($record[ 'path' ] . ' | ' . $this->filterData[ 'thickness' ] . ' | ' . $this->filterData[ 'material' ] . ' | ' . $this->filterData[ 'quanity' ]  );
+//                               
+//                               }
                         $typeId = intval( $record[ 'typeId' ] );
                         /*
                          * check for file copies and count them
@@ -304,6 +310,7 @@ class ProjectSaver
                             $result[ $record[ 'name' ] . '.' . $record[ 'ext' ] ] = ['name' => $record[ 'name' ],
                                 'path' => $record[ 'path' ], 'ext' => $record[ 'ext' ], 'error' => 'record already in table' ];
                             $this->raport[ $projectId ][ $newAssemblieId ][ 'assmblieFiles' ] = $result;
+                            $backupName = $record['name'];
                             $record[ 'name' ] = 'skip';
                             
                         }
@@ -348,7 +355,7 @@ class ProjectSaver
                                 return false;
                             }
                         } else {
-                            
+
                              $stmt = $this->db->prepare( "UPDATE project_assemblies_files SET thickness=:thickness, material=:material, quanity=:quanity  WHERE path=:path" );
                             
 //                            $stmt->bindparam( ':fileId', $check->id );
@@ -372,6 +379,7 @@ class ProjectSaver
                         }
                     }
                 }
+
                 $countFiles = $count[ $projectId ][ 'assemblyFiles' ];
                 $this->log[ $projectId ][ 'assemblyFiles' ] = $countFiles;
                 $this->log[ $projectId ][ 'assemblyFilesAdded' ] = $fileCount;
@@ -387,13 +395,17 @@ class ProjectSaver
     }
 
     public function filterFile( $filterFile, $data ) {
+        
         foreach ( $filterFile as $filter ) {              
-                   
+                  
             if (isset($filter['name'])){
                 $patternPatrs = explode('_', $filter['name']);
                 $pattern = $patternPatrs[0];
                 
-                    if(  preg_match('/^'.$pattern.'/', $data))
+                $namePatrs = explode('_', $data);
+                $name = $namePatrs[0];
+                
+                    if($pattern == $name)
                     {
                         if ( !isset( $filter[ 'thickness' ] ) )
                         {
@@ -419,7 +431,7 @@ class ProjectSaver
                             'thickness' => $filter[ 'thickness' ],
                             'material' => $filter[ 'material' ],
                         ];
-                        
+//                        die($pattern . ' | '. $filter['name'] . ' | ' . $filter[ 'quanity' ] . ' | ' . $filter[ 'thickness' ] . ' | ' . $filter[ 'material' ] );
                         return $this->filterData = $result;
                 }
             }

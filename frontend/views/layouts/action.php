@@ -17,6 +17,11 @@ AppAsset::register($this);
 FontAwesomeAsset::register($this);
 
 ?>
+
+<?php if (Yii::$app->user->isGuest) { 
+        $this->registerJs("window.location = 'index.php';");    
+} ?>
+
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">

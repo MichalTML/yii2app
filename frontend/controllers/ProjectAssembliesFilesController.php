@@ -14,6 +14,7 @@ use frontend\models\FileGroup;
 use frontend\models\FileGroupName;
 use yii\web\UploadedFile;
 use frontend\models\ProjectAssembliesMainFiles;
+use frontend\models\FilesImages;
 
 /**
  * ProjectAssembliesFilesController implements the CRUD actions for ProjectAssembliesFiles model.
@@ -134,7 +135,7 @@ class ProjectAssembliesFilesController extends Controller
                  ['=','projectId',$sygnature],
                  ['=','sygnature',$fileSygnature],
                  ['=','ext', $extension],      
-                 ['!=','statusId', '8']
+                 ['!=','statusId', 10]
                  ])
                 ->asArray()
                 ->all();
@@ -145,7 +146,7 @@ class ProjectAssembliesFilesController extends Controller
         } elseif(count($files) > 1){
             foreach($files as $file){
                 $filesPathContainer.= ' "'.$file['path'].'"';
-            }
+        }
             $zipPath = '/media/data/app_data/project_data/' . $fileName .'.zip';
             $zipList = 'zip -j ' . $zipPath . $filesPathContainer;
 //            var_dump($zipList);
@@ -621,18 +622,30 @@ class ProjectAssembliesFilesController extends Controller
                         }
                         break;
                         case 'sendtotreatment':
+                            
                         foreach($data['id'] as $id){
                                 $model = $this->findModel($id);
-                                if($model->destinationId != 0 & $model->statusId == 7 & $model->statusId == 9 ){
+                                if($model->destinationId != 0 & $model->statusId == 7 || $model->statusId == 9 ){
                                     $model->statusId = 6;
                                     $model->save();
-
+                                    
                                     $model = new ProjectAssembliesFilesData;
                                     $model->isNewRecord = 1;
                                     $model->fileId = $id;
                                     $model->statusId = 6;
                                     $model->save();
                                 } 
+                                
+                                if( $model->destinationId != 0 & $model->statusId == 11){
+                                    $model->statusId = 12;
+                                    $model->save();
+                                    
+                                    $model = new ProjectAssembliesFilesData;
+                                    $model->isNewRecord = 1;
+                                    $model->fileId = $id;
+                                    $model->statusId = 12;
+                                    $model->save();
+                                }
                         }
                         break;
                     case 'add':
@@ -677,25 +690,22 @@ class ProjectAssembliesFilesController extends Controller
                         break;
                         case 'rejectfile':
                         foreach($data['id'] as $id){  
-                        $notesCheck = ProjectAssembliesFilesNotes::find()
-                                ->andWhere(['fileId' => $id] )
-                                ->andWhere(['typeId' => 3])
-                                ->all();
-                            $model = new ProjectAssembliesFilesData;
-                            $model->isNewRecord = 1;
-                            $model->fileId = $id;
-                            $model->statusId = 9;
-                            $model->save();
-                        if($notesCheck){
-                            $model = $this->findModel($id);
-                            $model->statusId = 9;
-                            $model->save();    
-                            $model = new ProjectAssembliesFilesData;
-                            $model->isNewRecord = 1;
-                            $model->fileId = $id;
-                            $model->statusId = 9;
-                            $model->save();
-                        }
+                            $notesCheck = ProjectAssembliesFilesNotes::find()
+                                    ->andWhere(['fileId' => $id] )
+                                    ->andWhere(['typeId' => 3])
+                                    ->all();
+                            
+                            if($notesCheck){
+                                $model = $this->findModel($id);
+                                $model->statusId = 9;
+                                $model->save();  
+
+                                $model = new ProjectAssembliesFilesData;
+                                $model->isNewRecord = 1;
+                                $model->fileId = $id;
+                                $model->statusId = 9;
+                                $model->save();
+                            }
                         }
                         break;
                         case 'download':
@@ -705,6 +715,7 @@ class ProjectAssembliesFilesController extends Controller
                             $files= ProjectAssembliesFiles::find()->select(['path'])                            
                                     ->andWhere(['sygnature' => $dft->sygnature])
                                     ->andWhere(['assemblieId' => $dft->assemblieId])
+                                    ->andFilterWhere(['!=','statusId', 10])
                                     ->andFilterWhere(['or', ['ext' => 'dxf'], ['ext' => 'pdf']])
                                     ->all();
                             $fileGroup = FileGroup::find()->select(['groupId'])->where(['fileId' => $id])->asArray()->one();
@@ -891,6 +902,13 @@ class ProjectAssembliesFilesController extends Controller
                         ->one();
         
                 if(!empty($checkFile)){
+                    if($fileExt == 'pdf'){
+                        $fileImage = FilesImages::find()->where(['fileId' => $checkFile->id])->one();
+                        exec('rm /var/www/yii2app/frontend/web'. $fileImage->imagePath);
+                        $newImagePath = '/var/www/yii2app/frontend/web'. $fileImage->imagePath;
+                        exec('convert "' . $checkFile->path.'"[0]'. ' "' .$newImagePath.'"', $output, $return);
+                        
+                        }
                     
                     if($FileCheck->sygnature == $checkFile->sygnature){  
                      
@@ -928,7 +946,7 @@ class ProjectAssembliesFilesController extends Controller
                         $checkFile->path = $newPath;
                         $checkFile->id = $newFileId;
                         $checkFile->updatedAt = date('Y-m-d H:i:s');
-                        $checkFile->statusId = 8;
+                        $checkFile->statusId = 10;
 
                             if($checkFile->save()){
                                 // passing all attributes from old to new file
@@ -938,7 +956,7 @@ class ProjectAssembliesFilesController extends Controller
                                 $fileClone->name = $fileName;
                                 $fileClone->path = $oldPath;
                                 $fileClone->updatedAt = date('Y-m-d H:i:s');
-                                $fileClone->statusId = 0;
+                                $fileClone->statusId = 7;
 
                                 $fileClone->save();
 
@@ -947,7 +965,7 @@ class ProjectAssembliesFilesController extends Controller
                                 $statusChange->find()
                                 ->where(['id' => $fileId ])
                                 ->one();
-                                $statusChange->statusId = '0';
+                                $statusChange->statusId = '7';
                                 $statusChange->save();
 
 
@@ -993,7 +1011,7 @@ class ProjectAssembliesFilesController extends Controller
                         $checkAsm->name = $newFileName;
                         $checkAsm->path = $newPath;
                         $checkAsm->id = $newFileId;
-                        $checkAsm->statusId = 0;
+                        $checkAsm->statusId = 10;
                         $checkAsm->updatedAt = date('Y-m-d H:i:s');
                     
                         if($checkAsm->save()){
@@ -1003,7 +1021,7 @@ class ProjectAssembliesFilesController extends Controller
                                 $fileClone->id = $oldId;
                                 $fileClone->name = $oldFileName;
                                 $fileClone->path = $oldPath;
-                                $fileClone->statusId = 1;
+                                $fileClone->statusId = 7;
                                 $fileClone->updatedAt = date('Y-m-d H:i:s');
 
                                 $fileClone->save();

@@ -7,7 +7,7 @@ class ProjectImporter
 {
     
     public $excelFormat = ['xls' => 1, 'xlsx' => 1, 'ods' => 1];
-    public $projectsRootDirectory = 'e:/tma_projekty/'; // project root path
+    public $projectsRootDirectory = '/media/data/app_data/project_data/'; // project root path
     public $projectMainTables = ['data', 'project', 'orders' ];
     public $rootStructure = [
         'project' => ['Projekt', 'projket', 'Project', 'project' ],
@@ -107,8 +107,10 @@ class ProjectImporter
                     if ( isset($this->excelFormat[$fileInfo->getExtension()]))
                     {
                         $fileSyg = explode('_', $fileInfo->getFilename());
-                        if( preg_match( '/p{1}[0-9]*/i', $fileSyg[0] )){
-                            $this->fileList = $fileInfo->getPathname();
+                        if(count($fileSyg) > 1) {
+                            if(preg_match( '/p{1}[0-9]*/i', $fileSyg[0]) & preg_match( '/parts/i', $fileSyg[1])  ){
+                                $this->fileList = $fileInfo->getPathname();
+                            }
                         }
                     }
                 }

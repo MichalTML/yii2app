@@ -93,7 +93,7 @@ class SiteController extends Controller
         return $this->render( 'otherClients' );
     }
 
-    public function actionLogin() {
+    public function actionLogin($flag = null, $sygnature = null, $projectId = null, $elementName = null) {
         $this->layout = 'login';
         if ( !\Yii::$app->user->isGuest )
         {
@@ -103,6 +103,11 @@ class SiteController extends Controller
         $model = new LoginForm();
         if ( $model->load( Yii::$app->request->post() ) && $model->login() )
         {
+            if($flag == 1){
+                return $this->redirect( ['invoices/index' ] );   
+            }elseif($flag == 2){
+                return $this->redirect( ['invoices/index' ] );  
+            }
             return $this->redirect( ['main' ] );
         } else
         {

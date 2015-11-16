@@ -9,17 +9,18 @@ class ExcelImporter
     public $label = ['A' => 'Lp', 'B' => 'name', 'C' => 'quanity', 'D' => 'thickness', 'E' => 'material' ];
     public $iteration = 1;
     public $files = [ ];
-
+    
     public function __construct( $file ) {
-
         if ( !file_exists( $file ) )
         {
+            
             $json = "Excel file load error!";
             return json_encode($json);
         }
         $this->file = $file;
         $this->readFile();
         $this->renameKeys();
+        
     }
 
     public function readFile() {
@@ -33,6 +34,7 @@ class ExcelImporter
                 $this->cellDataExtractor($cellIterator);
                 $this->iteration++;
             }
+            
         }
         return $this->files; // saving data
     }
@@ -40,14 +42,16 @@ class ExcelImporter
     
     private function cellDataExtractor($cells){
         foreach ( $cells as $cell ) { // itterating throught Excel cells
-             
+
                     if ( !empty( $cell->getFormattedValue()) ) // filtering out empty cells
                     {
+                        
                        //var_dump($cell->getFormattedValue());
                         $name = preg_replace( '/[0-9]/', '', $cell->getCoordinate() ); // getting letter cord ex. 'A'
-                        
+ 
                             if ( isset( $this->label[ $name ] ) && !empty( $cell->getFormattedValue() ) )
                             { // Filtering only needed cells / empty out
+                                
                                 $formatCell = trim($cell->getFormattedValue());
                                 $formatData = explode(' ', $formatCell);
                                 

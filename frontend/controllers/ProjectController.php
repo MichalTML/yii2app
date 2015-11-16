@@ -36,7 +36,8 @@ class ProjectController extends Controller {
      * Lists all ProjectData models.
      * @return mixed
      */
-    public function actionIndex() {
+    public function actionIndex() {       
+
         $this->layout = 'action';
         $searchModel = new ProjectSearch();
         $order = ['defaultOrder' => ['sygnature' => 'DESC']];        
@@ -241,7 +242,10 @@ class ProjectController extends Controller {
                 ] );
     }
     
-    public function actionCtreatment($sygnature, $id, $pagination = 20){     
+    public function actionCtreatment($sygnature, $id, $pagination = 20, $elementName = null){   
+        if(Yii::$app->user->isGuest){
+            return $this->redirect(['site/login']);
+        }
         $assemblieFiles = ProjectAssembliesFiles::find()->select(['id', 'path', 'name'])->asArray()->where(['and', ['projectId' => $sygnature, 'ext' => 'pdf']])->all();
  
         if($assemblieFiles){
@@ -274,7 +278,7 @@ class ProjectController extends Controller {
         $dataProvider->pagination->pageSize = $pagination;
         return $this->render( 'cassembliesFiles',
                             [
-                              'searchModel' => $searchModel,
+                               'searchModel' => $searchModel,
                                'dataProvider' => $dataProvider,
                                'id' => $id,
                                'sygnature' => $sygnature,
@@ -341,7 +345,7 @@ class ProjectController extends Controller {
     public function actionTreatmentmanager($sygnature, $id, $pagination = 20){
         $this->layout = 'action';        
         $searchModel = new ProjectAssembliesFilesSearch();
-        $order = ['defaultOrder' => ['priorityId' => 'DESC', 'name' => 'DESC']];
+        $order = ['defaultOrder' => ['date' => 'DESC', 'priorityId' => 'DESC']];
         $dataProvider = $searchModel->search( Yii::$app->request->queryParams, $sygnature, 'treatmanager-pending', $order);
         $dataProvider->pagination->pageSize = $pagination;
         return $this->render( 'treatmentfiles',

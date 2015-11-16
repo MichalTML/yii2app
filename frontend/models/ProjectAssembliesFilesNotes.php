@@ -9,6 +9,7 @@ use yii\db\Expression;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use common\models\User;
+use frontend\models\ProjectAssembliesFilesNotesLabels;
 /**
  * This is the model class for table "project_assemblies_files_notes".
  *
@@ -39,8 +40,8 @@ class ProjectAssembliesFilesNotes extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fileId', 'note'], 'required'],
-            [['fileId', 'typeId', 'creUserId'], 'integer'],
+            [['fileId'], 'required'],
+            [['fileId', 'typeId', 'creUserId', 'labelId'], 'integer'],
             [['creTime'], 'safe'],
             [['note'], 'string', 'max' => 255]
         ];
@@ -58,6 +59,7 @@ class ProjectAssembliesFilesNotes extends \yii\db\ActiveRecord
             'typeId' => 'Destination',
             'creUserId' => 'Created by',
             'creTime' => 'Created at',
+            'labelId' => 'Label'
         ];
     }
     
@@ -109,6 +111,20 @@ class ProjectAssembliesFilesNotes extends \yii\db\ActiveRecord
                     ->all();
         return ArrayHelper::map( $droptions, 'id', 'type' );
 
+    }
+    
+    public function getLabelList(){
+        $droptions = ProjectAssembliesFilesNotesLabels::find()
+                     ->asArray()
+                     ->all();
+        return ArrayHelper::map( $droptions, 'labelId', 'labelName' );
+    }
+    
+    public function getLabelName($labelId){
+        $labelName = ProjectAssembliesFilesNotesLabels::find()
+                ->where(['labelId' => $labelId])
+                ->one();
+        return $labelName->labelName;
     }
     /**
      * @return \yii\db\ActiveQuery

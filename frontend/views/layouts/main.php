@@ -6,16 +6,19 @@ use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use frontend\widgets\Alert;
 use frontend\assets\FontAwesomeAsset;
-use yii\helpers\Url;
-use yii\grid\GridView;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
 AppAsset::register($this);
 FontAwesomeAsset::register($this);
-
 ?>
+
+<?php if (Yii::$app->user->isGuest) { 
+        $this->registerJs("window.location = 'index.php';");    
+} ?>
+
+
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">

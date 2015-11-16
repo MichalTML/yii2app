@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use frontend\models\Invemp;
+use frontend\models\InvoicesCategories;
 /**
  * InvoicesController implements the CRUD actions for Invoices model.
  */
@@ -501,5 +502,28 @@ class InvoicesController extends Controller
             'code' => 200,
             ];
     }
+    }
+    
+    public function actionCreategroup(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            
+            $invoicesCategory = new InvoicesCategories;
+            $invoicesCategory->isNewRecord = true;
+            $invoicesCategory->category = $data['data'];
+            
+            if($invoicesCategory->save()){
+                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                return [
+                    'code' => 400,
+                    'groupName' => $data['data'],
+                    ];
+            }
+        }
+        
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return [
+            'code' => 100,
+            ];
     }
 }

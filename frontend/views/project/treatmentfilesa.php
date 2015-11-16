@@ -157,8 +157,16 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
         ],
         'rowOptions' => function ($model) {
             $notesCheck = ProjectAssembliesFilesNotes::find()
-                                ->Where(['fileId' => $model->id, 'typeId' => 0] )
+                                ->Where(['fileId' => $model->id] )
+                                ->andFilterWhere(['or',
+                                            ['=', 'typeId', 0],
+                                            ['=', 'typeId', 3],
+                                               ])
+                    
                                 ->all();
+            if($model->statusId == 11){
+                return ['class' => 'treatment-note lighted-row', 'style' => 'background-color: black; font-size:10px'];
+            }
             if($notesCheck){
                 return ['class' => 'treatment-note lighted-row', 'style' => 'font-size:10px'];
             }
@@ -185,7 +193,13 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                'attribute' => 'name',
                'value' => 'name',
                'headerOptions' => ['style' => 'text-align: center; min-width: 240px;' ],
-               'contentOptions' => ['style' => 'padding-left: 10px;text-align: left; vertical-align: middle;' ],
+               'contentOptions' => function($model){
+                                    if($model->statusId == 12){
+                                        return ['style' => 'background-color: green; color: white; padding-left: 10px;text-align: left; vertical-align: middle;' ];
+                                    }
+                                    return ['style' => 'padding-left: 10px;text-align: left; vertical-align: middle;' ];
+                                   },
+               
            ],
            [
                'label' => 'Material',
@@ -202,7 +216,14 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                'attribute' => 'thickness',
                'filter' => Html::activeDropDownList($searchModel, 'thickness', 
                        ArrayHelper::map(  ProjectAssembliesFiles::find()
-                               ->where(['projectId' => $sygnature, 'statusId' => '4', 'ext' => 'dft'])
+                               ->where(['projectId' => $sygnature, 'ext' => 'dft'])
+                               ->andFilterWhere( ['or',
+                                    ['=', 'statusId', 1],
+                                    ['=', 'statusId', 2],
+                                    ['=', 'statusId', 3],
+                                    ['=', 'statusId', 4],
+                                    ['=', 'statusId', 5],
+                                   ])
                                ->orderBy(['thickness' => SORT_ASC])->asArray()->all(), 
                                'thickness','thickness'),['class'=>'form-control', 'prompt' => ' ']),
                'format' => 'raw',
@@ -361,7 +382,7 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                                     $fileStatus = ProjectAssembliesFilesData::find()
                                     ->select(['id'])->where(['fileId' => $model->id, 'statusId' => '1'])->one();
                                     
-                                    if($model->quanityDone == $model->quanity || $fileStatus == null){
+                                    if($model->quanityDone == $model->quanity || $fileStatus == null || $model->statusId == 11){
                                         return '<i class="fa fa-plus"></i>';
                                     } else {
                                         return Html::button( '<a href=""><i class="fa fa-plus"></i></a>', 
@@ -372,7 +393,7 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                                         $fileStatus = ProjectAssembliesFilesData::find()
                                          ->select(['id'])->where(['fileId' => $model->id, 'statusId' => '1'])->one();
                                         
-                                    if($model->quanityDone == 0 || $fileStatus == null){
+                                    if($model->quanityDone == 0 || $fileStatus == null || $model->statusId == 11){
                                         return '<i class="fa fa-minus"></i>';
                                     } else {
                                         return Html::button( '<a href=""><i class="fa fa-minus"></i></a>', 
@@ -384,7 +405,7 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                                                 $fileStatus = ProjectAssembliesFilesData::find()
                                                 ->select(['id'])->where(['fileId' => $model->id, 'statusId' => '1'])->one();
                                                 
-                                   if ($model->quanity == $model->quanityDone & $model->destinationId != 0 & $fileStatus != null) {
+                                   if ($model->quanity == $model->quanityDone & $model->destinationId != 0 & $fileStatus != null & $model->statusId != 11) {
                                         return Html::button( '<a href=""><i class="fa fa-paper-plane"></i></a>', 
                                         ['value' => $url, 'class' => 'send-button', 'id' => 'send', 'data-id' => $model->id, 
                                         'data-url' => $url, 'title' => 'finish element' ] );
@@ -393,10 +414,13 @@ $this->params[ 'breadcrumbs' ][] = 'P' . $sygnature . ' - Accepted Files';
                                     }
                                     },
                                     'reject' => function ($url, $model)
-                                    {                                      
+                                    {                         
+                                        if($model->statusId != 11){
                                         return Html::button( '<a href=""><i class="fa fa-exclamation-triangle"></i></a>', 
                                         ['value' => $url, 'class' => 'reject-button-note', 'id' => 'reject', 
                                         'data-id' => $model->id, 'data-url' => $url, 'title' => 'reject file', 'file-name' => $model->name ] );
+                                        } 
+                                        return '<i class="fa fa-exclamation-triangle">';
                                     },                                     
                                     'seenote' => function ($url, $model)
                                     {

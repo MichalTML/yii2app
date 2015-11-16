@@ -16,12 +16,12 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
      * @inheritdoc
      */
     public function attributes() {
-        return array_merge( parent::attributes(), ['filegroup.groupName', 'Programming', 'CNC', 'ConvTreat', 'Anodizing', 'priority.name', 'type.name', 'assemblie.name', 'status.statusName', 'destination.destination'] );
+        return array_merge( parent::attributes(), ['date', 'filegroup.groupName', 'Programming', 'CNC', 'ConvTreat', 'Anodizing', 'priority.name', 'type.name', 'assemblie.name', 'status.statusName', 'destination.destination'] );
     }
 
     public function rules() {
         return [
-            [[ 'filegroup.groupName', 'Programming', 'CNC', 'ConvTreat', 'Anodizing', 'priority.name', 'type.name', 'assemblie.name', 'sygnature', 'name', 'path', 'size', 'ext', 'material', 'feedback', 'createdAt', 'updatedAt', 'status.statusName','thickness', 'destination.destination'], 'safe' ],
+            [['date', 'filegroup.groupName', 'Programming', 'CNC', 'ConvTreat', 'Anodizing', 'priority.name', 'type.name', 'assemblie.name', 'sygnature', 'name', 'path', 'size', 'ext', 'material', 'feedback', 'createdAt', 'updatedAt', 'status.statusName','thickness', 'destination.destination'], 'safe' ],
         ];
     }
 
@@ -59,7 +59,7 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
                 ->andFilterWhere( ['and',
                 ['=', 'project_assemblies_files.statusId', '6' ],        
                         ])
-                ->joinWith( ['filegroup', 'priority', 'type', 'assemblie', 'status', 'destination', 'programming', 'cnc', 'anod', 'ct'], false)
+                ->joinWith( ['date', 'filegroup', 'priority', 'type', 'assemblie', 'status', 'destination', 'programming', 'cnc', 'anod', 'ct'], false)
                 ->distinct()
                 ;
         } elseif ($sygnature != null & $treatment == 'treatmanager-accepted'){
@@ -153,6 +153,11 @@ class ProjectAssembliesFilesSearch extends ProjectAssembliesFiles
          $dataProvider->sort->attributes[ 'filegroup.groupName' ] = [
                     'asc' => ['file_group_name.groupName' => SORT_ASC ],
                     'desc' => ['file_group_name.groupName' => SORT_DESC ],
+        ];
+         
+         $dataProvider->sort->attributes[ 'date' ] = [
+                    'asc' => ['date.timeStamp' => SORT_ASC ],
+                    'desc' => ['date.timeStamp' => SORT_DESC ],
         ];
          
         $this->load( $params );

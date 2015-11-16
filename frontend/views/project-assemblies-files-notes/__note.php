@@ -1,8 +1,10 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use kartik\form\ActiveForm;
+use kartik\label\LabelInPlace;
 use kartik\grid\GridView;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model frontend\models\ProjectNotes */
 /* @var $form yii\widgets\ActiveForm */
@@ -10,18 +12,38 @@ use kartik\grid\GridView;
 ?>
 
 <div class="project-notes-form">
-
-    <?php 
-    $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientValidation'=>false, 'enableAjaxValidation'=>true]); 
-    ?>
     
     <?php
     if(isset($privnote)){
+        $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientValidation'=>false, 'enableAjaxValidation'=>true]); 
     echo $form->field($model, 'typeId')
               ->dropDownList( $model->getTypeList(2), ['rows' => '2', 'maxlength' => 255, 'style' => '' ] );   
     } elseif(isset($option)){
+         $config = ['template'=>"{input}{error}"];
+                 $form = ActiveForm::begin([
+                        'id' => 'login-form-horizontal', 
+                        'type' => ActiveForm::TYPE_INLINE,
+                        'formConfig' => ['labelSpan' => 2, 'deviceSize' => ActiveForm::SIZE_SMALL]
+                 ]);  
+                  ?>
+                    <div style="margin-bottom: 20px;">
+                    <?= $form->field($noteLabel, 'labelName', $config)->widget(LabelInPlace::classname(),[
+                            'label' => 'New Label Name',
+                             ]);
+                    ?>
+                    <?= Html::submitButton('New Label', 
+                        ['data-url' => Url::toRoute( ['project-assemblies-files-notes/note'] )
+                        ,'class' => 'btn btn-success groupe-create group-button', 'title' => 'Create new group']);                    
+                    ?>
+                    </div>
+    <?php
+                    ActiveForm::end();
+                    $form = ActiveForm::begin(['id' => $model->formName(), 'enableClientValidation'=>false, 'enableAjaxValidation'=>true]); 
         echo $form->field($model, 'typeId')
-              ->dropDownList( $model->getTypeList(3), ['rows' => '2', 'maxlength' => 255, 'style' => '' ] );      
+              ->dropDownList( $model->getTypeList(3), ['rows' => '2', 'maxlength' => 255, 'style' => '' ] ); 
+        
+        echo $form->field($model, 'labelId')
+              ->dropDownList( $model->getLabelList(), ['rows' => '2', 'maxlength' => 255, 'style' => '' ] );  
     }else {
     echo $form->field($model, 'typeId')
               ->dropDownList( $model->getTypeList(0), ['rows' => '2', 'maxlength' => 255, 'style' => '' ] );   
@@ -30,7 +52,7 @@ use kartik\grid\GridView;
     <?= $form->field($model, 'note')->textarea(['rows' => '2', 'maxlength' => 255, 'style' => 'resize:none']) ?>
     
     <div class="form-group">
-        <?= Html::submitButton('Create', ['class' => 'btn btn-primary', 'id' => 'create-note']) ?>
+        <?= Html::submitButton('Create', ['class' => 'btn btn-primary', 'id' => 'create-note', 'name' => 'noteMe', 'value' => 'save-note']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -58,7 +80,16 @@ use kartik\grid\GridView;
                 
             ],
 [
-                'value' => 'note',
+                'value' => function($model){
+                                   if(isset($model->labelId)){
+                                       if(!empty($model->note)){
+                                           return $model->getLabelName($model->labelId) . ': ' . $model->note;
+                                       }
+                                       return $model->getLabelName($model->labelId);
+                                   }
+                                   return $model->note;
+                },                                 
+                      
                 'label' => 'Note Content',
                 'contentOptions' => function($model){
                                             if($model->statusId == 1 || $model->typeId == 2){
@@ -88,14 +119,27 @@ use kartik\grid\GridView;
 ?>
 
 <?php
+if(isset($option)){
+    $this->registerJs(
+    '   $(".form-group .col-sm-10").removeClass();
+        $("#create-note").click(function(){
+       // $("#create-note").attr("name", "note-me");
+    var $note = $("#projectassembliesfilesnotes-note").val();
+        $("#modal-window").modal("hide");    
+    });'
+    );
+} else {
     $this->registerJs(
     '$("#create-note").click(function(){
+       // $("#create-note").attr("name", "note-me");
     var $note = $("#projectassembliesfilesnotes-note").val();
         if($note.length > 0){  
-             $("#modal-window").modal("hide");
+        $("#modal-window").modal("hide");
         }
     
     });'
     );
+}
+    
 ?>
 
